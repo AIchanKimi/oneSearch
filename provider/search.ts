@@ -1,6 +1,6 @@
 import type { SearchProvider } from '@/types'
 
-export const items: SearchProvider[]
+export const searchProvider: SearchProvider[]
   = [
     {
       label: '链接',

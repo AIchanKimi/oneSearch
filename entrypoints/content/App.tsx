@@ -1,5 +1,6 @@
 import QuickMenu from '@/components/QuickMenu'
-import { items } from '@/provider'
+import {searchProvider } from '@/provider/search'
+import {actionProvider } from '@/provider/action'
 import { useEffect, useState } from 'react'
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
       document.removeEventListener('mouseup', handleMouseUp)
     }
   }, [])
-
+const items = [...searchProvider,...actionProvider]
   return (
     <>
       {select
