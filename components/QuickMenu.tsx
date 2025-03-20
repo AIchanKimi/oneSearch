@@ -1,3 +1,5 @@
+import { Button } from './ui/button'
+
 export type QuickMenuItem = {
   label: string
   link?: string
@@ -13,7 +15,7 @@ type QuickMenuProps = {
 function QuickMenu({ mousePosition, items, selectedText }: QuickMenuProps) {
   return (items && items.length > 0) && (
     <div
-      className="fixed z-50"
+      className="bg-background rounded-md fixed z-50 flex items-center gap-2"
       style={{
         top: `${mousePosition.y}px`,
         left: `${mousePosition.x}px`,
@@ -23,9 +25,11 @@ function QuickMenu({ mousePosition, items, selectedText }: QuickMenuProps) {
         const linkUrl = item.link?.replace('{selectedText}', selectedText || '')
 
         return (
-          <a href={linkUrl} key={item.label} target="_blank" rel="noopener noreferrer">
-            <img src={item.icon} alt="" />
-          </a>
+          <Button variant="ghost" size="icon" key={item.label}>
+            <a href={linkUrl} target="_blank" rel="noopener noreferrer">
+              <img className="size-4" src={item.icon} alt="" />
+            </a>
+          </Button>
         )
       })}
     </div>
