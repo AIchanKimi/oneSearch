@@ -1,4 +1,4 @@
-export type SearchItem = {
+export type SearchProvider = {
   label: string
   link?: string
   icon?: string
