@@ -1,10 +1,9 @@
-import type { Provider } from '@/types'
+import type { ActionProvider } from '@/types'
 import MenuItem from './menu-item'
-import { Button } from './ui/button'
 
 type QuickMenuProps = {
   mousePosition: { x: number, y: number }
-  items?: Provider []
+  items?: ActionProvider[]
   selectedText?: string
 }
 

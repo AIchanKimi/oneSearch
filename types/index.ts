@@ -1,22 +1,27 @@
-export type Provider = SearchProvider | ActionProvider
 
-type BaseProvider = {
+export type BaseProvider = {
   label: string
   icon: string
 }
-
-export type SearchProvider = BaseProvider &{
-  type:'search'
-  link: string
-}
-
-export type ActionPayload = {
-    source: string
+export type MenuAction = {
+  type: 'menu'
+  payload: {
     selectedText: string
+    source: string
   }
-export type ActionType= 'menu'
-export type ActionProvider = BaseProvider &{
-  type:'action'
-  action: ActionType
-  payload: boolean
 }
+
+export type SearchAction = {
+  type: 'search'
+  payload: {
+    link: string
+    selectedText: string
+    source: string
+  }
+}
+
+
+export type ActionProvider = BaseProvider & (MenuAction | SearchAction)
+
+export type ActionType = ActionProvider['type']
+  
