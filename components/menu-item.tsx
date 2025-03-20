@@ -14,7 +14,7 @@ function QuickMenuItem({ provider, selectedText }: QuickMenuItemProps) {
         variant="outline" 
         size="icon" 
         key={provider.label}
-        onClick={() => console.log(provider.action)}
+        onClick={() => handleAction(provider.action)}
       >
         <img className="size-4" src={provider.icon} alt="" />
       </Button>
