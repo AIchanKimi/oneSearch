@@ -1,5 +1,6 @@
 import type { Provider } from '@/types'
 import { Button } from './ui/button'
+import QuickMenuItem from './menu-item'
 
 type QuickMenuProps = {
   mousePosition: { x: number, y: number }
@@ -26,31 +27,14 @@ function QuickMenu({ mousePosition, items, selectedText }: QuickMenuProps) {
         left: `${mousePosition.x}px`,
       }}
     >
-      {items.map((item) => {
-        if (item.type === 'action') {
-          // ActionProvider: 直接使用 Button 并触发 action
-          return (
-            <Button 
-              variant="outline" 
-              size="icon" 
-              key={item.label}
-              onClick={() => handleAction(item.action)}
-            >
-              <img className="size-4" src={item.icon} alt="" />
-            </Button>
-          )
-        } else {
-          const linkUrl = item.link?.replace('{selectedText}', selectedText || '')
-          
-          return (
-            <Button variant="ghost" size="icon" key={item.label}>
-              <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-                <img className="size-4" src={item.icon} alt="" />
-              </a>
-            </Button>
-          )
-        }
-      })}
+      {items.map((item) => (
+        <QuickMenuItem 
+          key={item.label}
+          provider={item}
+          selectedText={selectedText}
+          onAction={handleAction}
+        />
+      ))}
     </div>
   )
 }

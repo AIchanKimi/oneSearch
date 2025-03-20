@@ -1,4 +1,4 @@
-import QuickMenu from '@/components/QuickMenu'
+import QuickMenu from '@/components/quick-menu'
 import {searchProvider } from '@/provider/search'
 import {actionProvider } from '@/provider/action'
 import { useEffect, useState } from 'react'
