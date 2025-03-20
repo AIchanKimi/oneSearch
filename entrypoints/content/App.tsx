@@ -10,7 +10,7 @@ function App() {
     const handleMouseUp = (event: MouseEvent) => {
       const selectedText = window.getSelection()?.toString() || ''
       setSelection(selectedText)
-      setMousePosition({ x: event.clientX, y: event.clientY })
+      setMousePosition({ x: event.clientX + 20, y: event.clientY + 20 })
     }
 
     document.addEventListener('mouseup', handleMouseUp)
