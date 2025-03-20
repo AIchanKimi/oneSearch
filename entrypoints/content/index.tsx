@@ -2,17 +2,17 @@
 import ReactDOM from 'react-dom/client'
 import { createShadowRootUi } from 'wxt/client'
 import App from './App.tsx'
+import '@/assets/globals.css'
 
 export default defineContentScript({
   matches: ['*://*/*'],
+  cssInjectionMode: 'ui',
   async main(ctx) {
-    console.log('Hello content script.')
-
     const ui = await createShadowRootUi(ctx, {
       name: 'wxt-react-example',
       position: 'inline',
       anchor: 'body',
-      append: 'first',
+      append: 'last',
       onMount: (container) => {
         // Don't mount react app directly on <body>
         const wrapper = document.createElement('div')
