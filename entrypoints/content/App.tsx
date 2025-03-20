@@ -8,19 +8,36 @@ function App() {
   const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
 
   useEffect(() => {
-    const handleMouseUp = (event: MouseEvent) => {
-      const selectedText = window.getSelection()?.toString() || ''
-      setSelection(selectedText)
-      setMousePosition({ x: event.clientX + 20, y: event.clientY + 20 })
-    }
-
-    document.addEventListener('mouseup', handleMouseUp)
-
+    const handleSelectionChange = () => {
+      const selectedText = window.getSelection()?.toString() || '';
+      
+      if (selectedText) {
+        setSelection(selectedText);
+        
+        // 获取选区的位置
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          setMousePosition({ 
+            x: rect.right + 10, 
+            y: rect.bottom + 10 
+          });
+        }
+      } else {
+        setSelection('');
+      }
+    };
+    
+    // 监听文本选择变化事件
+    document.addEventListener('selectionchange', handleSelectionChange);
+    
     return () => {
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [])
-const items = [...searchProvider,...actionProvider]
+      document.removeEventListener('selectionchange', handleSelectionChange);
+    };
+  }, []);
+
+  const items = [...searchProvider,...actionProvider]
   return (
     <>
       {select
