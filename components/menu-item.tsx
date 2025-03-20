@@ -1,5 +1,6 @@
 import type { Provider } from '@/types'
 import { Button } from './ui/button'
+import {handleAction} from '@/utils/handle-action'
 
 type QuickMenuItemProps = {
   provider: Provider
@@ -13,7 +14,7 @@ function QuickMenuItem({ provider, selectedText }: QuickMenuItemProps) {
         variant="outline" 
         size="icon" 
         key={provider.label}
-        onClick={() => handleAction(provider.action)}
+        onClick={() => console.log(provider.action)}
       >
         <img className="size-4" src={provider.icon} alt="" />
       </Button>
