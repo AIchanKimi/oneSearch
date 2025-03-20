@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import QuickMenu from '@/components/QuickMenu'
 import { useEffect, useState } from 'react'
 
 function App() {
@@ -19,22 +19,7 @@ function App() {
     }
   }, [])
 
-  return (
-    <>
-      {select
-        && (
-          <Button
-            className="fixed z-50"
-            style={{
-              top: `${mousePosition.y}px`,
-              left: `${mousePosition.x}px`,
-            }}
-          >
-            {select}
-          </Button>
-        )}
-    </>
-  )
+  return (<>{select && (<QuickMenu select={select} mousePosition={mousePosition} />)}</>)
 }
 
 export default App
