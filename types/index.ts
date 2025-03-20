@@ -14,9 +14,9 @@ export type ActionPayload = {
     source: string
     selectedText: string
   }
-
+export type ActionType= 'menu'
 export type ActionProvider = BaseProvider &{
   type:'action'
-  action: string
+  action: ActionType
   payload: boolean
 }

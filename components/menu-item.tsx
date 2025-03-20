@@ -4,18 +4,16 @@ import { Button } from './ui/button'
 type QuickMenuItemProps = {
   provider: Provider
   selectedText?: string
-  onAction: (action: any) => void
 }
 
-function QuickMenuItem({ provider, selectedText, onAction }: QuickMenuItemProps) {
+function QuickMenuItem({ provider, selectedText }: QuickMenuItemProps) {
   if (provider.type === 'action') {
-    // ActionProvider: 直接使用 Button 并触发 action
     return (
       <Button 
         variant="outline" 
         size="icon" 
         key={provider.label}
-        onClick={() => onAction(provider.action)}
+        onClick={() => handleAction(provider.action)}
       >
         <img className="size-4" src={provider.icon} alt="" />
       </Button>
