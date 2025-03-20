@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
 
 function App() {
   const [select, setSelection] = useState<string>()
@@ -16,9 +17,14 @@ function App() {
   })
   return (
     <>
-      <Button>
-        {select ? `Selected text: ${select}` : 'No text selected'}
-      </Button>
+      {select
+        && (
+          <Button
+            className="fixed top-2.5 left-2.5 z-50"
+          >
+            {select}
+          </Button>
+        )}
     </>
   )
 }
