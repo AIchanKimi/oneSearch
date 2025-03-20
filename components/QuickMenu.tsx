@@ -1,14 +1,9 @@
+import type { SearchItem } from '@/types'
 import { Button } from './ui/button'
-
-export type QuickMenuItem = {
-  label: string
-  link?: string
-  icon?: string
-}
 
 type QuickMenuProps = {
   mousePosition: { x: number, y: number }
-  items?: Array<QuickMenuItem>
+  items?: SearchItem[]
   selectedText?: string
 }
 
