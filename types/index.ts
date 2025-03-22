@@ -1,7 +1,9 @@
 export type BaseProvider = {
   label: string
   icon: string
+  tag: string
 }
+
 export type MenuAction = {
   type: 'menu'
   payload: {
