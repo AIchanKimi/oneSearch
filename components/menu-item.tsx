@@ -15,14 +15,16 @@ function QuickMenuItem({ provider, size = 'normal' }: QuickMenuItemProps) {
       key={provider.label}
       onClick={() => handleAction(provider)}
     >
-      {size === 'icon' ? (
-        <img className="size-4" src={provider.icon} alt="" />
-      ) : (
-        <div className="flex items-center gap-2">
-          <img className="size-4" src={provider.icon} alt="" />
-          <span>{provider.label}</span>
-        </div>
-      )}
+      {size === 'icon'
+        ? (
+            <img className="size-4" src={provider.icon} alt="" />
+          )
+        : (
+            <div className="flex items-center gap-2">
+              <img className="size-4" src={provider.icon} alt="" />
+              <span>{provider.label}</span>
+            </div>
+          )}
     </Button>
   )
 }

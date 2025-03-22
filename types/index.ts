@@ -2,8 +2,8 @@ export type BaseProvider = {
   label: string
   icon: string
   tag: string
-  bubble:boolean
-  panel:boolean
+  bubble: boolean
+  panel: boolean
 }
 
 export type MenuAction = {

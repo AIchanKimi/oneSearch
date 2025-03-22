@@ -17,7 +17,7 @@ function BubbleMenu({ mousePosition, items }: BubbleMenuProps) {
     >
       {items.map(item => (
         <MenuItem
-          size='icon'
+          size="icon"
           key={item.label}
           provider={item}
         />
