@@ -1,5 +1,5 @@
 import type { ActionProvider } from '@/types'
-import QuickMenu from '@/components/quick-menu'
+import BubbleMenu from '@/components/bubble-menu'
 import { actionProvider } from '@/provider/action'
 import { searchProvider } from '@/provider/search'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
@@ -30,7 +30,7 @@ function Container() {
   return (
     <>
       {selectedText && (
-        <QuickMenu
+        <BubbleMenu
           mousePosition={mousePosition}
           items={quickMenuItems}
         />
