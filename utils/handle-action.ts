@@ -9,12 +9,8 @@ export function handleAction(action: ActionProvider) {
       navigator.clipboard.writeText(action.payload.selectedText)
       break
     case 'search':
-      const searchUrl = action.payload.link.replaceAll(
-        '{selectedText}',
-        encodeURI(action.payload.selectedText),
-      )
       window
-        .open(searchUrl, '_blank')
+        .open(action.payload.link.replaceAll('{selectedText}', encodeURI(action.payload.selectedText)), '_blank')
         ?.focus()
       break
     default:
