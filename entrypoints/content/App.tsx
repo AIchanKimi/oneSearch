@@ -3,6 +3,7 @@ import BubbleMenu from '@/components/bubble-menu'
 import { actionProvider } from '@/provider/action'
 import { searchProvider } from '@/provider/search'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import Panel from '@/components/panel'
 
 type SelectionContextType = {
   selectedText: string
@@ -19,6 +20,8 @@ function Container() {
   const items = useMemo(() => [...searchProvider, ...actionProvider], [])
   const [quickMenuItems, setQuickMenuItems] = useState<ActionProvider[]>([])
   const { selectedText, mousePosition } = context
+  const [showPanel, setShowPanel] = useState(false)
+  
   useEffect(() => {
     const tempList = items.map((item) => {
       item.payload.source = window.location.href
@@ -28,13 +31,31 @@ function Container() {
     setQuickMenuItems(tempList.filter((item)=>item.bubble === true))
   }, [selectedText, items])
 
+  const handleOpenPanel = () => {
+    setShowPanel(true)
+  }
+
+  const handleClosePanel = () => {
+    setShowPanel(false)
+  }
+
   return (
     <>
       {selectedText && (
-        <BubbleMenu
-          mousePosition={mousePosition}
-          items={quickMenuItems}
-        />
+        <>
+        {!showPanel ? (
+          <BubbleMenu
+            mousePosition={mousePosition}
+            items={quickMenuItems}
+          />
+        ) : (
+          <Panel  
+            isOpen={true}
+            items={quickMenuItems}
+            onClose={handleClosePanel}
+          />
+        )}
+        </>
       )}
     </>
   )
