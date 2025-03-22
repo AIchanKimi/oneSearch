@@ -17,6 +17,7 @@ function QuickMenu({ mousePosition, items }: QuickMenuProps) {
     >
       {items.map(item => (
         <MenuItem
+          size='icon'
           key={item.label}
           provider={item}
         />
