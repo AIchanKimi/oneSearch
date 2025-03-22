@@ -11,7 +11,7 @@ export function handleAction(action: ActionProvider) {
     case 'search':
       const searchUrl = action.payload.link.replaceAll(
         '{selectedText}',
-        encodeURI(action.payload.selectedText)
+        encodeURI(action.payload.selectedText),
       )
       window
         .open(searchUrl, '_blank')

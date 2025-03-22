@@ -7,7 +7,7 @@ type QuickMenuProps = {
 }
 
 function QuickMenu({ mousePosition, items }: QuickMenuProps) {
-  console.log(items);
+  console.log(items)
   return (items && items.length > 0) && (
     <div
       className="bg-background rounded-md fixed z-50 flex items-center gap-1"
