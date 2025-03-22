@@ -3,7 +3,7 @@ import type { ActionProvider } from '@/types'
 export const searchProvider: ActionProvider[]
   = [
     {
-      bubble:false,
+      bubble:true,
       panel:false,
       label: '必应',
       icon: 'https://s2.loli.net/2022/08/16/3uWMUjDVAlS8c9T.png',
@@ -601,7 +601,7 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
-      bubble:false,
+      bubble:true,
       panel:false,
       label: 'GitHub',
       icon: 'https://s2.loli.net/2022/08/17/OedrPVhtkn5Mug4.png',
@@ -679,9 +679,9 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
-      bubble:false,
+      bubble:true,
       panel:false,
-      label: 'Twitter',
+      label: 'X',
       icon: 'https://s2.loli.net/2022/08/17/rsbLXJA1lG5hmfe.png',
       type: 'search',
       tag: '社交',
@@ -874,7 +874,7 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
-      bubble:false,
+      bubble:true,
       panel:false,
       label: '哔哩哔哩',
       icon: 'https://www.bilibili.com/favicon.ico?v=1',

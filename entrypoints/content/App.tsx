@@ -20,11 +20,12 @@ function Container() {
   const [quickMenuItems, setQuickMenuItems] = useState<ActionProvider[]>([])
   const { selectedText, mousePosition } = context
   useEffect(() => {
-    setQuickMenuItems(items.map((item) => {
+    const tempList = items.map((item) => {
       item.payload.source = window.location.href
       item.payload.selectedText = selectedText
       return item
-    }))
+    })
+    setQuickMenuItems(tempList.filter((item)=>item.bubble === true))
   }, [selectedText, items])
 
   return (
