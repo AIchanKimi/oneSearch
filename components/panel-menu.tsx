@@ -1,23 +1,17 @@
 import type { ActionProvider } from '@/types'
 import MenuItem from './menu-item'
 
-type BubbleMenuProps = {
-  mousePosition: { x: number, y: number }
+type PanelMenuProps = {
   items: ActionProvider[]
 }
 
-function BubbleMenu({ mousePosition, items }: BubbleMenuProps) {
+function PanelMenu({ items }: PanelMenuProps) {
   return (items && items.length > 0) && (
     <div
       className="bg-background rounded-md fixed z-50 flex items-center gap-1"
-      style={{
-        top: `${mousePosition.y}px`,
-        left: `${mousePosition.x}px`,
-      }}
     >
       {items.map(item => (
         <MenuItem
-          size='icon'
           key={item.label}
           provider={item}
         />
@@ -26,4 +20,4 @@ function BubbleMenu({ mousePosition, items }: BubbleMenuProps) {
   )
 }
 
-export default BubbleMenu
+export default PanelMenu
