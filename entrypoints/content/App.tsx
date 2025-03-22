@@ -2,32 +2,31 @@ import type { ActionProvider } from '@/types'
 import QuickMenu from '@/components/quick-menu'
 import { actionProvider } from '@/provider/action'
 import { searchProvider } from '@/provider/search'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 type SelectionContextType = {
   selectedText: string
   mousePosition: { x: number, y: number }
 }
 
-const SelectionContext = createContext<SelectionContextType | undefined>(undefined)
+const SelectionContext = createContext<SelectionContextType>({
+  selectedText: '',
+  mousePosition: { x: 0, y: 0 },
+})
 
 function Container() {
   const context = useContext(SelectionContext)
-
-  if (!context) {
-    return null
-  }
-
-  const { selectedText, mousePosition } = context
+  const items = useMemo(() => [...searchProvider, ...actionProvider], [])
   const [quickMenuItems, setQuickMenuItems] = useState<ActionProvider[]>([])
-  const items = [...searchProvider, ...actionProvider]
+  const { selectedText, mousePosition } = context
   useEffect(() => {
     setQuickMenuItems(items.map((item) => {
       item.payload.source = window.location.href
       item.payload.selectedText = selectedText
       return item
     }))
-  }, [selectedText])
+  }, [selectedText, items])
+
   return (
     <>
       {selectedText && (
@@ -73,8 +72,10 @@ function App() {
     }
   }, [])
 
+  const contextValue = useMemo(() => ({ selectedText, mousePosition }), [selectedText, mousePosition])
+
   return (
-    <SelectionContext value={{ selectedText, mousePosition }}>
+    <SelectionContext value={contextValue}>
       <Container />
     </SelectionContext>
   )
