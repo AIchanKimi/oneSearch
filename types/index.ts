@@ -1,4 +1,3 @@
-
 export type BaseProvider = {
   label: string
   icon: string
@@ -20,8 +19,14 @@ export type SearchAction = {
   }
 }
 
+export type CopyAction = {
+  type: 'copy'
+  payload: {
+    selectedText: string
+    source: string
+  }
+}
 
-export type ActionProvider = BaseProvider & (MenuAction | SearchAction)
+export type ActionProvider = BaseProvider & (MenuAction | SearchAction | CopyAction)
 
 export type ActionType = ActionProvider['type']
-  

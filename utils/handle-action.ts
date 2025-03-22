@@ -1,21 +1,25 @@
-import { ActionProvider} from "@/types";
+import type { ActionProvider } from '@/types'
 
-export const handleAction = (action: ActionProvider, clearSelectedText?: () => void) => {
+export function handleAction(action: ActionProvider) {
   switch (action.type) {
     case 'menu':
-      console.log('menu');
-      break;
+      console.error('menu')
+      break
+    case 'copy':
+      navigator.clipboard.writeText(action.payload.selectedText)
+      break
     case 'search':
-      const linkUrl = action.payload.link.replace('{selectedText}', action.payload.selectedText || '')
-      console.log(linkUrl);
-      break;
+      const searchUrl = action.payload.link.replaceAll(
+        '{selectedText}',
+        encodeURI(action.payload.selectedText)
+      )
+      window
+        .open(searchUrl, '_blank')
+        ?.focus()
+      break
     default:
-      console.log('default');
-      break;
+      break
   }
-  
-  // action 执行完成后清空 selectedText
-  if (clearSelectedText) {
-    clearSelectedText();
-  }
+
+  window.getSelection()?.removeAllRanges()
 }

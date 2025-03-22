@@ -1,37 +1,83 @@
 import QuickMenu from '@/components/quick-menu'
-import {searchProvider } from '@/provider/search'
-import {actionProvider } from '@/provider/action'
-import { SelectionProvider, useSelection } from '@/context/SelectionContext';
+import { actionProvider } from '@/provider/action'
+import { searchProvider } from '@/provider/search'
+import { ActionProvider } from '@/types'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-function QuickMenuContainer() {
-  const { selectedText, mousePosition, setSelectedText } = useSelection();
-  const items = [...searchProvider,...actionProvider];
+type SelectionContextType = {
+  selectedText: string
+  mousePosition: { x: number, y: number }
+}
 
-  // 创建清空选中文本的方法
-  const clearSelectedText = () => {
-    setSelectedText('');
-  };
+const SelectionContext = createContext<SelectionContextType | undefined>(undefined)
 
+function Container() {
+  const context = useContext(SelectionContext)
+
+  if (!context) {
+    return null
+  }
+
+  const { selectedText, mousePosition } = context
+  const [quickMenuItems,setQuickMenuItems]=useState<ActionProvider[]>([])
+  const items = [...searchProvider, ...actionProvider]
+  useEffect(() => { 
+    setQuickMenuItems(items.map((item) => {
+      item.payload.source = window.location.href
+      item.payload.selectedText = selectedText
+      return item
+    }))
+  },[selectedText])
   return (
     <>
       {selectedText && (
         <QuickMenu
           mousePosition={mousePosition}
-          selectedText={selectedText}
-          items={items}
-          clearSelectedText={clearSelectedText}
+          items={quickMenuItems}
         />
       )}
     </>
-  );
+  )
 }
 
 function App() {
+  const [selectedText, setSelectedText] = useState<string>('')
+  const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
+
+  useEffect(() => {
+    let lastMousePosition = { x: 0, y: 0 }
+    const handleSelectionChange = () => {
+      const selectedText = window.getSelection()?.toString() || ''
+      if (selectedText) {
+        setSelectedText(selectedText)
+        setMousePosition(lastMousePosition)
+      }
+      else {
+        setSelectedText('')
+      }
+    }
+
+    const handleMouseMove = (event: MouseEvent) => {
+      lastMousePosition = {
+        x: event.clientX + 20,
+        y: event.clientY + 20,
+      }
+    }
+
+    document.addEventListener('selectionchange', handleSelectionChange)
+    document.addEventListener('mousemove', handleMouseMove)
+
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange)
+      document.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [])
+
   return (
-    <SelectionProvider>
-      <QuickMenuContainer />
-    </SelectionProvider>
-  );
+    <SelectionContext value={{    selectedText,mousePosition}}>
+      <Container />
+    </SelectionContext>
+  )
 }
 
 export default App

@@ -3,12 +3,11 @@ import MenuItem from './menu-item'
 
 type QuickMenuProps = {
   mousePosition: { x: number, y: number }
-  items?: ActionProvider[]
-  selectedText?: string
+  items: ActionProvider[]
 }
 
-function QuickMenu({ mousePosition, items, selectedText }: QuickMenuProps) {
-
+function QuickMenu({ mousePosition, items }: QuickMenuProps) {
+  console.log(items);
   return (items && items.length > 0) && (
     <div
       className="bg-background rounded-md fixed z-50 flex items-center gap-1"
@@ -17,11 +16,10 @@ function QuickMenu({ mousePosition, items, selectedText }: QuickMenuProps) {
         left: `${mousePosition.x}px`,
       }}
     >
-      {items.map((item) => (
-        <MenuItem 
+      {items.map(item => (
+        <MenuItem
           key={item.label}
           provider={item}
-          selectedText={selectedText}
         />
       ))}
     </div>
