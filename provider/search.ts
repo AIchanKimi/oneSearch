@@ -3,6 +3,8 @@ import type { ActionProvider } from '@/types'
 export const searchProvider: ActionProvider[]
   = [
     {
+      bubble:false,
+      panel:false,
       label: '必应',
       icon: 'https://s2.loli.net/2022/08/16/3uWMUjDVAlS8c9T.png',
       type: 'search',
@@ -14,6 +16,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度',
       icon: 'https://www.baidu.com/favicon.ico',
       type: 'search',
@@ -25,6 +29,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '搜狗',
       icon: 'https://dlweb.sogoucdn.com/translate/favicon.ico?v=20180424',
       type: 'search',
@@ -36,6 +42,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '360',
       icon: 'https://s.ssl.qhimg.com/static/121a1737750aa53d.ico',
       type: 'search',
@@ -47,6 +55,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度翻译',
       icon: 'https://fanyi-cdn.cdn.bcebos.com/webStatic/translation/img/favicon/favicon.ico',
       type: 'search',
@@ -58,6 +68,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '有道词典',
       icon: 'https://shared-https.ydstatic.com/images/favicon.ico',
       type: 'search',
@@ -69,6 +81,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '必应翻译',
       icon: 'https://s2.loli.net/2022/08/16/3uWMUjDVAlS8c9T.png',
       type: 'search',
@@ -80,6 +94,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '海词词典',
       icon: 'http://i1.haidii.com/favicon.ico',
       type: 'search',
@@ -91,6 +107,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'CNKI翻译',
       icon: 'https://epub.cnki.net/favicon.ico',
       type: 'search',
@@ -102,6 +120,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '汉典',
       icon: 'https://www.zdic.net/favicon.ico',
       type: 'search',
@@ -113,6 +133,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'deepL',
       icon: 'https://s2.loli.net/2022/08/17/m3H5BdLRAexbVsz.png',
       type: 'search',
@@ -124,6 +146,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度网盘',
       icon: 'https://nd-static.bdstatic.com/m-static/v20-main/favicon-main.ico',
       type: 'search',
@@ -135,6 +159,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度百科',
       icon: 'https://baike.baidu.com/favicon.ico',
       type: 'search',
@@ -146,6 +172,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度知道',
       icon: 'https://www.baidu.com/favicon.ico?t=20171027',
       type: 'search',
@@ -157,6 +185,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '维基百科',
       icon: 'https://s2.loli.net/2022/08/17/uycfXb6FIGRV5mN.png',
       type: 'search',
@@ -168,6 +198,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'Quora',
       icon: 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAA81JREFUWAntVluIjFEc/51vlkUiLMot7LBo5ZoSudSSOyu7s6554EFC8iBFNg/a8uTysOVSbmlG7bh7cC0PiiKXbMsMDyRWucsuu3P8zuR8e+acb8Ymb/bUdP6X3/9/fud3vu98A7SN/10B0VoBLoXR5YuHUjRjlgTGsrA353zWv6WdFAJXEEK8vA51re2pcH8kEJuIjvIdtkqJjcR3y9WczQhDvL2H7YufoTYXVudyEoiFMYIdo2xa7BcIPCDtI8LDY6rxnfG+KYm5VGAFsXkKx6YqvimSxEHl5xpZCaQXB26xaXfdgIvuF6Oxufw0l7ZGrBDjUuAxGCp5AtvKE6iyoBluIIGaYejxswkPuHhfA30rksBU7pSCBA+SXkA1zppZkl4WeYZTZsy0PdPR9o+f2G0tDhHCrlyLq1ru9hz1v6/7pGeJvRdGZn92HALxMAopy9qMJsAHMQo3rFigS5JxM8GN9PzagC1mzLQdAj+ACDW2j+Ze0LmbjbQtUrirbX+WWOrbluEQ4AnPtjDKTQbEsoUSTkJicKwIRU6cAZcAMMAGUo6PdiyrL/ApKCebMTAo7hIQ6G0DpUCDHcvm54eCsXwWnL6qh0tA4r3dnAqoK7dVo1GiSxCQD+fboLhLQOClA5To6sSyBbyWi8uEtMvDC9PXdvrq1I6a+QZc5zTBjPGdKNR+dCjmyBRWU5UhjHUm/jnzNV4BjpXfxne+Bb001p+5qdIKJFDpR3zDUSAv5N5aXGSMrIR3tgh9eAmfI8synulo/sK0ZyKFalmPO/FhGJhKYbzf/bfBRQ6JSqIChkNgSR0eEleTgZUoiJ3E5IV1eC09rOeOq6hAxmeXJIsbm3ApTcgo5tm/y+uEaiOUYbKPO84Uon8j8IhN/bMn8Cq/bjM0+sY0dKh/heNUYYmO2TNrpBfC3LKnuGzntO8ooBKLknjJwvlsoD6r6UEyJdEwqtRRqMD0m2jo1Q8raSrFnMHaZu5+fa7FVRFx2Ud0CKZwh6coax+NYtM7vBfS/wdof5ZNmEfMbp3XMxuXUrEz2k8T3wnJGu6lZeQkoGDnh6LgWzP2sND/w9FSnsMSOFyRwBqF4JtTwpvwCs1rFUmUmFV/JKDBvMsHsckq+rP4G8tdt1c5NnjD6QmNSYxlXFjMXVSK8fFfxX2rr+w+qrJJ1enRagK6QM/6Gz/vET6oGI9rB++HXTofOAuMoyr3zNxfEzCbKDtWhpC8j6NUYbmdS/sCB7j4Bjv3zwioxupBi57AUiGxjkcynLKHONfyvamOPMVRe/E2v00BpcAvNM8U1IpUANcAAAAASUVORK5CYII=',
       type: 'search',
@@ -179,6 +211,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '萌娘百科',
       icon: 'data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAogB2AMkAFgAAAAAAAAAAALUAMgCrAIIAAAAAAAAAAAAAAAAAAAAAAKwASgCbAK0AnAC3AK0AYAD/AAEA/wAbAI0A/wCnADYAAAAAAAAAAACoAFUAlgDeAAAAAAAAAAAAAAAAAMMAPgCVAPsAqACJAKMAdgCWAPEAsQBXAKwAHACMAP8AyQAsAAAAAAAAAAAAsAA7AJQA+wD/AAMAAAAAAAAAAACXAH0AnQC2AAAAAAAAAAAApQB4AJsAvgDPADUAjQD/AKYAgQCkAIUAmwB/ANcAKwCOAP8A2AAdAAAAAAAAAAAAjwCBAKEAqgDkAAwA/AAQALQARACXAOoAoAA2AI4A/wCWAK4AlwCoAKAAlADwABQAkwD7AK8ANQAAAAAAAAAAAJEAgQCQAP0AjwD/AKMA1ADFADIAjQDuALYATQCQAPcA/wACAAAAAAAAAAAAAAAAAJgA5QCmAE4AAAAAAAAAAACjAHkAmwDUALgAJgD/AAYAtAA8AJEA7wCfAFIAkQD/AJsA0QCRANoAlQDYAPMAIACUAMoApQBlAAAAAAAAAAAAowBeAJkA5gDeABUA/wABAKwAjgCZAMIApQBiAJMA7QCkAGAAowBSALUAMwD/AAEAngDFAJEAZgAAAAAAAAAAAMkAJQCaANcAlQDzAJwAywCWAPQAsAA3AKcAbwCOAPsAoACjALIAQgD/ABQAyQAxAJUA6wChAF8AAAAAAAAAAAAAAAAA/wACAK0AQQCgAFoAxgAcAAAAAACwAEMAnwCOAJ4AsQCRAPoAjQD/AI8A/wCiAL0A4wAOAAAAAAAAAAAAAAAAAAAAAAD/AC4A/wC9ALIAswD/AG8AAAAAAAAAAAD/AAEAogDmAM4AVADVABEAAAAAAAAAAAAAAAAAAAAAAKwAhQCfALsAyQDBAOwA/wDqAP8A8gD9AMkApQCPAGkAlwBqAJcA8QChAKsAqwBkAJAATgCvADsAAAAAAAAAAAC0AEsAmQB8AMoAlQDzAPYA/wD/APkA6gCgALcAngDCAJQAwgCSANwAkAD9AJcA0QCcAN0AqACfAAAAAAAAAAAAAAAAAAAAAAAAAAAAoQCVAK0AnAD/AB8AAAAAAAAAAAAAAAAAwgAqAJgA+AD/AAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOEADgD4AAoAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAoA/wABAAAAAAAAAAAAAAAA//+sQf8zrEHAM6xBgDGsQZgBrEGAAaxBgDmsQYABrEGAAaxBgAGsQcIBrEHhh6xBgAGsQYABrEHxx6xB8+esQQ==',
       type: 'search',
@@ -190,6 +224,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '豆丁文档',
       icon: 'https://st.douding.cn/images_cn/topic/favicon.ico?rand=24220809',
       type: 'search',
@@ -201,6 +237,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '豆瓣读书',
       icon: 'https://www.douban.com/favicon.ico',
       type: 'search',
@@ -212,6 +250,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '微信(搜狗)',
       icon: 'https://dlweb.sogoucdn.com/translate/favicon.ico?v=20180424',
       type: 'search',
@@ -223,6 +263,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '果壳',
       icon: 'https://www.guokr.com/favicon.ico',
       type: 'search',
@@ -234,6 +276,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度文库',
       icon: 'https://www.baidu.com/favicon.ico',
       type: 'search',
@@ -245,6 +289,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度地图',
       icon: 'https://map.baidu.com/favicon.ico',
       type: 'search',
@@ -256,6 +302,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度图片',
       icon: 'https://www.baidu.com/favicon.ico',
       type: 'search',
@@ -267,6 +315,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '百度学术',
       icon: 'https://xueshu.baidu.com/favicon.ico',
       type: 'search',
@@ -278,6 +328,8 @@ export const searchProvider: ActionProvider[]
       }
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌图片',
       icon: 'https://s2.loli.net/2022/08/16/QUL3cvA4t7Tx5sE.png',
       type: 'search',
@@ -289,6 +341,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '搜狗图片',
       icon: 'https://dlweb.sogoucdn.com/translate/favicon.ico?v=20180424',
       type: 'search',
@@ -300,6 +354,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '必应图片',
       icon: 'https://cn.bing.com/sa/simg/favicon-trans-bg-blue-new.ico',
       type: 'search',
@@ -311,6 +367,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'pixiv',
       icon: 'https://s2.loli.net/2022/08/17/OxGZLn26TlWyQt9.png',
       type: 'search',
@@ -322,6 +380,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'flickr',
       icon: 'https://combo.staticflickr.com/pw/favicon.ico',
       type: 'search',
@@ -333,6 +393,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '花瓣',
       icon: 'https://huaban.com/favicon.ico',
       type: 'search',
@@ -344,6 +406,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌学术',
       icon: 'https://s2.loli.net/2022/08/17/4BaC1Acu2ebXJR9.png',
       type: 'search',
@@ -355,6 +419,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '知网',
       icon: 'https://epub.cnki.net/favicon.ico',
       type: 'search',
@@ -366,6 +432,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '万方',
       icon: 'https://cdn.s.wanfangdata.com.cn/favicon.ico',
       type: 'search',
@@ -377,6 +445,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'WOS',
       icon: 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABEpJREFUWAmdVl1sFFUUPmfY2S3QVoMI7XYhUSsmGqttjRZqtCIBEoT4YGrQPuiDoSXCA4nRREPqi/ENSYWiUVQSSRNSS9Q3I0GFtmoN8aeJQbQrrNAaq7S2pWS7c/3OtjPO7N6ZzuxJzt57v3PuOd/92TOXqURpr1LvsaIUGdQbL6O+gyM8VkooLmVSR5XaphR9as9FEEsxnTEUHbsnRcd2fcdZ27ZYG5nAnlpVmZ2iYZLV64TpIuDXzXI62nWBr+tc3JjhHoTpz03RK77JJYCitdDDIHmho1q1K4W9CZBAY+G8F29VN0xM0yXgFYU2vzEzfZEgeuaNUU7rfCLtwOQMtSNI6OSSEHfl4VlFP+yuVs/pCBTuwHY4PQAth4I4zUKnoBnor+2rVSfaZmhJgmQny0x66kCGr9kBCgkMw3CnbSxoT2H86O6UqqU52oyVbVFEjwCLtCNI2I+lPdZ9kf+R+G4ClRgL6Hcse2B7E+rIW43KPHeZdrBF+0GmzjEs0sG9GI4toa1df3DGTWAj5n0eMPc22H7T2eWmP5+kx615IvfqfAoxkDjXPcoN7tXK2fvJnzBok8sEZlaHrnDf4VFqwHAnVnVV8CCBT4/Y3QSCmH8bFMy2CZEjY9yTYKrH4X5j45p2bJUxf5xuAis1jjYk//3QIv/5+hp6EBMO+Ex6rfMyz4jNTeAmH2eB/wqwaU3yPcBu7MNW7y1wGNj4EB2yMTeBFTaoacc1WCioe4y7DKYXxBlkJmNET7ee4JxushQc/Ju02qabEAVDJXwZ34aiOCDkiOn0ijsTxVA05OPe+AQ+SzFa753nPoJ8ZfKanVHQBXWc/DqpwXibxeog6kXXmqGE1BNH3AT+dtDiTnUxFA5JDprPWpb1Pg5WcpVbWet4i2pxdj4sgWS4dP97SXVM9sf20610FOgS2wL8/l8Gz0pZz0tYApF2INVfuSI1YH6CDK8u5PE0IPFS3ferlwvoJvCzx8s7uMs79B8lB+JPWjwzjL/TNn8vWjU+PZ6vD24CQeX2DgRbGxCQagbNppqB2GekrB6cd1WQr9gU8xPSOpcB/aDaLb6boe9Ix5bGoUbzSvanrUy5vcpSm2x8sRbfjB+NhLmdKOt5D8g8+erd7BPgBPDWdUMVK6/NXW+2lNqCdbTiYRJUwjWh+Kv40uU70vVX819MVEePdGB0N7RiQefQji7oeWxxBxK2YFyS4A3Qa1al2tK3pOWplxf3EQjQPQ/7/tbC0uJr9TMwTRqK92XWZ98lSnu83JfQY9ANWC07gkOb1tn8MGzxqUQiVpfZIMmLJRKBzIZJVEuWwrKo4KJdMgzehVVvGmmY/d1vQiQCEsRQSzvRyGXVC/OIJL6xcl1tpin7tryS9I7zaOElDPJ1bGu+ju/M5azjDkCUwwX7Ervzwe1NzR+e5tNyeUNJSQQkMup8H5Li+ccfLTPLTp6/79/IryaJ8x9KSDhA8t6n2QAAAABJRU5ErkJggg==',
       type: 'search',
@@ -388,6 +458,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'Springer',
       icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAlVJREFUeNrsVz1SwkAUXhw7G7xBPEBGPIHhBqRMBZwAUlsAhXX0BIGKUjxB4ATgcADjCUxjrS+7X5g1f+wuYcbCN/OMLLt53/vet2+XFjMx27Po74A8IZ+z/TJhhnapGTgN2ibfkU8w2ie/MwXQ0gTwnRtZkzvkPnlM3iF/0mHkQhPwDoGyAAs8A/IXsBISUOdcALLAzxIgxnXA2Ayfe+QRgdiSvzQHwPY6oDghiqf07NIzA/DBx/bLVAs35CvM7WHdiQDES0IIUGS/X67xbRdaYBiPyV36bwjGojoQLcXgW3yKueD2y5UicIcDEKVZ0LonEwb6eA5R57Zy2QRLM5Sjr18C22tDVGkGFspwX5mtaFB5EFMwZ+F9WgyECJwpPBXesGJuhO5YZhlzPfVOaHtjLJgfrXlJZjlbIZkJzU3k913UCC9A1n7hHCiq2sn1hXwZEoCwjjMgsgkPwiu21YjTaXuuNDaSWnOVvUl6qtVAANWuKpS7Qz0jyR0+v/4MyMBZ1QAEtQNMTgqU2V540IVoQK7Unn3FzTmqYyA7aFIgr+QbCvqJ4D2Am/OdIPZ4H2z4vAOqmVMNQFDYlbbgRGo8AcD5BTZKOlyNPddrQBww7q+OZ3uB1A8YP+lkNvRsfbwRCXpdqa5jaXGEEpkEZ2VbUedGFPJbkaBfd+0Aa99N7wPOYYeclnnX9EY0kk5FE7vFZSY2BeAg+9gQQKesVatcSKL83m3AZjimlX4XLHhDatbW7N/+ih0V4efDVXY8N2mL68evuaoIO2fYBRvTn2aN248AAwDlS8jXdEymWAAAAABJRU5ErkJggg==',
       type: 'search',
@@ -399,6 +471,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'Letpub',
       icon: 'https://www.letpub.com.cn/images/favicon.ico',
       type: 'search',
@@ -410,6 +484,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '科研通',
       icon: 'https://www.ablesci.com/favicon.ico/',
       type: 'search',
@@ -421,6 +497,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌学术',
       icon: 'https://s2.loli.net/2022/08/17/4BaC1Acu2ebXJR9.png',
       type: 'search',
@@ -432,6 +510,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '贴吧',
       icon: 'https://www.baidu.com/favicon.ico',
       type: 'search',
@@ -443,6 +523,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌',
       icon: 'https://s2.loli.net/2022/08/16/QUL3cvA4t7Tx5sE.png',
       type: 'search',
@@ -454,6 +536,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌翻译',
       icon: 'https://ssl.gstatic.com/translate/favicon.ico',
       type: 'search',
@@ -465,6 +549,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌地图',
       icon: 'https://s2.loli.net/2022/08/17/SloXZzf9nC6LPbq.png',
       type: 'search',
@@ -476,6 +562,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '高德地图',
       icon: 'https://a.amap.com/pc/static/favicon.ico',
       type: 'search',
@@ -487,6 +575,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌地球',
       icon: 'https://s2.loli.net/2022/08/17/IOiPDl7YX3QnmsC.png',
       type: 'search',
@@ -498,6 +588,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '谷歌新闻',
       icon: 'https://s2.loli.net/2022/08/17/RTdZQMD2Aw8eobn.png',
       type: 'search',
@@ -509,6 +601,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'GitHub',
       icon: 'https://s2.loli.net/2022/08/17/OedrPVhtkn5Mug4.png',
       type: 'search',
@@ -520,6 +614,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'Apache Issues',
       icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAABE0AAARNAES6f7VAAAAB3RJTUUH4QIJEAkJojze8AAAA1xJREFUWMPdl0tonVUQx38z5/vubaPmJqZV+8JrJWmjQqXRGAUXFiwKgqsWV4UqqNSVYEVLuxJ1IdKVj67EjYauBLEU8YVUY9OilSZi2pReCLWJrXmQ1+V+35lxoVvtzW2uAQfO6syZ/+/MmTOHIyyzzb9/Z1nw94DHLBPyqrzetn/04D/563KKXz3U2WpV2e8uO4FFSUCEF/5tTbJc4r+9tDXJFvwZgj1dbGdKEl/lEdwZ+08A4pw8KgmH3LVm0TMN0u4RHD5oOkBlz91r4jyvaeqtnvk5z3yjJK6SAPj3TQeozegBTenR3M5qpOBRbpLUkcRPaJDzTQUY3nHvU7bAi57YFS/qpOU8rIkhqSCJH9HAdNMABjr6Omrj2cHCzdEl1YuYdUqOeipoznER+ax8dMiaBpC02rP5vHYDV9M2m/dM10uKg17ymhye+K4wfc0YjYoPlnvLDntQ0WwxjFqmm91BxAWlTYS4g5N+rTgNNyJHnnOnCxjDGbdMNnoEywSvycdWkx/rymIj4ifKDz0Y8V2CqbifFmQbEHAAH3Gnv/fiqammAHxRfiSJxCcdu0PRMcVawTb/NSsGcgp8uO46Wvr+w+05+oBgqtgvinUrxt/jMnCsrzI40TSAjHCXQHfAZg3LFbtFMAKOYlGx8SXdpKU4f1p+ohDxHvBbHTkdYJ2jRcVwzAUd2E7lm6YBZKRrBe8THCOOGGGnYKIYAZsQeLdUqXgzATYo3ivYoCJrDSspiuLRsaOPV459u9QjrasPvNH1smy4/7JMa+umRSm2R8KVnGRLRlowwpwj/RnFNxvqpvU1HQ/7Zg7fNxNKPbmlc2mcKimsD+Rf1Sh8PRnah56/cGS8aQCCG0hLLrp3TldPgLcL/nNVimeiJPc40t/we1KP02xooejZiLqfjxJKk7oq4LZNsFLA97167q3RRgHqqoHEI5mk22uadNQkXMpE1kXV1EQ/iejAdb2o9ThVQ+FGNd+i8JOIVAS7YG4fjRbafug/+4o3HcDQhTzoh2r2axD98vNNndUzx3dfl/CSADJJouBl1/DH20MHFhlm2ayuGpBQTHNNbquKnlvun1RdGfg9zq5WVFvDDdMrAjCaTbQoMn1y6J24IgCzvrjGYYGVsq1de3fzf7U/AU7ddxqLiUogAAAAAElFTkSuQmCC',
       type: 'search',
@@ -531,6 +627,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'Maven',
       icon: 'data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAA49nPALqwpgDWdBgA13UZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAAABAQEBAQEBAQEBAQEBAQAAAEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAQAAAQAAAQAAAQABAAEAAIEAgAEAgQEAAAEBAQEBAAEBAQABAQEBAAABAQEBAQABAIEAAQEBAQAAAQEAAQEAAQABAAEBAAEAAAEAAAABAAEAAQABAAABAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAAAEBAQEBAQEBAQEBAQEBAAAAwMDAwMDAwMDAwQEBAQAAAAAAAAAAAAAAAAAAAAAAP//AACAAQAAgAEAAIABAAD//wAAu20AAKohAACCIQAAgiEAAJKlAAC6rQAA//8AAIABAACAAQAAgAEAAP//AAA=',
       type: 'search',
@@ -542,6 +640,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'StackOverflow',
       icon: 'https://stackoverflow.com/favicon.ico',
       type: 'search',
@@ -553,6 +653,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '微博',
       icon: 'https://s.weibo.com/favicon.ico',
       type: 'search',
@@ -564,6 +666,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '豆瓣',
       icon: 'https://www.douban.com/favicon.ico',
       type: 'search',
@@ -575,6 +679,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'Twitter',
       icon: 'https://s2.loli.net/2022/08/17/rsbLXJA1lG5hmfe.png',
       type: 'search',
@@ -586,6 +692,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'Facebook',
       icon: 'https://s2.loli.net/2022/08/17/69R4ObX3kUctNvM.png',
       type: 'search',
@@ -597,6 +705,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '脉脉',
       icon: 'https://maimai.cn/favicon.ico',
       type: 'search',
@@ -608,6 +718,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '淘宝',
       icon: 'https://www.taobao.com/favicon.ico',
       type: 'search',
@@ -619,6 +731,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '天猫',
       icon: 'https://www.tmall.com/favicon.ico',
       type: 'search',
@@ -630,6 +744,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '京东',
       icon: 'https://www.jd.com/favicon.ico',
       type: 'search',
@@ -641,6 +757,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '当当',
       icon: 'http://www.dangdang.com/favicon.ico',
       type: 'search',
@@ -652,6 +770,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '苏宁',
       icon: 'https://www.suning.com/favicon.ico',
       type: 'search',
@@ -663,6 +783,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '亚马逊',
       icon: 'https://www.amazon.cn/favicon.ico',
       type: 'search',
@@ -674,6 +796,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '知乎',
       icon: 'https://www.zhihu.com/favicon.ico',
       type: 'search',
@@ -685,6 +809,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '网易云音乐',
       icon: 'https://s1.music.126.net/style/favicon.ico?v20180823',
       type: 'search',
@@ -696,6 +822,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'QQ音乐',
       icon: 'https://y.qq.com/favicon.ico?max_age=2592000',
       type: 'search',
@@ -707,6 +835,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '酷我音乐',
       icon: 'http://www.kuwo.cn/favicon.ico',
       type: 'search',
@@ -718,6 +848,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '咪咕音乐',
       icon: 'https://music.migu.cn/favicon.ico',
       type: 'search',
@@ -729,6 +861,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '酷狗5sing',
       icon: 'http://5sing.kugou.com/favicon.ico',
       type: 'search',
@@ -740,6 +874,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: '哔哩哔哩',
       icon: 'https://www.bilibili.com/favicon.ico?v=1',
       type: 'search',
@@ -751,6 +887,8 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
+      bubble:false,
+      panel:false,
       label: 'StackOverflow',
       icon: 'https://stackoverflow.com/favicon.ico',
       type: 'search',
