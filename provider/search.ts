@@ -653,7 +653,7 @@ export const searchProvider: ActionProvider[]
       },
     },
     {
-      bubble:false,
+      bubble:true,
       panel:false,
       label: '微博',
       icon: 'https://s.weibo.com/favicon.ico',
