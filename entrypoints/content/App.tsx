@@ -52,9 +52,7 @@ function Container() {
               )
             : (
                 <Panel
-                  isOpen
                   items={quickMenuItems}
-                  onClose={closePanel}
                 />
               )}
         </>

@@ -9,10 +9,11 @@ type BubbleMenuProps = {
 function BubbleMenu({ mousePosition, items }: BubbleMenuProps) {
   return (items && items.length > 0) && (
     <div
-      className="bg-background rounded-md fixed z-50 flex items-center gap-1"
+      className="bg-background rounded-md fixed flex items-center gap-1"
       style={{
         top: `${mousePosition.y}px`,
         left: `${mousePosition.x}px`,
+        zIndex: 9999,
       }}
     >
       {items.map(item => (
