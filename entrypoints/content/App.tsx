@@ -3,7 +3,7 @@ import BubbleMenu from '@/components/bubble-menu'
 import Panel from '@/components/panel'
 import { actionProvider } from '@/provider/action'
 import { searchProvider } from '@/provider/search'
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 type ContextType = {
   selectedText: string
@@ -40,7 +40,9 @@ function Container() {
   }, [selectedText, items])
 
   return (
-    <>
+    <div
+      onMouseDown={e => e.preventDefault()}
+    >
       {selectedText && (
         <>
           {!showPanel
@@ -57,7 +59,7 @@ function Container() {
               )}
         </>
       )}
-    </>
+    </div>
   )
 }
 
