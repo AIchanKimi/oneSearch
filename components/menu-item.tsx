@@ -2,18 +2,19 @@ import type { ActionProvider } from '@/types'
 import { handleAction } from '@/utils/handle-action'
 import { Button } from './ui/button'
 
-type QuickMenuItemProps = {
+type MenuItemProps = {
   provider: ActionProvider
   size?: 'icon' | 'normal'
+  menuAction: (arg?: any) => any
 }
 
-function QuickMenuItem({ provider, size = 'normal' }: QuickMenuItemProps) {
+function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
   return (
     <Button
       variant="outline"
       size={size === 'icon' ? 'icon' : 'default'}
       key={provider.label}
-      onClick={() => handleAction(provider)}
+      onClick={() => handleAction(provider, () => menuAction())}
     >
       {size === 'icon'
         ? (
@@ -29,4 +30,4 @@ function QuickMenuItem({ provider, size = 'normal' }: QuickMenuItemProps) {
   )
 }
 
-export default QuickMenuItem
+export default MenuItem

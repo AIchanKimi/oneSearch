@@ -1,5 +1,5 @@
 import type { ActionProvider } from '@/types'
-import BubbleMenu from '@/components/bubble-menu'
+import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
 import { actionProvider } from '@/provider/action'
 import { searchProvider } from '@/provider/search'
@@ -42,7 +42,7 @@ function Container() {
         <>
           {!showPanel
             ? (
-                <BubbleMenu
+                <Bubble
                   mousePosition={mousePosition}
                   items={quickMenuItems}
                   setShowPanel={setShowPanel}

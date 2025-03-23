@@ -1,8 +1,9 @@
 import type { ActionProvider } from '@/types'
 
-export function handleAction(action: ActionProvider) {
+export function handleAction(action: ActionProvider, menuAction: (arg?: any) => any) {
   switch (action.type) {
     case 'menu':
+      menuAction()
       break
     case 'copy':
       navigator.clipboard.writeText(action.payload.selectedText)
