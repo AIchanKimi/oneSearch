@@ -1,11 +1,8 @@
 import type { ActionProvider } from '@/types'
-import { globalOpenPanel } from '@/entrypoints/content/App'
 
 export function handleAction(action: ActionProvider) {
   switch (action.type) {
     case 'menu':
-      // 使用全局函数打开面板
-      globalOpenPanel()
       break
     case 'copy':
       navigator.clipboard.writeText(action.payload.selectedText)
