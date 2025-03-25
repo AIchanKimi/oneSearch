@@ -51,7 +51,7 @@ function Panel({ items, setShowPanel }: PanelProps) {
                     <MenuItem
                       key={item.label}
                       provider={item}
-                      menuAction={() => setShowPanel(true)}
+                      menuAction={setShowPanel}
                     />
                   ))}
                 </div>

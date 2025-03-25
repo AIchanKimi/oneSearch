@@ -20,7 +20,7 @@ const menuItemVariants = cva('flex items-center', {
 type MenuItemProps = {
   provider: ActionProvider
   size?: 'icon' | 'normal'
-  menuAction: (arg?: any) => any
+  menuAction: (arg: boolean) => void
 } & VariantProps<typeof menuItemVariants>
 
 function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
@@ -30,7 +30,7 @@ function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
       size={size === 'icon' ? 'icon' : 'sm'}
       key={provider.label}
       className={cn(menuItemVariants({ size }))}
-      onClick={() => handleAction(provider, () => menuAction())}
+      onClick={() => handleAction(provider, menuAction)}
     >
       <div className="flex items-center gap-2 truncate">
         <img className="size-4" src={provider.icon} alt="" />

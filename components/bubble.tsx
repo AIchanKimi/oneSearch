@@ -22,7 +22,7 @@ function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
           size="icon"
           key={item.label}
           provider={item}
-          menuAction={() => setShowPanel(true)}
+          menuAction={setShowPanel}
         />
       ))}
     </div>
