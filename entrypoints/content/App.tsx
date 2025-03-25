@@ -22,7 +22,8 @@ const Context = createContext<ContextType>({
 function Container() {
   const context = useContext(Context)
   const items = useMemo(() => [...searchProvider, ...actionProvider], [])
-  const [quickMenuItems, setQuickMenuItems] = useState<ActionProvider[]>([])
+  const [bubbleItems, setBubbleItems] = useState<ActionProvider[]>([])
+  const [panelItems, setPanelItems] = useState<ActionProvider[]>([])
   const { selectedText, mousePosition, showPanel, setShowPanel } = context
 
   useEffect(() => {
@@ -31,7 +32,8 @@ function Container() {
       item.payload.selectedText = selectedText
       return item
     })
-    setQuickMenuItems(tempList.filter(item => item.bubble === true))
+    setBubbleItems(tempList.filter(item => item.bubble === true))
+    setPanelItems(tempList.filter(item => item.panel === true))
   }, [selectedText, items])
 
   return (
@@ -44,13 +46,13 @@ function Container() {
             ? (
                 <Bubble
                   mousePosition={mousePosition}
-                  items={quickMenuItems}
+                  items={bubbleItems}
                   setShowPanel={setShowPanel}
                 />
               )
             : (
                 <Panel
-                  items={quickMenuItems}
+                  items={panelItems}
                   setShowPanel={setShowPanel}
                 />
               )}
