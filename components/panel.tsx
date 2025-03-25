@@ -31,7 +31,7 @@ function Panel({ items, setShowPanel }: PanelProps) {
       onClick={() => setShowPanel(false)}
     >
       <div
-        className="bg-background rounded-lg p-8 w-4/5 h-4/5 "
+        className="bg-background rounded-lg p-8 w-4/5 h-4/5 flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6">
@@ -41,7 +41,7 @@ function Panel({ items, setShowPanel }: PanelProps) {
           </Button>
         </div>
 
-        <div className="overflow-x-auto pb-4">
+        <div className="overflow-x-auto flex-grow">
           <div className="flex gap-4">
             {groupedItems.map(([tag, providers]) => (
               <div key={tag} className="min-w-fit">
