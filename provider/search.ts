@@ -30,7 +30,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '搜狗',
       icon: 'https://dlweb.sogoucdn.com/translate/favicon.ico?v=20180424',
       type: 'search',
@@ -43,7 +43,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '360',
       icon: 'https://s.ssl.qhimg.com/static/121a1737750aa53d.ico',
       type: 'search',
@@ -147,7 +147,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '百度网盘',
       icon: 'https://nd-static.bdstatic.com/m-static/v20-main/favicon-main.ico',
       type: 'search',
@@ -316,7 +316,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '百度学术',
       icon: 'https://xueshu.baidu.com/favicon.ico',
       type: 'search',
@@ -407,7 +407,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '谷歌学术',
       icon: 'https://s2.loli.net/2022/08/17/4BaC1Acu2ebXJR9.png',
       type: 'search',
@@ -420,7 +420,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '知网',
       icon: 'https://epub.cnki.net/favicon.ico',
       type: 'search',
@@ -433,7 +433,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '万方',
       icon: 'https://cdn.s.wanfangdata.com.cn/favicon.ico',
       type: 'search',
@@ -446,7 +446,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: 'WOS',
       icon: 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABEpJREFUWAmdVl1sFFUUPmfY2S3QVoMI7XYhUSsmGqttjRZqtCIBEoT4YGrQPuiDoSXCA4nRREPqi/ENSYWiUVQSSRNSS9Q3I0GFtmoN8aeJQbQrrNAaq7S2pWS7c/3OtjPO7N6ZzuxJzt57v3PuOd/92TOXqURpr1LvsaIUGdQbL6O+gyM8VkooLmVSR5XaphR9as9FEEsxnTEUHbsnRcd2fcdZ27ZYG5nAnlpVmZ2iYZLV64TpIuDXzXI62nWBr+tc3JjhHoTpz03RK77JJYCitdDDIHmho1q1K4W9CZBAY+G8F29VN0xM0yXgFYU2vzEzfZEgeuaNUU7rfCLtwOQMtSNI6OSSEHfl4VlFP+yuVs/pCBTuwHY4PQAth4I4zUKnoBnor+2rVSfaZmhJgmQny0x66kCGr9kBCgkMw3CnbSxoT2H86O6UqqU52oyVbVFEjwCLtCNI2I+lPdZ9kf+R+G4ClRgL6Hcse2B7E+rIW43KPHeZdrBF+0GmzjEs0sG9GI4toa1df3DGTWAj5n0eMPc22H7T2eWmP5+kx615IvfqfAoxkDjXPcoN7tXK2fvJnzBok8sEZlaHrnDf4VFqwHAnVnVV8CCBT4/Y3QSCmH8bFMy2CZEjY9yTYKrH4X5j45p2bJUxf5xuAis1jjYk//3QIv/5+hp6EBMO+Ex6rfMyz4jNTeAmH2eB/wqwaU3yPcBu7MNW7y1wGNj4EB2yMTeBFTaoacc1WCioe4y7DKYXxBlkJmNET7ee4JxushQc/Ju02qabEAVDJXwZ34aiOCDkiOn0ijsTxVA05OPe+AQ+SzFa753nPoJ8ZfKanVHQBXWc/DqpwXibxeog6kXXmqGE1BNH3AT+dtDiTnUxFA5JDprPWpb1Pg5WcpVbWet4i2pxdj4sgWS4dP97SXVM9sf20610FOgS2wL8/l8Gz0pZz0tYApF2INVfuSI1YH6CDK8u5PE0IPFS3ferlwvoJvCzx8s7uMs79B8lB+JPWjwzjL/TNn8vWjU+PZ6vD24CQeX2DgRbGxCQagbNppqB2GekrB6cd1WQr9gU8xPSOpcB/aDaLb6boe9Ix5bGoUbzSvanrUy5vcpSm2x8sRbfjB+NhLmdKOt5D8g8+erd7BPgBPDWdUMVK6/NXW+2lNqCdbTiYRJUwjWh+Kv40uU70vVX819MVEePdGB0N7RiQefQji7oeWxxBxK2YFyS4A3Qa1al2tK3pOWplxf3EQjQPQ/7/tbC0uJr9TMwTRqK92XWZ98lSnu83JfQY9ANWC07gkOb1tn8MGzxqUQiVpfZIMmLJRKBzIZJVEuWwrKo4KJdMgzehVVvGmmY/d1vQiQCEsRQSzvRyGXVC/OIJL6xcl1tpin7tryS9I7zaOElDPJ1bGu+ju/M5azjDkCUwwX7Ervzwe1NzR+e5tNyeUNJSQQkMup8H5Li+ccfLTPLTp6/79/IryaJ8x9KSDhA8t6n2QAAAABJRU5ErkJggg==',
       type: 'search',
@@ -459,7 +459,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: 'Springer',
       icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAlVJREFUeNrsVz1SwkAUXhw7G7xBPEBGPIHhBqRMBZwAUlsAhXX0BIGKUjxB4ATgcADjCUxjrS+7X5g1f+wuYcbCN/OMLLt53/vet2+XFjMx27Po74A8IZ+z/TJhhnapGTgN2ibfkU8w2ie/MwXQ0gTwnRtZkzvkPnlM3iF/0mHkQhPwDoGyAAs8A/IXsBISUOdcALLAzxIgxnXA2Ayfe+QRgdiSvzQHwPY6oDghiqf07NIzA/DBx/bLVAs35CvM7WHdiQDES0IIUGS/X67xbRdaYBiPyV36bwjGojoQLcXgW3yKueD2y5UicIcDEKVZ0LonEwb6eA5R57Zy2QRLM5Sjr18C22tDVGkGFspwX5mtaFB5EFMwZ+F9WgyECJwpPBXesGJuhO5YZhlzPfVOaHtjLJgfrXlJZjlbIZkJzU3k913UCC9A1n7hHCiq2sn1hXwZEoCwjjMgsgkPwiu21YjTaXuuNDaSWnOVvUl6qtVAANWuKpS7Qz0jyR0+v/4MyMBZ1QAEtQNMTgqU2V540IVoQK7Unn3FzTmqYyA7aFIgr+QbCvqJ4D2Am/OdIPZ4H2z4vAOqmVMNQFDYlbbgRGo8AcD5BTZKOlyNPddrQBww7q+OZ3uB1A8YP+lkNvRsfbwRCXpdqa5jaXGEEpkEZ2VbUedGFPJbkaBfd+0Aa99N7wPOYYeclnnX9EY0kk5FE7vFZSY2BeAg+9gQQKesVatcSKL83m3AZjimlX4XLHhDatbW7N/+ih0V4efDVXY8N2mL68evuaoIO2fYBRvTn2aN248AAwDlS8jXdEymWAAAAABJRU5ErkJggg==',
       type: 'search',
@@ -472,7 +472,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: 'Letpub',
       icon: 'https://www.letpub.com.cn/images/favicon.ico',
       type: 'search',
@@ -485,7 +485,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '科研通',
       icon: 'https://www.ablesci.com/favicon.ico/',
       type: 'search',
@@ -498,7 +498,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '谷歌学术',
       icon: 'https://s2.loli.net/2022/08/17/4BaC1Acu2ebXJR9.png',
       type: 'search',
@@ -589,7 +589,7 @@ export const searchProvider: ActionProvider[]
     },
     {
       bubble: false,
-      panel: true,
+      panel: false,
       label: '谷歌新闻',
       icon: 'https://s2.loli.net/2022/08/17/RTdZQMD2Aw8eobn.png',
       type: 'search',
@@ -882,6 +882,19 @@ export const searchProvider: ActionProvider[]
       tag: '视频',
       payload: {
         link: 'https://search.bilibili.com/all?keyword={selectedText}',
+        selectedText: '',
+        source: '',
+      },
+    },
+    {
+      bubble: true,
+      panel: true,
+      label: 'youtube',
+      icon: 'https://www.youtube.com/s/desktop/82d99f7b/img/logos/favicon_144x144.png',
+      type: 'search',
+      tag: '视频',
+      payload: {
+        link: 'https://www.youtube.com/results?search_query={selectedText}',
         selectedText: '',
         source: '',
       },

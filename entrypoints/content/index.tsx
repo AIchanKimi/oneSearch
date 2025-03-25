@@ -7,7 +7,7 @@ export default defineContentScript({
   matches: ['*://*/*'],
   cssInjectionMode: 'ui',
   async main(ctx) {
-    document.documentElement.style.fontSize = '16px'
+    // document.documentElement.style.fontSize = '16px'
 
     const ui = await createShadowRootUi(ctx, {
       name: 'one-search',

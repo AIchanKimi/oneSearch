@@ -31,7 +31,7 @@ function Panel({ items, setShowPanel }: PanelProps) {
       onClick={() => setShowPanel(false)}
     >
       <div
-        className="bg-background rounded-lg p-8 w-4/5 h-4/5 flex flex-col"
+        className="bg-background rounded-lg p-8 max-w-4/5 max-h-4/5 flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6">
