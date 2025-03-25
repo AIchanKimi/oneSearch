@@ -8,12 +8,14 @@ export default defineContentScript({
   cssInjectionMode: 'ui',
   async main(ctx) {
     const ui = await createShadowRootUi(ctx, {
-      name: 'wxt-react-example',
-      position: 'inline',
+      name: 'one-search',
+      position: 'overlay',
+      mode: 'closed',
+      isolateEvents: true,
       anchor: 'body',
       append: 'last',
+      zIndex: 9999,
       onMount: (container) => {
-        // Don't mount react app directly on <body>
         const wrapper = document.createElement('div')
         container.append(wrapper)
 
@@ -27,7 +29,6 @@ export default defineContentScript({
       },
     })
 
-    // 直接挂载UI，而不是等待消息
     ui.mount()
   },
 })

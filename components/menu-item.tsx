@@ -26,7 +26,7 @@ type MenuItemProps = {
 function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size={size === 'icon' ? 'icon' : 'default'}
       key={provider.label}
       className={cn(menuItemVariants({ size }))}
