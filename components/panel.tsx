@@ -27,11 +27,11 @@ function Panel({ items, setShowPanel }: PanelProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      className="w-full h-full fixed inset-0 bg-black/50 flex items-center justify-center"
       onClick={() => setShowPanel(false)}
     >
       <div
-        className="bg-background rounded-lg p-8 shadow-lg max-w-5xl w-full max-h-[80vh]"
+        className="bg-background rounded-lg p-8 w-4/5 h-4/5 "
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6">
@@ -41,13 +41,12 @@ function Panel({ items, setShowPanel }: PanelProps) {
           </Button>
         </div>
 
-        {/* 水平滚动容器 */}
         <div className="overflow-x-auto pb-4">
-          <div className="flex gap-8">
+          <div className="flex gap-4">
             {groupedItems.map(([tag, providers]) => (
-              <div key={tag} className="flex-none w-64">
+              <div key={tag} className="min-w-fit">
                 <h3 className="font-medium mb-4 text-lg">{tag}</h3>
-                <div className="grid gap-4">
+                <div className="flex flex-col gap-2">
                   {providers.map(item => (
                     <MenuItem
                       key={item.label}

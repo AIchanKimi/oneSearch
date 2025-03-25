@@ -7,6 +7,8 @@ export default defineContentScript({
   matches: ['*://*/*'],
   cssInjectionMode: 'ui',
   async main(ctx) {
+    document.documentElement.style.fontSize = '16px'
+
     const ui = await createShadowRootUi(ctx, {
       name: 'one-search',
       position: 'overlay',
@@ -14,7 +16,7 @@ export default defineContentScript({
       isolateEvents: true,
       anchor: 'body',
       append: 'last',
-      zIndex: 9999,
+      zIndex: 2147483646,
       onMount: (container) => {
         const wrapper = document.createElement('div')
         container.append(wrapper)
