@@ -27,7 +27,7 @@ function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
   return (
     <Button
       variant="ghost"
-      size={size === 'icon' ? 'icon' : 'default'}
+      size={size === 'icon' ? 'icon' : 'sm'}
       key={provider.label}
       className={cn(menuItemVariants({ size }))}
       onClick={() => handleAction(provider, () => menuAction())}
