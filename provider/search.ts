@@ -660,7 +660,7 @@ export const searchProvider: ActionProvider[]
       type: 'search',
       tag: '社交',
       payload: {
-        link: 'https://s.weibo.com/weibo/{selectedText}',
+        link: 'https://s.weibo.com/weibo?q={selectedText}',
         selectedText: '',
         source: '',
       },
@@ -682,11 +682,11 @@ export const searchProvider: ActionProvider[]
       bubble: true,
       panel: true,
       label: 'X',
-      icon: 'https://s2.loli.net/2022/08/17/rsbLXJA1lG5hmfe.png',
+      icon: 'https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png',
       type: 'search',
       tag: '社交',
       payload: {
-        link: 'https://twitter.com/search?q={selectedText}',
+        link: 'https://x.com/search?q={selectedText}',
         selectedText: '',
         source: '',
       },
