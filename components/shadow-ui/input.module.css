@@ -1,0 +1,75 @@
+.input {
+  /* 基础样式 */
+  display: flex;
+  height: 36px; /* 原h-9 2.25rem */
+  width: 100%; /* w-full */
+  min-width: 0; /* min-w-0 */
+  border-radius: 6px; /* 原rounded-md 0.375rem */
+  border: 1px solid var(--border-input); /* border border-input */
+  background-color: transparent; /* bg-transparent */
+  padding-left: 12px; /* 原px-3 0.75rem */
+  padding-right: 12px; /* 原px-3 0.75rem */
+  padding-top: 4px; /* 原py-1 0.25rem */
+  padding-bottom: 4px; /* 原py-1 0.25rem */
+  font-size: 16px; /* 原text-base 1rem */
+  box-shadow: var(--shadow-xs); /* shadow-xs */
+  transition: color, box-shadow; /* transition-[color,box-shadow] */
+  outline: none; /* outline-none */
+}
+
+/* 响应式文字大小 */
+@media (min-width: 768px) {
+  .input {
+    font-size: 14px; /* 原md:text-sm 0.875rem */
+  }
+}
+
+/* 焦点状态 */
+.input:focus-visible {
+  border-color: var(--ring); /* focus-visible:border-ring */
+  box-shadow: 0 0 0 3px var(--ring-color-50); /* focus-visible:ring-ring/50 focus-visible:ring-[3px] */
+}
+
+/* 无效状态 */
+.input[aria-invalid='true'] {
+  border-color: var(--destructive); /* aria-invalid:border-destructive */
+  box-shadow: 0 0 0 2px rgb(var(--destructive) / 0.2); /* aria-invalid:ring-destructive/20 */
+}
+
+/* 暗黑模式 */
+:global(.dark) .input {
+  background-color: rgb(var(--input) / 0.3); /* dark:bg-input/30 */
+}
+
+:global(.dark) .input[aria-invalid='true'] {
+  box-shadow: 0 0 0 2px rgb(var(--destructive) / 0.4); /* dark:aria-invalid:ring-destructive/40 */
+}
+
+/* 占位符样式 */
+.input::placeholder {
+  color: var(--muted-foreground); /* placeholder:text-muted-foreground */
+}
+
+/* 选中文本样式 */
+.input::selection {
+  background-color: var(--primary); /* selection:bg-primary */
+  color: var(--primary-foreground); /* selection:text-primary-foreground */
+}
+
+/* 文件输入样式 */
+.input::file-selector-button {
+  display: inline-flex; /* file:inline-flex */
+  height: 28px; /* 原file:h-7 1.75rem */
+  border: 0; /* file:border-0 */
+  background-color: transparent; /* file:bg-transparent */
+  font-size: 14px; /* 原file:text-sm 0.875rem */
+  font-weight: 500; /* file:font-medium */
+  color: var(--foreground); /* file:text-foreground */
+}
+
+/* 禁用状态 */
+.input:disabled {
+  pointer-events: none; /* disabled:pointer-events-none */
+  cursor: not-allowed; /* disabled:cursor-not-allowed */
+  opacity: 0.5; /* disabled:opacity-50 */
+}
