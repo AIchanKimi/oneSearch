@@ -1,0 +1,24 @@
+.menuItem {
+  display: flex;
+  align-items: center;
+}
+
+.normal {
+  gap: 8px;
+  justify-content: flex-start;
+  width: 112px; /* 相当于 w-28 (7rem) */
+}
+
+.contentContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}

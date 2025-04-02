@@ -1,0 +1,11 @@
+.bubbleContainer {
+  background-color: var(--background);
+  border-radius: 6px; /* 将 0.375rem 替换为 6px */
+  position: fixed;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  box-shadow: inset 0 0 0 1px var(--border);
+  gap: 4px; /* 将 0.25rem 替换为 4px */
+  z-index: 9999; /* 添加回 z-index */
+}

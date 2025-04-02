@@ -1,4 +1,5 @@
 import type { ActionProvider } from '@/types'
+import styles from './bubble.module.css'
 import MenuItem from './menu-item'
 
 type BubbleMenuProps = {
@@ -10,11 +11,10 @@ type BubbleMenuProps = {
 function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
   return (items && items.length > 0) && (
     <div
-      className="bg-background rounded-md fixed flex items-center gap-1"
+      className={styles.bubbleContainer}
       style={{
         top: `${mousePosition.y}px`,
         left: `${mousePosition.x}px`,
-        zIndex: 9999,
       }}
     >
       {items.map(item => (

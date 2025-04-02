@@ -1,0 +1,138 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.button svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.button svg:not([class*='size-']) {
+  width: 16px;
+  height: 16px;
+}
+
+.button:focus-visible {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px rgba(var(--ring-rgb), 0.5);
+}
+
+.button[aria-invalid='true'] {
+  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.2);
+  border-color: var(--destructive);
+}
+
+/* 变体 */
+.default {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-xs);
+}
+
+.default:hover {
+  background-color: rgba(var(--primary-rgb), 0.9);
+}
+
+.destructive {
+  background-color: var(--destructive);
+  color: white;
+  box-shadow: var(--shadow-xs);
+}
+
+.destructive:hover {
+  background-color: rgba(var(--destructive-rgb), 0.9);
+}
+
+.destructive:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.2);
+}
+
+.outline {
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  box-shadow: var(--shadow-xs);
+}
+
+.outline:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.secondary {
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+  box-shadow: var(--shadow-xs);
+}
+
+.secondary:hover {
+  background-color: rgba(var(--secondary-rgb), 0.8);
+}
+
+.ghost:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.link {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* 大小 */
+.sizeDefault {
+  height: 36px;
+  padding: 8px 16px;
+}
+
+.sizeDefault:has(> svg) {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.sizeSm {
+  height: 32px;
+  border-radius: 6px;
+  padding: 0 12px;
+  gap: 6px;
+}
+
+.sizeSm:has(> svg) {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.sizeLg {
+  height: 40px;
+  border-radius: 6px;
+  padding: 0 24px;
+}
+
+.sizeLg:has(> svg) {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.sizeIcon {
+  width: 36px;
+  height: 36px;
+}

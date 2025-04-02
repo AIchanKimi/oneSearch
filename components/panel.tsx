@@ -2,7 +2,8 @@ import type { ActionProvider } from '@/types'
 import { X } from 'lucide-react'
 import { useMemo } from 'react'
 import MenuItem from './menu-item'
-import { Button } from './ui/button'
+import styles from './panel.module.css'
+import { Button } from './shadow-ui/button'
 
 type PanelProps = {
   items: ActionProvider[]
@@ -27,26 +28,26 @@ function Panel({ items, setShowPanel }: PanelProps) {
 
   return (
     <div
-      className="w-full h-full fixed inset-0 bg-black/50 flex items-center justify-center"
+      className={styles.overlay}
       onClick={() => setShowPanel(false)}
     >
       <div
-        className="bg-background rounded-lg p-8 max-w-4/5 max-h-4/5 flex flex-col"
+        className={styles.panelContainer}
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">应用列表</h2>
+        <div className={styles.panelHeader}>
+          <h2 className={styles.panelTitle}>应用列表</h2>
           <Button variant="ghost" size="icon" onClick={() => setShowPanel(false)}>
             <X></X>
           </Button>
         </div>
 
-        <div className="overflow-x-auto flex-grow">
-          <div className="flex gap-4">
+        <div className={styles.contentArea}>
+          <div className={styles.groupsContainer}>
             {groupedItems.map(([tag, providers]) => (
-              <div key={tag} className="min-w-fit">
-                <h3 className="font-medium mb-4 text-lg">{tag}</h3>
-                <div className="flex flex-col gap-2">
+              <div key={tag} className={styles.groupItem}>
+                <h3 className={styles.groupTitle}>{tag}</h3>
+                <div className={styles.itemsContainer}>
                   {providers.map(item => (
                     <MenuItem
                       key={item.label}
