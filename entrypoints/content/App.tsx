@@ -12,7 +12,7 @@ type ContextType = {
   setShowPanel: (_: boolean) => void
 }
 
-const Context = createContext<ContextType>({
+export const Context = createContext<ContextType>({
   selectedText: '',
   mousePosition: { x: 0, y: 0 },
   showPanel: false,
