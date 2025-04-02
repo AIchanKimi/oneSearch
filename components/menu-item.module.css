@@ -1,3 +1,48 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  outline: none;
+  border: none;
+  background: none;
+}
+
+.button:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.button:focus-visible {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px rgba(var(--ring-rgb), 0.5);
+}
+
+/* 只保留ghost变体 */
+.ghost:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* 只保留需要的尺寸 */
+.sizeSm {
+  height: 32px;
+  border-radius: 6px;
+  padding: 0 12px;
+  gap: 6px;
+}
+
+.sizeIcon {
+  width: 36px;
+  height: 36px;
+}
+
 .menuItem {
   display: flex;
   align-items: center;
