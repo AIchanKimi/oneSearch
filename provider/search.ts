@@ -10,7 +10,7 @@ export const searchProvider: ActionProvider[]
       type: 'search',
       tag: '通用',
       payload: {
-        link: 'https://cn.bing.com/search?q={selectedText}',
+        link: 'https://www.bing.com/search?q={selectedText}',
         selectedText: '',
         source: '',
       },
