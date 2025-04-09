@@ -1,8 +1,6 @@
 import type { ActionProvider } from '@/types'
 import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
-import { actionProvider } from '@/provider/action'
-import { searchProvider } from '@/provider/search'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 type ContextType = {
@@ -21,20 +19,24 @@ export const Context = createContext<ContextType>({
 
 function Container() {
   const context = useContext(Context)
-  const items = useMemo(() => [...searchProvider, ...actionProvider], [])
   const [bubbleItems, setBubbleItems] = useState<ActionProvider[]>([])
   const [panelItems, setPanelItems] = useState<ActionProvider[]>([])
   const { selectedText, mousePosition, showPanel, setShowPanel } = context
 
   useEffect(() => {
-    const tempList = items.map((item) => {
-      item.payload.source = window.location.href
-      item.payload.selectedText = selectedText
-      return item
-    })
-    setBubbleItems(tempList.filter(item => item.bubble === true))
-    setPanelItems(tempList.filter(item => item.panel === true))
-  }, [selectedText, items])
+    async function fetchItems() {
+      const items = await ActionProviderStorage.getValue()
+      const tempList = items.map((item) => {
+        item.payload.source = window.location.href
+        item.payload.selectedText = selectedText
+        return item
+      })
+      setBubbleItems(tempList.filter(item => item.bubble === true))
+      setPanelItems(tempList.filter(item => item.panel === true))
+    }
+
+    fetchItems()
+  }, [selectedText])
 
   return (
     <div
