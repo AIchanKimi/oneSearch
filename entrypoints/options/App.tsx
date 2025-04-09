@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { sendMessage } from '@/utils/message'
+import { ActionProviderStorage } from '@/utils/storage'
 import { useEffect } from 'react'
 
 function App() {
   const [data, setdata] = useState(0)
   useEffect(() => {
     async function fetchData() {
-      const length = await sendMessage('getStringLength', 'hello world')
+      const length = (await ActionProviderStorage.getValue()).length
       setdata(length)
     }
     fetchData()
