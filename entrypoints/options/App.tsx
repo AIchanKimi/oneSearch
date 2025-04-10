@@ -114,13 +114,32 @@ function App() {
   }
 
   // 处理对话框中的数据更新
-  const handleDialogDataChange = <K extends keyof ActionProvider>(field: K, value: ActionProvider[K]) => {
-    if (editingItem) {
-      setEditingItem({
-        ...editingItem,
+  const handleDialogDataChange = (field: string, value: any) => {
+    if (!editingItem)
+      return
+
+    setEditingItem((prev) => {
+      if (!prev)
+        return prev
+
+      // 处理嵌套属性，如 payload.link
+      if (field.includes('.')) {
+        const [parent, child] = field.split('.')
+        return {
+          ...prev,
+          [parent as keyof ActionProvider]: {
+            ...(prev[parent as keyof ActionProvider] as object),
+            [child]: value,
+          },
+        }
+      }
+
+      // 处理普通属性
+      return {
+        ...prev,
         [field]: value,
-      })
-    }
+      }
+    })
   }
 
   // 保存对话框编辑
@@ -318,6 +337,23 @@ function App() {
                   onChange={e => handleDialogDataChange('icon', e.target.value)}
                 />
               </div>
+
+              {/* 只有搜索类型才显示payload配置 */}
+              {editingItem.type === 'search' && (
+                <div className="space-y-2 border-t pt-2 mt-2">
+                  <h4 className="font-medium">Payload 配置</h4>
+
+                  <div>
+                    <Label htmlFor="edit-link">链接模板</Label>
+                    <Input
+                      id="edit-link"
+                      value={(editingItem.payload as any).link || ''}
+                      className="mt-1"
+                      onChange={e => handleDialogDataChange('payload.link', e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
           <DialogFooter>
