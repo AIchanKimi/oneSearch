@@ -58,7 +58,7 @@ function App() {
         source: '',
       },
     }
-    const newData = [...data, newItem]
+    const newData = [newItem, ...data]
     setData(newData)
     // 自动保存到存储
     await ActionProviderStorage.setValue(newData)
@@ -124,6 +124,13 @@ function App() {
         </div>
       </header>
       <main className="flex-1">
+        <div className="button-container mt-6 flex justify-start items-center">
+          <Button onClick={handleAddNew} className="flex items-center gap-2">
+            <span>+</span>
+            {' '}
+            添加新项
+          </Button>
+        </div>
         <div className="storage-content">
           <h2 className="text-xl font-semibold mb-4">存储内容：</h2>
           {data.length > 0
@@ -141,13 +148,6 @@ function App() {
                 ))}
               </div>
             ) }
-        </div>
-        <div className="button-container mt-6 flex justify-end items-center">
-          <Button onClick={handleAddNew} className="flex items-center gap-2">
-            <span>+</span>
-            {' '}
-            添加新项
-          </Button>
         </div>
       </main>
 
