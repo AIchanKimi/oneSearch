@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Toaster } from '@/components/ui/sonner'
 import { Switch } from '@/components/ui/switch'
 import { ActionProviderStorage } from '@/utils/storage'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -17,6 +18,7 @@ function App() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
+  const [parent] = useAutoAnimate() // 添加 useAutoAnimate 引用
 
   // 搜索和过滤状态
   const [searchTerm, setSearchTerm] = useState('')
@@ -146,71 +148,67 @@ function App() {
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col min-h-screen">
-      <header className="mb-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">One Search 选项</h1>
-          <p className="bg-slate-100 px-3 py-1 rounded-lg">
-            数据长度:
-            {data.length}
-          </p>
-        </div>
-      </header>
       <main className="flex-1">
-        <div className="button-container mt-6 flex justify-start items-center gap-2">
-          <Button onClick={handleAddNew} className="flex items-center gap-2">
-            <span>+</span>
-            {' '}
-            添加新项
-          </Button>
-        </div>
+        {/* 头部区域：搜索过滤在左，添加按钮在右 */}
+        <div className="header-container py-4 mb-6 border-b">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            {/* 左侧：搜索和过滤控件 */}
+            <div className="filter-controls w-full md:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="search-term">搜索标签</Label>
+                <Input
+                  id="search-term"
+                  placeholder="输入关键词搜索"
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="mt-1"
+                />
+              </div>
 
-        {/* 添加搜索和过滤控件 */}
-        <div className="filter-container mt-4 mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <Label htmlFor="search-term">搜索标签</Label>
-            <Input
-              id="search-term"
-              placeholder="输入关键词搜索"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="mt-1"
-            />
-          </div>
+              <div>
+                <Label htmlFor="type-filter">按类型过滤</Label>
+                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <SelectTrigger id="type-filter" className="mt-1">
+                    <SelectValue placeholder="选择类型" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">全部类型</SelectItem>
+                    <SelectItem value="search">搜索</SelectItem>
+                    <SelectItem value="menu">菜单</SelectItem>
+                    <SelectItem value="copy">复制</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-          <div>
-            <Label htmlFor="type-filter">按类型过滤</Label>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger id="type-filter" className="mt-1">
-                <SelectValue placeholder="选择类型" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">全部类型</SelectItem>
-                <SelectItem value="search">搜索</SelectItem>
-                <SelectItem value="menu">菜单</SelectItem>
-                <SelectItem value="copy">复制</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              <div>
+                <Label htmlFor="tag-filter">按标签过滤</Label>
+                <Select value={tagFilter} onValueChange={setTagFilter}>
+                  <SelectTrigger id="tag-filter" className="mt-1">
+                    <SelectValue placeholder="选择标签" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">全部标签</SelectItem>
+                    {availableTags.map(tag => (
+                      <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
-          <div>
-            <Label htmlFor="tag-filter">按标签过滤</Label>
-            <Select value={tagFilter} onValueChange={setTagFilter}>
-              <SelectTrigger id="tag-filter" className="mt-1">
-                <SelectValue placeholder="选择标签" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">全部标签</SelectItem>
-                {availableTags.map(tag => (
-                  <SelectItem key={tag} value={tag}>{tag}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {/* 右侧：添加新项按钮 */}
+            <div className="add-button-container md:self-end">
+              <Button onClick={handleAddNew} className="flex items-center gap-2 w-full md:w-auto">
+                <span>+</span>
+                {' '}
+                添加新项
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="storage-content">
           <h2 className="text-xl font-semibold mb-4">
-            存储内容：
             {filteredData.length !== data.length && (
               <span className="ml-2 text-sm font-normal text-gray-500">
                 (显示
@@ -224,7 +222,7 @@ function App() {
           </h2>
           {filteredData.length > 0
             ? (
-                <div className="data-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div ref={parent} className="data-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredData.map((item) => {
                     const originalIndex = data.findIndex(d => d === item)
                     return (

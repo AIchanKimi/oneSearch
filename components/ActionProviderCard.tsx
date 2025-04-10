@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Pencil, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 type ActionProviderCardProps = {
   item: ActionProvider
@@ -19,10 +22,29 @@ export function ActionProviderCard({
   onDelete,
   onPropertyChange,
 }: ActionProviderCardProps) {
+  const [lastClickTime, setLastClickTime] = useState(0)
+
+  const handleDeleteClick = () => {
+    const now = Date.now()
+    const timeDiff = now - lastClickTime
+
+    if (timeDiff < 300) {
+      // 如果是双击（两次点击间隔小于300ms），执行删除操作
+      onDelete(index)
+    }
+    else {
+      // 单击时，显示提示信息
+      toast.info('请双击以确认删除')
+    }
+
+    // 更新最后点击时间
+    setLastClickTime(now)
+  }
+
   return (
     <Card className="mb-4 flex flex-col">
       <CardContent className="space-y-4 flex-1 p-4">
-        {/* 上部分：左边是icon，右边是label和类型与标签 */}
+        {/* 上部分：左边是icon，中间是label和类型与标签，右边是操作按钮 */}
         <div className="flex items-start gap-4 pb-3 border-b">
           {/* 左侧图标 */}
           <div className="flex-shrink-0">
@@ -41,7 +63,7 @@ export function ActionProviderCard({
                 )}
           </div>
 
-          {/* 右侧标签、类型和标签分类 */}
+          {/* 中间标签、类型和标签分类 */}
           <div className="flex-1">
             <div className="font-medium text-lg mb-1">{item.label || '无标签'}</div>
             <div className="text-sm text-gray-600 space-y-1">
@@ -58,6 +80,22 @@ export function ActionProviderCard({
                 </div>
               )}
             </div>
+          </div>
+
+          {/* 右侧操作按钮 */}
+          <div className="flex space-x-1">
+            <Button variant="ghost" size="icon" onClick={() => onEdit(index)} title="编辑">
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleDeleteClick}
+              className="text-red-500 hover:text-red-700"
+              title="双击删除"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
@@ -80,16 +118,6 @@ export function ActionProviderCard({
               onCheckedChange={checked => onPropertyChange(index, 'panel', checked)}
             />
           </div>
-        </div>
-
-        {/* 操作按钮 */}
-        <div className="flex justify-end space-x-2 mt-auto pt-2">
-          <Button variant="outline" size="sm" onClick={() => onEdit(index)}>
-            编辑
-          </Button>
-          <Button variant="destructive" size="sm" onClick={() => onDelete(index)}>
-            删除
-          </Button>
         </div>
       </CardContent>
     </Card>
