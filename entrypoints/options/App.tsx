@@ -34,14 +34,17 @@ function App() {
   }
 
   // 处理删除项目
-  const handleDelete = (index: number) => {
+  const handleDelete = async (index: number) => {
     const newData = [...data]
     newData.splice(index, 1)
     setData(newData)
+    // 自动保存到存储
+    await ActionProviderStorage.setValue(newData)
+    toast.success('项目已删除')
   }
 
   // 处理添加新项
-  const handleAddNew = () => {
+  const handleAddNew = async () => {
     const newItem: ActionProvider = {
       label: '新项目',
       bubble: false,
@@ -55,7 +58,11 @@ function App() {
         source: '',
       },
     }
-    setData([...data, newItem])
+    const newData = [...data, newItem]
+    setData(newData)
+    // 自动保存到存储
+    await ActionProviderStorage.setValue(newData)
+    toast.success('已添加新项目')
   }
 
   // 直接更新单个属性
@@ -69,6 +76,7 @@ function App() {
 
     // 直接保存到存储
     await ActionProviderStorage.setValue(newData)
+    toast.success('已更新')
   }
 
   // 处理对话框中的数据更新
@@ -82,21 +90,19 @@ function App() {
   }
 
   // 保存对话框编辑
-  const handleDialogSave = () => {
+  const handleDialogSave = async () => {
     if (editingIndex !== null && editingItem) {
       const newData = [...data]
       newData[editingIndex] = editingItem
       setData(newData)
+      // 自动保存到存储
+      await ActionProviderStorage.setValue(newData)
+      toast.success('更改已保存')
+
       setIsDialogOpen(false)
       setEditingItem(null)
       setEditingIndex(null)
     }
-  }
-
-  // 保存所有更改
-  const handleSave = async () => {
-    await ActionProviderStorage.setValue(data)
-    toast.success('数据已成功保存！')
   }
 
   // 取消编辑
@@ -136,16 +142,11 @@ function App() {
               </div>
             ) }
         </div>
-        <div className="button-container mt-6 flex justify-between items-center">
+        <div className="button-container mt-6 flex justify-end items-center">
           <Button onClick={handleAddNew} className="flex items-center gap-2">
             <span>+</span>
             {' '}
             添加新项
-          </Button>
-          <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700 flex items-center gap-2">
-            <span>💾</span>
-            {' '}
-            保存更改
           </Button>
         </div>
       </main>
