@@ -1,6 +1,6 @@
 import type { ActionProvider } from '@/types'
+import { ActionProviderCard } from '@/components/ActionProviderCard'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -53,6 +53,19 @@ function App() {
       },
     }
     setData([...data, newItem])
+  }
+
+  // 直接更新单个属性
+  const handlePropertyChange = async (index: number, property: keyof ActionProvider, value: any) => {
+    const newData = [...data]
+    newData[index] = {
+      ...newData[index],
+      [property]: value,
+    }
+    setData(newData)
+
+    // 直接保存到存储
+    await ActionProviderStorage.setValue(newData)
   }
 
   // 处理对话框中的数据更新
@@ -108,89 +121,14 @@ function App() {
             && (
               <div className="data-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {data.map((item, index) => (
-                  <Card key={item.label || index} className="mb-4 flex flex-col">
-                    <CardContent className="space-y-4 flex-1 p-4">
-                      {/* 标签作为独立项目显示 */}
-                      <div>
-                        <Label htmlFor={`label-${index}`}>标签</Label>
-                        <div className="mt-1 font-medium">{item.label || '无标签'}</div>
-                      </div>
-
-                      {/* 布尔值使用状态显示 */}
-                      <div className="flex items-center justify-between">
-                        <Label>气泡显示</Label>
-                        <span
-                          className={`px-2 py-1 rounded text-xs ${
-                            item.bubble
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}
-                        >
-                          {item.bubble ? '是' : '否'}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <Label>面板显示</Label>
-                        <span
-                          className={`px-2 py-1 rounded text-xs ${
-                            item.panel
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}
-                        >
-                          {item.panel ? '是' : '否'}
-                        </span>
-                      </div>
-
-                      {/* 图标使用图片显示 */}
-                      {item.icon && (
-                        <div>
-                          <Label>图标</Label>
-                          <div className="mt-2 flex items-center">
-                            <img
-                              src={item.icon}
-                              alt="图标"
-                              className="w-12 h-12 object-contain border rounded p-1"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 类型显示 */}
-                      <div>
-                        <Label>类型</Label>
-                        <div className="mt-1 font-medium">{item.type}</div>
-                      </div>
-
-                      {/* 标签分类显示 */}
-                      {item.tag !== undefined && (
-                        <div>
-                          <Label>标签分类</Label>
-                          <div className="mt-1 font-medium">{item.tag || '无分类'}</div>
-                        </div>
-                      )}
-
-                      {item.payload && (
-                        <div>
-                          <Label>配置信息</Label>
-                          <pre className="overflow-auto max-h-40 bg-muted p-2 rounded mt-1 text-xs">
-                            {JSON.stringify(item.payload, null, 2)}
-                          </pre>
-                        </div>
-                      )}
-
-                      {/* 操作按钮 */}
-                      <div className="flex justify-end space-x-2 mt-auto pt-2">
-                        <Button variant="outline" size="sm" onClick={() => handleEdit(index)}>
-                          编辑
-                        </Button>
-                        <Button variant="destructive" size="sm" onClick={() => handleDelete(index)}>
-                          删除
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <ActionProviderCard
+                    key={item.label || index}
+                    item={item}
+                    index={index}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onPropertyChange={handlePropertyChange}
+                  />
                 ))}
               </div>
             ) }
