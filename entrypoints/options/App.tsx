@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Toaster } from '@/components/ui/sonner'
 import { Switch } from '@/components/ui/switch'
 import { ActionProviderStorage } from '@/utils/storage'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 function App() {
@@ -17,6 +17,38 @@ function App() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
+
+  // 搜索和过滤状态
+  const [searchTerm, setSearchTerm] = useState('')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [tagFilter, setTagFilter] = useState<string>('all')
+
+  // 提取可用的标签列表
+  const availableTags = useMemo(() => {
+    const tags = new Set<string>()
+    data.forEach((item) => {
+      if (item.tag)
+        tags.add(item.tag)
+    })
+    return Array.from(tags)
+  }, [data])
+
+  // 根据过滤条件筛选数据
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      // 搜索条件：标签包含搜索词
+      const matchesSearch = !searchTerm
+        || item.label.toLowerCase().includes(searchTerm.toLowerCase())
+
+      // 类型过滤
+      const matchesType = typeFilter === 'all' || item.type === typeFilter
+
+      // 标签过滤
+      const matchesTag = tagFilter === 'all' || item.tag === tagFilter
+
+      return matchesSearch && matchesType && matchesTag
+    })
+  }, [data, searchTerm, typeFilter, tagFilter])
 
   useEffect(() => {
     async function fetchData() {
@@ -124,30 +156,95 @@ function App() {
         </div>
       </header>
       <main className="flex-1">
-        <div className="button-container mt-6 flex justify-start items-center">
+        <div className="button-container mt-6 flex justify-start items-center gap-2">
           <Button onClick={handleAddNew} className="flex items-center gap-2">
             <span>+</span>
             {' '}
             添加新项
           </Button>
         </div>
-        <div className="storage-content">
-          <h2 className="text-xl font-semibold mb-4">存储内容：</h2>
-          {data.length > 0
-            && (
-              <div className="data-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {data.map((item, index) => (
-                  <ActionProviderCard
-                    key={item.label || index}
-                    item={item}
-                    index={index}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onPropertyChange={handlePropertyChange}
-                  />
+
+        {/* 添加搜索和过滤控件 */}
+        <div className="filter-container mt-4 mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Label htmlFor="search-term">搜索标签</Label>
+            <Input
+              id="search-term"
+              placeholder="输入关键词搜索"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="type-filter">按类型过滤</Label>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger id="type-filter" className="mt-1">
+                <SelectValue placeholder="选择类型" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部类型</SelectItem>
+                <SelectItem value="search">搜索</SelectItem>
+                <SelectItem value="menu">菜单</SelectItem>
+                <SelectItem value="copy">复制</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="tag-filter">按标签过滤</Label>
+            <Select value={tagFilter} onValueChange={setTagFilter}>
+              <SelectTrigger id="tag-filter" className="mt-1">
+                <SelectValue placeholder="选择标签" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部标签</SelectItem>
+                {availableTags.map(tag => (
+                  <SelectItem key={tag} value={tag}>{tag}</SelectItem>
                 ))}
-              </div>
-            ) }
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="storage-content">
+          <h2 className="text-xl font-semibold mb-4">
+            存储内容：
+            {filteredData.length !== data.length && (
+              <span className="ml-2 text-sm font-normal text-gray-500">
+                (显示
+                {' '}
+                {filteredData.length}
+                /
+                {data.length}
+                )
+              </span>
+            )}
+          </h2>
+          {filteredData.length > 0
+            ? (
+                <div className="data-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredData.map((item) => {
+                    const originalIndex = data.findIndex(d => d === item)
+                    return (
+                      <ActionProviderCard
+                        key={item.label || originalIndex}
+                        item={item}
+                        index={originalIndex}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onPropertyChange={handlePropertyChange}
+                      />
+                    )
+                  })}
+                </div>
+              )
+            : (
+                <p className="text-center py-8 text-gray-500">
+                  没有符合条件的数据
+                </p>
+              )}
         </div>
       </main>
 
