@@ -1,13 +1,16 @@
 import type { ActionProvider } from '@/types'
 import { ActionProviderCard } from '@/components/ActionProviderCard'
+
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Toaster } from '@/components/ui/sonner'
 import { Switch } from '@/components/ui/switch'
 import { ActionProviderStorage } from '@/utils/storage'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 function App() {
   const [data, setData] = useState<ActionProvider[]>([])
@@ -93,7 +96,7 @@ function App() {
   // 保存所有更改
   const handleSave = async () => {
     await ActionProviderStorage.setValue(data)
-    alert('数据已保存成功！')
+    toast.success('数据已成功保存！')
   }
 
   // 取消编辑
@@ -229,6 +232,7 @@ function App() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Toaster richColors position="top-right" />
     </div>
   )
 }
