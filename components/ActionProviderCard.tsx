@@ -66,7 +66,7 @@ export function ActionProviderCard({
           {/* 中间标签、类型和标签分类 */}
           <div className="flex-1">
             <div className="font-medium text-lg mb-1">{item.label || '无标签'}</div>
-            <div className="text-sm text-gray-600 space-y-1">
+            <div className="text-sm text-gray-600 flex gap-3">
               <div>
                 类型:
                 {' '}
