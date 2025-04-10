@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { useState, useEffect } from 'react'
+import { Upload } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
 
 interface ActionProviderEditDialogProps {
   open: boolean
@@ -23,6 +24,7 @@ export function ActionProviderEditDialog({
   onCancel,
 }: ActionProviderEditDialogProps) {
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // 当初始item改变时更新内部状态
   useEffect(() => {
@@ -58,6 +60,25 @@ export function ActionProviderEditDialog({
         [field]: value,
       }
     })
+  }
+
+  // 处理图片上传并转换为base64
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const base64String = e.target?.result as string
+      if (base64String) {
+        handleDialogDataChange('icon', base64String)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click()
   }
 
   const handleSave = () => {
@@ -131,12 +152,36 @@ export function ActionProviderEditDialog({
 
             <div>
               <Label htmlFor="edit-icon">图标URL</Label>
-              <Input
-                id="edit-icon"
-                value={editingItem.icon}
-                className="mt-1"
-                onChange={e => handleDialogDataChange('icon', e.target.value)}
-              />
+              <div className="flex items-center gap-2 mt-1">
+                <div 
+                  className="w-10 h-10 border rounded flex items-center justify-center overflow-hidden cursor-pointer flex-shrink-0"
+                  onClick={triggerFileInput}
+                  title="点击上传图片"
+                >
+                  {editingItem.icon ? (
+                    <img 
+                      src={editingItem.icon} 
+                      alt="预览" 
+                      className="h-full w-full object-contain"
+                    />
+                  ) : (
+                    <Upload className="h-4 w-4 text-gray-400" />
+                  )}
+                </div>
+                <Input
+                  id="edit-icon"
+                  value={editingItem.icon}
+                  className="flex-1"
+                  onChange={e => handleDialogDataChange('icon', e.target.value)}
+                />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+              </div>
             </div>
 
             {/* 只有搜索类型才显示payload配置 */}
