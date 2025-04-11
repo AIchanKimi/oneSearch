@@ -3,28 +3,28 @@ import { ActionProviderCard } from '@/components/ActionProviderCard'
 import { ActionProviderEditDialog } from '@/components/ActionProviderEditDialog'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Toaster } from '@/components/ui/sonner'
-import { ActionProviderStorage } from '@/utils/storage'
-import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { useEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
-import { Check, ChevronsUpDown } from "lucide-react"
-import { cn } from "@/lib/utils"
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command"
+} from '@/components/ui/command'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Toaster } from '@/components/ui/sonner'
+import { cn } from '@/lib/utils'
+import { ActionProviderStorage } from '@/utils/storage'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 
 function App() {
   const [data, setData] = useState<ActionProvider[]>([])
@@ -194,11 +194,11 @@ function App() {
                       aria-expanded={tagPopoverOpen}
                       className="w-full justify-between mt-1"
                     >
-                      {tagFilter === 'all' ? "全部标签" : tagFilter}
+                      {tagFilter === 'all' ? '全部标签' : tagFilter}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
+                  <PopoverContent className="w-full p-0 max-h-80 overflow-y-auto scrollbar-none">
                     <Command>
                       <CommandInput placeholder="搜索标签..." />
                       <CommandEmpty>未找到相关标签</CommandEmpty>
@@ -212,8 +212,8 @@ function App() {
                         >
                           <Check
                             className={cn(
-                              "mr-2 h-4 w-4",
-                              tagFilter === 'all' ? "opacity-100" : "opacity-0"
+                              'mr-2 h-4 w-4',
+                              tagFilter === 'all' ? 'opacity-100' : 'opacity-0',
                             )}
                           />
                           全部标签
@@ -229,8 +229,8 @@ function App() {
                           >
                             <Check
                               className={cn(
-                                "mr-2 h-4 w-4",
-                                tagFilter === tag ? "opacity-100" : "opacity-0"
+                                'mr-2 h-4 w-4',
+                                tagFilter === tag ? 'opacity-100' : 'opacity-0',
                               )}
                             />
                             {tag}
@@ -301,7 +301,7 @@ function App() {
         onSave={handleDialogSave}
         onCancel={handleCancelEdit}
       />
-      
+
       <Toaster richColors position="top-right" />
     </div>
   )
