@@ -38,6 +38,7 @@ function App() {
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [tagFilter, setTagFilter] = useState<string>('all')
   const [tagPopoverOpen, setTagPopoverOpen] = useState(false)
+  const [displayFilter, setDisplayFilter] = useState<string>('all')
 
   // 提取可用的标签列表
   const availableTags = useMemo(() => {
@@ -62,9 +63,14 @@ function App() {
       // 标签过滤
       const matchesTag = tagFilter === 'all' || item.tag === tagFilter
 
-      return matchesSearch && matchesType && matchesTag
+      // 显示过滤（合并气泡和面板）
+      const matchesDisplay = displayFilter === 'all'
+        || (displayFilter === 'bubble' && item.bubble)
+        || (displayFilter === 'panel' && item.panel)
+
+      return matchesSearch && matchesType && matchesTag && matchesDisplay
     })
-  }, [data, searchTerm, typeFilter, tagFilter])
+  }, [data, searchTerm, typeFilter, tagFilter, displayFilter])
 
   useEffect(() => {
     async function fetchData() {
@@ -157,7 +163,7 @@ function App() {
         <div className="header-container py-4 mb-6 border-b">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             {/* 左侧：搜索和过滤控件 */}
-            <div className="filter-controls flex items-center gap-4">
+            <div className="filter-controls flex flex-wrap items-center gap-4">
               <div>
                 <Label htmlFor="search-term">搜索标签</Label>
                 <Input
@@ -180,6 +186,20 @@ function App() {
                     <SelectItem value="search">搜索</SelectItem>
                     <SelectItem value="menu">菜单</SelectItem>
                     <SelectItem value="copy">复制</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="display-filter">显示过滤</Label>
+                <Select value={displayFilter} onValueChange={setDisplayFilter}>
+                  <SelectTrigger id="display-filter" className="mt-1 w-52">
+                    <SelectValue placeholder="选择显示方式" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">全部</SelectItem>
+                    <SelectItem value="bubble">气泡</SelectItem>
+                    <SelectItem value="panel">面板</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
