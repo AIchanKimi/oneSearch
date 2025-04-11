@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button'
 import React from 'react'
 
+// 为全局常量添加类型声明
+declare const __APP_VERSION__: string
+
 function App() {
   return (
     <div className="w-72 p-4 font-sans bg-white">
@@ -22,7 +25,10 @@ function App() {
       </div>
 
       <footer className="text-center text-xs text-gray-400 mt-4 border-t border-gray-200 pt-3">
-        <p className="m-0">v1.0.0</p>
+        <p className="m-0">
+          v
+          {__APP_VERSION__}
+        </p>
       </footer>
     </div>
   )
