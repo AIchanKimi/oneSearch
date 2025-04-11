@@ -14,8 +14,6 @@ export default defineBackground(() => {
         // 合并所有providers并装填到存储中
         const allProviders = [...searchProvider, ...actionProvider]
         await ActionProviderStorage.setValue(allProviders)
-
-        console.log('初始化完成: 所有提供者已装填到ActionProviderStorage中')
       }
     }
   })

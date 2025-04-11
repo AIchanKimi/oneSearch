@@ -6,9 +6,9 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Upload } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-interface ActionProviderEditDialogProps {
+type ActionProviderEditDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   item: ActionProvider | null
@@ -65,7 +65,8 @@ export function ActionProviderEditDialog({
   // 处理图片上传并转换为base64
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (!file) return
+    if (!file)
+      return
 
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -153,20 +154,22 @@ export function ActionProviderEditDialog({
             <div>
               <Label htmlFor="edit-icon">图标URL</Label>
               <div className="flex items-center gap-2 mt-1">
-                <div 
+                <div
                   className="w-10 h-10 border rounded flex items-center justify-center overflow-hidden cursor-pointer flex-shrink-0"
                   onClick={triggerFileInput}
                   title="点击上传图片"
                 >
-                  {editingItem.icon ? (
-                    <img 
-                      src={editingItem.icon} 
-                      alt="预览" 
-                      className="h-full w-full object-contain"
-                    />
-                  ) : (
-                    <Upload className="h-4 w-4 text-gray-400" />
-                  )}
+                  {editingItem.icon
+                    ? (
+                        <img
+                          src={editingItem.icon}
+                          alt="预览"
+                          className="h-full w-full object-contain"
+                        />
+                      )
+                    : (
+                        <Upload className="h-4 w-4 text-gray-400" />
+                      )}
                 </div>
                 <Input
                   id="edit-icon"
