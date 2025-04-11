@@ -197,10 +197,17 @@ export function ActionProviderEditDialog({
                   <Input
                     id="edit-link"
                     value={(editingItem.payload as any).link || ''}
-                    placeholder="搜索关键词用 {selectedText} 替换"
                     className="mt-1"
                     onChange={e => handleDialogDataChange('payload.link', e.target.value)}
                   />
+                  <p className="text-sm text-gray-500 mt-1">
+                    搜索关键词用
+                    {' '}
+                    {'{selectedText}'}
+                    {' '}
+                    替换，例子https://www.bing.com/search?q=
+                    {'{selectedText}'}
+                  </p>
                 </div>
               </div>
             )}
