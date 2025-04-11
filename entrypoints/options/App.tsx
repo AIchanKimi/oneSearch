@@ -157,7 +157,7 @@ function App() {
         <div className="header-container py-4 mb-6 border-b">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             {/* 左侧：搜索和过滤控件 */}
-            <div className="filter-controls w-full md:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="filter-controls flex items-center gap-4">
               <div>
                 <Label htmlFor="search-term">搜索标签</Label>
                 <Input
@@ -165,14 +165,14 @@ function App() {
                   placeholder="输入关键词搜索"
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className="mt-1"
+                  className="mt-1 w-52"
                 />
               </div>
 
               <div>
                 <Label htmlFor="type-filter">按类型过滤</Label>
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger id="type-filter" className="mt-1">
+                  <SelectTrigger id="type-filter" className="mt-1 w-52">
                     <SelectValue placeholder="选择类型" />
                   </SelectTrigger>
                   <SelectContent>
@@ -192,7 +192,7 @@ function App() {
                       variant="outline"
                       role="combobox"
                       aria-expanded={tagPopoverOpen}
-                      className="w-full justify-between mt-1"
+                      className="justify-between mt-1 w-52"
                     >
                       {tagFilter === 'all' ? '全部标签' : tagFilter}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
