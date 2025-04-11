@@ -255,18 +255,6 @@ function App() {
         </div>
 
         <div className="storage-content">
-          <h2 className="text-xl font-semibold mb-4">
-            {filteredData.length !== data.length && (
-              <span className="ml-2 text-sm font-normal text-gray-500">
-                (显示
-                {' '}
-                {filteredData.length}
-                /
-                {data.length}
-                )
-              </span>
-            )}
-          </h2>
           {filteredData.length > 0
             ? (
                 <div ref={parent} className="data-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
