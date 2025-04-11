@@ -42,7 +42,7 @@ export function ActionProviderCard({
   }
 
   return (
-    <Card className="mb-4 flex flex-col">
+    <Card className="flex flex-col">
       <CardContent className="space-y-4 flex-1 p-4">
         {/* 上部分：左边是icon，中间是label和类型与标签，右边是操作按钮 */}
         <div className="flex items-start gap-4 pb-3 border-b">
