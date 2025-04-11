@@ -11,6 +11,20 @@ import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 function App() {
   const [data, setData] = useState<ActionProvider[]>([])
@@ -23,6 +37,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [tagFilter, setTagFilter] = useState<string>('all')
+  const [tagPopoverOpen, setTagPopoverOpen] = useState(false)
 
   // 提取可用的标签列表
   const availableTags = useMemo(() => {
@@ -171,17 +186,60 @@ function App() {
 
               <div>
                 <Label htmlFor="tag-filter">按标签过滤</Label>
-                <Select value={tagFilter} onValueChange={setTagFilter}>
-                  <SelectTrigger id="tag-filter" className="mt-1">
-                    <SelectValue placeholder="选择标签" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">全部标签</SelectItem>
-                    {availableTags.map(tag => (
-                      <SelectItem key={tag} value={tag}>{tag}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Popover open={tagPopoverOpen} onOpenChange={setTagPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={tagPopoverOpen}
+                      className="w-full justify-between mt-1"
+                    >
+                      {tagFilter === 'all' ? "全部标签" : tagFilter}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput placeholder="搜索标签..." />
+                      <CommandEmpty>未找到相关标签</CommandEmpty>
+                      <CommandGroup>
+                        <CommandItem
+                          value="all"
+                          onSelect={() => {
+                            setTagFilter('all')
+                            setTagPopoverOpen(false)
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              tagFilter === 'all' ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          全部标签
+                        </CommandItem>
+                        {availableTags.map(tag => (
+                          <CommandItem
+                            key={tag}
+                            value={tag}
+                            onSelect={() => {
+                              setTagFilter(tag)
+                              setTagPopoverOpen(false)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                tagFilter === tag ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {tag}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 
