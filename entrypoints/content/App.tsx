@@ -1,6 +1,7 @@
 import type { ActionProvider } from '@/types'
 import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
+import { ActionProviderStorage } from '@/utils/storage'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 type ContextType = {
@@ -31,7 +32,20 @@ function Container() {
         item.payload.selectedText = selectedText
         return item
       })
-      setBubbleItems(tempList.filter(item => item.bubble === true))
+
+      // 获取气泡项并按order排序
+      const bubbleList = tempList.filter(item => item.bubble === true)
+      const sortedBubbleList = bubbleList.sort((a, b) => {
+        if (a.order === undefined && b.order === undefined)
+          return 0
+        if (a.order === undefined)
+          return 1
+        if (b.order === undefined)
+          return -1
+        return a.order - b.order
+      })
+
+      setBubbleItems(sortedBubbleList)
       setPanelItems(tempList.filter(item => item.panel === true))
     }
 

@@ -4,6 +4,7 @@ export type BaseProvider = {
   tag: string
   bubble: boolean
   panel: boolean
+  order?: number // 添加可选的排序属性
 }
 
 export type MenuAction = {

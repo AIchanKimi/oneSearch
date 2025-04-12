@@ -1,7 +1,8 @@
 import type { ActionProvider } from '@/types'
+import type { DropResult } from '@hello-pangea/dnd'
 import { ActionProviderCard } from '@/components/ActionProviderCard'
-import { ActionProviderEditDialog } from '@/components/ActionProviderEditDialog'
 
+import { ActionProviderEditDialog } from '@/components/ActionProviderEditDialog'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -18,11 +19,19 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
+import { Check, ChevronsUpDown, MoveVertical } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -39,6 +48,9 @@ function App() {
   const [tagFilter, setTagFilter] = useState<string>('all')
   const [tagPopoverOpen, setTagPopoverOpen] = useState(false)
   const [displayFilter, setDisplayFilter] = useState<string>('all')
+
+  const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false)
+  const [bubbleItemsForSort, setBubbleItemsForSort] = useState<ActionProvider[]>([])
 
   // 提取可用的标签列表
   const availableTags = useMemo(() => {
@@ -79,6 +91,66 @@ function App() {
     }
     fetchData()
   }, [])
+
+  // 初始化排序项
+  const initSortableItems = () => {
+    // 获取所有bubble为true的项目
+    const bubbleItems = data.filter(item => item.bubble === true)
+    // 按照order排序，没有order的排在后面
+    const sorted = [...bubbleItems].sort((a, b) => {
+      if (a.order === undefined && b.order === undefined)
+        return 0
+      if (a.order === undefined)
+        return 1
+      if (b.order === undefined)
+        return -1
+      return a.order - b.order
+    })
+    setBubbleItemsForSort(sorted)
+  }
+
+  // 处理排序
+  const handleOpenSortSheet = () => {
+    initSortableItems()
+    setIsOrderSheetOpen(true)
+  }
+
+  // 处理拖拽结束
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination)
+      return
+
+    const items = Array.from(bubbleItemsForSort)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+
+    setBubbleItemsForSort(items)
+  }
+
+  // 保存排序
+  const handleSaveOrder = async () => {
+    const newData = [...data]
+
+    // 更新每个项目的order属性
+    bubbleItemsForSort.forEach((item, index) => {
+      const dataIndex = newData.findIndex(d =>
+        d.label === item.label
+        && d.type === item.type
+        && d.tag === item.tag,
+      )
+      if (dataIndex !== -1) {
+        newData[dataIndex] = {
+          ...newData[dataIndex],
+          order: index,
+        }
+      }
+    })
+
+    setData(newData)
+    await ActionProviderStorage.setValue(newData)
+    setIsOrderSheetOpen(false)
+    toast.success('气泡排序已保存')
+  }
 
   // 处理编辑状态
   const handleEdit = (index: number) => {
@@ -263,8 +335,12 @@ function App() {
               </div>
             </div>
 
-            {/* 右侧：添加新项按钮 */}
-            <div className="add-button-container md:self-end">
+            {/* 右侧：添加新项按钮和排序按钮 */}
+            <div className="add-button-container md:self-end flex space-x-2">
+              <Button onClick={handleOpenSortSheet} variant="outline" className="flex items-center gap-2">
+                <MoveVertical size={16} />
+                排序气泡
+              </Button>
               <Button onClick={handleAddNew} className="flex items-center gap-2 w-full md:w-auto">
                 <span>+</span>
                 {' '}
@@ -300,6 +376,67 @@ function App() {
               )}
         </div>
       </main>
+
+      {/* 排序Sheet */}
+      <Sheet open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen}>
+        <SheetContent side="right" className="w-96 sm:max-w-lg">
+          <SheetHeader>
+            <SheetTitle>排序气泡项目</SheetTitle>
+            <SheetDescription>
+              拖拽下方项目调整气泡显示顺序
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="mt-6">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="bubble-sort-list">
+                {provided => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="space-y-2"
+                  >
+                    {bubbleItemsForSort.map((item, index) => (
+                      <Draggable key={item.label} draggableId={`${item.label}-${index}`} index={index}>
+                        {provided => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="flex items-center p-3 border rounded bg-white hover:bg-gray-50 cursor-move"
+                          >
+                            <div className="mr-2 text-gray-400">
+                              <MoveVertical size={16} />
+                            </div>
+                            <div className="flex-1 truncate">
+                              {item.label}
+                              {item.tag && (
+                                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded-full">
+                                  {item.tag}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+
+            <div className="flex justify-end gap-2 mt-6">
+              <Button variant="outline" onClick={() => setIsOrderSheetOpen(false)}>
+                取消
+              </Button>
+              <Button onClick={handleSaveOrder}>
+                保存排序
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* 使用拆分后的编辑对话框组件 */}
       <ActionProviderEditDialog
