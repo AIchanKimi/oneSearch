@@ -129,8 +129,7 @@ pnpm zip
 
 - [项目主页](https://github.com/AIchanKimi/oneSearch)
 - [问题反馈](https://github.com/AIchanKimi/oneSearch/issues)
-- [贡献指南](CONTRIBUTING.md)
 
 ---
 
-Made with ❤️ by [AIchanKimi](https://github.com/AIchanKimi)
+Made by [AIchanKimi](https://github.com/AIchanKimi)
