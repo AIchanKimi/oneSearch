@@ -403,18 +403,18 @@ function App() {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="flex items-center p-3 border rounded bg-white hover:bg-gray-50 cursor-move"
+                            className="flex items-center mx-3 p-3 border rounded bg-white hover:bg-gray-50 cursor-move"
                           >
                             <div className="mr-2 text-gray-400">
                               <MoveVertical size={16} />
                             </div>
+                            {item.icon && (
+                              <div className="mr-3 flex items-center justify-center w-6 h-6">
+                                <img src={item.icon} alt="" className="max-w-full max-h-full" />
+                              </div>
+                            )}
                             <div className="flex-1 truncate">
                               {item.label}
-                              {item.tag && (
-                                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded-full">
-                                  {item.tag}
-                                </span>
-                              )}
                             </div>
                           </div>
                         )}
@@ -426,7 +426,7 @@ function App() {
               </Droppable>
             </DragDropContext>
 
-            <div className="flex justify-end gap-2 mt-6">
+            <div className="flex justify-end gap-2 mx-3 mt-6">
               <Button variant="outline" onClick={() => setIsOrderSheetOpen(false)}>
                 取消
               </Button>
