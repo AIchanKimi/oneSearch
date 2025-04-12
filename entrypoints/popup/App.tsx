@@ -22,6 +22,16 @@ function App() {
             打开设置
           </a>
         </Button>
+        <Button asChild variant="default" size="default">
+          <a
+            href="https://github.com/AIchanKimi/oneSearch"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full"
+          >
+            项目主页
+          </a>
+        </Button>
       </div>
 
       <footer className="text-center text-xs text-gray-400 mt-4 border-t border-gray-200 pt-3">
