@@ -1,8 +1,6 @@
 # OneSearch - 一键搜索多个平台
 
-<div align="center">
-  <img src="./public/icon/128.png" alt="OneSearch Logo" width="128" height="128">
-</div>
+---
 
 OneSearch 是一个强大的浏览器扩展，让您能够在选择文本后，通过简单的点击快速在多个搜索引擎和平台上搜索该内容。
 

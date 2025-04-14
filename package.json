@@ -1,9 +1,9 @@
 {
-  "name": "oneSearch",
+  "name": "onesearch",
   "type": "module",
   "version": "0.0.0",
   "private": true,
-  "description": "manifest.json description",
+  "description": "一键搜索多个平台",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
