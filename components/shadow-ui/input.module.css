@@ -30,6 +30,11 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5); /* 替换 var(--ring-color-50) */
 }
 
+.input:focus {
+  border-color: #3b82f6; /* 替换 var(--ring) 为 #3b82f6 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); /* 替换 var(--ring-rgb) 为 59, 130, 246 */
+}
+
 /* 无效状态 */
 .input[aria-invalid='true'] {
   border-color: #ef4444; /* 替换 var(--destructive) */

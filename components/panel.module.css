@@ -10,7 +10,7 @@
 }
 
 .panelContainer {
-  background-color: var(--background);
+  background-color: #fff; /* 替换 var(--background) 为 #fff */
   border-radius: 8px;
   padding: 32px;
   max-width: 80%;
