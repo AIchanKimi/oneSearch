@@ -3,6 +3,7 @@ import type { DropResult } from '@hello-pangea/dnd'
 import { ActionProviderCard } from '@/components/ActionProviderCard'
 import { ActionProviderEditDialog } from '@/components/ActionProviderEditDialog'
 import { SortableSheet } from '@/components/SortableSheet'
+import { useTheme } from '@/components/theme-provider'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -11,6 +12,12 @@ import {
   CommandInput,
   CommandItem,
 } from '@/components/ui/command'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -23,7 +30,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { Check, ChevronsUpDown, MoveVertical } from 'lucide-react'
+import { Check, ChevronsUpDown, Moon, MoveVertical, Sun } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -37,6 +44,7 @@ type SortableTag = {
 }
 
 function App() {
+  const { setTheme } = useTheme()
   const [data, setData] = useState<ActionProvider[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -356,7 +364,7 @@ function App() {
               </div>
             </div>
 
-            <div className="add-button-container md:self-end flex space-x-2">
+            <div className="add-button-container md:self-end flex space-x-2 items-center">
               <Button onClick={handleOpenGroupSortSheet} variant="outline" className="flex items-center gap-2">
                 <MoveVertical size={16} />
                 排序分组
@@ -370,6 +378,26 @@ function App() {
                 {' '}
                 添加新项
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span className="sr-only">Toggle theme</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setTheme('light')}>
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('dark')}>
+                    Dark
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme('system')}>
+                    System
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
