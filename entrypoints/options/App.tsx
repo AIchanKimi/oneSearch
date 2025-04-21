@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/sheet'
 import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
-import { ActionProviderStorage } from '@/utils/storage'
+import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { Check, ChevronsUpDown, MoveVertical } from 'lucide-react'
@@ -51,6 +51,9 @@ function App() {
 
   const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false)
   const [bubbleItemsForSort, setBubbleItemsForSort] = useState<ActionProvider[]>([])
+  // 分组排序相关状态
+  const [isGroupOrderSheetOpen, setIsGroupOrderSheetOpen] = useState(false)
+  const [groupOrderTags, setGroupOrderTags] = useState<string[]>([])
 
   // 提取可用的标签列表
   const availableTags = useMemo(() => {
@@ -113,6 +116,35 @@ function App() {
   const handleOpenSortSheet = () => {
     initSortableItems()
     setIsOrderSheetOpen(true)
+  }
+
+  // 打开分组排序面板
+  const handleOpenGroupSortSheet = async () => {
+    const tags = Array.from(new Set(data.map(item => item.tag || '其他')))
+    const stored = await GroupOrderStorage.getValue()
+    const initial = [
+      ...stored.filter(tag => tags.includes(tag)),
+      ...tags.filter(tag => !stored.includes(tag)),
+    ]
+    setGroupOrderTags(initial)
+    setIsGroupOrderSheetOpen(true)
+  }
+
+  // 分组拖拽排序
+  const handleGroupDragEnd = (result: DropResult) => {
+    if (!result.destination)
+      return
+    const newTags = Array.from(groupOrderTags)
+    const [moved] = newTags.splice(result.source.index, 1)
+    newTags.splice(result.destination.index, 0, moved)
+    setGroupOrderTags(newTags)
+  }
+
+  // 保存分组顺序
+  const handleSaveGroupOrder = async () => {
+    await GroupOrderStorage.setValue(groupOrderTags)
+    setIsGroupOrderSheetOpen(false)
+    toast.success('分组排序已保存')
   }
 
   // 处理拖拽结束
@@ -337,6 +369,10 @@ function App() {
 
             {/* 右侧：添加新项按钮和排序按钮 */}
             <div className="add-button-container md:self-end flex space-x-2">
+              <Button onClick={handleOpenGroupSortSheet} variant="outline" className="flex items-center gap-2">
+                <MoveVertical size={16} />
+                排序分组
+              </Button>
               <Button onClick={handleOpenSortSheet} variant="outline" className="flex items-center gap-2">
                 <MoveVertical size={16} />
                 排序气泡
@@ -433,6 +469,47 @@ function App() {
               <Button onClick={handleSaveOrder}>
                 保存排序
               </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* 排序分组Sheet */}
+      <Sheet open={isGroupOrderSheetOpen} onOpenChange={setIsGroupOrderSheetOpen}>
+        <SheetContent side="right" className="w-96 sm:max-w-lg">
+          <SheetHeader>
+            <SheetTitle>排序分组</SheetTitle>
+            <SheetDescription>拖拽调整分组显示顺序</SheetDescription>
+          </SheetHeader>
+
+          <div className="mt-6">
+            <DragDropContext onDragEnd={handleGroupDragEnd}>
+              <Droppable droppableId="group-sort-list">
+                {provided => (
+                  <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+                    {groupOrderTags.map((tag, index) => (
+                      <Draggable key={tag} draggableId={tag} index={index}>
+                        {prov => (
+                          <div
+                            ref={prov.innerRef}
+                            {...prov.draggableProps}
+                            {...prov.dragHandleProps}
+                            className="flex items-center mx-3 p-3 border rounded bg-white hover:bg-gray-50 cursor-move"
+                          >
+                            <MoveVertical size={16} className="mr-2" />
+                            {tag}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+            <div className="flex justify-end gap-2 mx-3 mt-6">
+              <Button variant="outline" onClick={() => setIsGroupOrderSheetOpen(false)}>取消</Button>
+              <Button onClick={handleSaveGroupOrder}>保存排序</Button>
             </div>
           </div>
         </SheetContent>
