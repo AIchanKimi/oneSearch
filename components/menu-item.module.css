@@ -20,14 +20,14 @@
 }
 
 .button:focus-visible {
-  border-color: var(--ring);
-  box-shadow: 0 0 0 3px rgba(var(--ring-rgb), 0.5);
+  border-color: #3b82f6; /* 替换 var(--ring) 为 #3b82f6 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* 替换 var(--ring-rgb) 为 59, 130, 246 */
 }
 
 /* 只保留ghost变体 */
 .ghost:hover {
-  background-color: var(--accent);
-  color: var(--accent-foreground);
+  background-color: #f1f5f9; /* 替换 var(--accent) 为 #f1f5f9 */
+  color: #0f172a; /* 替换 var(--accent-foreground) 为 #0f172a */
 }
 
 /* 只保留需要的尺寸 */

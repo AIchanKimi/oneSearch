@@ -28,68 +28,68 @@
 }
 
 .button:focus-visible {
-  border-color: var(--ring);
-  box-shadow: 0 0 0 3px rgba(var(--ring-rgb), 0.5);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
 }
 
 .button[aria-invalid='true'] {
-  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.2);
-  border-color: var(--destructive);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
 }
 
 /* 变体 */
 .default {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  box-shadow: var(--shadow-xs);
+  background-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .default:hover {
-  background-color: rgba(var(--primary-rgb), 0.9);
+  background-color: rgba(37, 99, 235, 0.9);
 }
 
 .destructive {
-  background-color: var(--destructive);
+  background-color: #ef4444;
   color: white;
-  box-shadow: var(--shadow-xs);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .destructive:hover {
-  background-color: rgba(var(--destructive-rgb), 0.9);
+  background-color: rgba(239, 68, 68, 0.9);
 }
 
 .destructive:focus-visible {
-  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.2);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
 .outline {
-  border: 1px solid var(--border);
-  background-color: var(--background);
-  box-shadow: var(--shadow-xs);
+  border: 1px solid #e2e8f0;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .outline:hover {
-  background-color: var(--accent);
-  color: var(--accent-foreground);
+  background-color: #f1f5f9;
+  color: #0f172a;
 }
 
 .secondary {
-  background-color: var(--secondary);
-  color: var(--secondary-foreground);
-  box-shadow: var(--shadow-xs);
+  background-color: #f1f5f9;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .secondary:hover {
-  background-color: rgba(var(--secondary-rgb), 0.8);
+  background-color: rgba(241, 245, 249, 0.8);
 }
 
 .ghost:hover {
-  background-color: var(--accent);
-  color: var(--accent-foreground);
+  background-color: #f1f5f9;
+  color: #0f172a;
 }
 
 .link {
-  color: var(--primary);
+  color: #2563eb;
   text-decoration: none;
 }
 
