@@ -22,7 +22,7 @@ function App() {
   const { setTheme } = useTheme()
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex h-screen flex-col">
       <header className="border-b sticky top-0 z-30 bg-background">
         <div className="flex h-16 items-center px-6 justify-between">
           <div className="flex-1 font-bold">
@@ -55,7 +55,7 @@ function App() {
         </div>
       </header>
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         {/* 侧边导航栏 */}
         <Sidebar />
 
