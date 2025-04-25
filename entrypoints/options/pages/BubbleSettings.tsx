@@ -42,6 +42,10 @@ export function BubbleSettings() {
     const newOffset = { ...bubbleOffset, [axis]: numValue }
     setBubbleOffset(newOffset)
     await BubbleOffsetStorage.setValue(newOffset)
+  }
+
+  // 处理气泡偏移值变化完成后的提示
+  const handleBubbleOffsetCommit = async (axis: 'x' | 'y') => {
     toast.success(`气泡${axis === 'x' ? 'X' : 'Y'}轴偏移已更新`)
   }
 
@@ -123,14 +127,20 @@ export function BubbleSettings() {
       <Card className="mb-6">
         <CardContent className="p-6">
           <h2 className="text-xl font-semibold mb-4">气泡位置设置</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <Label htmlFor="bubble-offset-x">
-                  气泡X轴偏移:
+
+          <div className="grid grid-cols-[auto_1fr] gap-6 mb-10 max-w-[800px] mx-auto">
+            {/* 左上角单元格 - 留空作为间隔 */}
+            <div></div>
+
+            {/* 右上角单元格 - X轴滑块 */}
+            <div className="flex flex-col items-center">
+              <div className="flex justify-between w-full mb-1">
+                <div className="text-sm text-gray-600">← 左</div>
+                <div className="font-medium text-sm">
                   {bubbleOffset.x}
                   px
-                </Label>
+                </div>
+                <div className="text-sm text-gray-600">右 →</div>
               </div>
               <Slider
                 id="bubble-offset-x"
@@ -139,19 +149,19 @@ export function BubbleSettings() {
                 step={1}
                 value={[bubbleOffset.x]}
                 onValueChange={value => handleBubbleOffsetChange('x', value)}
-                className="mt-2"
+                onValueCommit={() => handleBubbleOffsetCommit('x')}
               />
-              <p className="text-sm text-gray-500 mt-1">
-                调整气泡在X轴方向的偏移量，正数为向右，负数为向左
-              </p>
             </div>
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <Label htmlFor="bubble-offset-y">
-                  气泡Y轴偏移:
-                  {bubbleOffset.y}
+
+            {/* 左下角单元格 - Y轴滑块，使用h-full适应与预览区域相同的高度 */}
+            <div className="flex h-full justify-self-end">
+              <div className="w-10 flex flex-col justify-between mr-4">
+                <div className="text-sm text-gray-600">↑ 上</div>
+                <div className="font-medium text-sm text-center">
+                  {-bubbleOffset.y}
                   px
-                </Label>
+                </div>
+                <div className="text-sm text-gray-600">↓ 下</div>
               </div>
               <Slider
                 id="bubble-offset-y"
@@ -160,11 +170,27 @@ export function BubbleSettings() {
                 step={1}
                 value={[bubbleOffset.y]}
                 onValueChange={value => handleBubbleOffsetChange('y', value)}
-                className="mt-2"
+                onValueCommit={() => handleBubbleOffsetCommit('y')}
+                orientation="vertical"
               />
-              <p className="text-sm text-gray-500 mt-1">
-                调整气泡在Y轴方向的偏移量，正数为向下，负数为向上
-              </p>
+            </div>
+
+            {/* 右下角单元格 - 预览区域，使用aspect-square确保是正方形 */}
+            <div className="aspect-square w-full bg-gray-100 relative rounded-lg flex items-center justify-center border">
+              {/* 水平虚线表示 Y 轴的 0 位置 */}
+              <div className="absolute top-1/2 left-0 right-0 border-t border-dashed border-gray-400"></div>
+              {/* 垂直虚线表示 X 轴的 0 位置 */}
+              <div className="absolute bottom-0 top-0 left-1/2 border-l border-dashed border-gray-400"></div>
+              <div
+                className="absolute w-10 h-10 bg-white rounded shadow-lg border flex items-center justify-center"
+                style={{
+                  transform: `translate(${bubbleOffset.x}px, ${-bubbleOffset.y}px)`,
+                  top: 'calc(50%)',
+                  left: 'calc(50%)',
+                }}
+              >
+                <span className="text-xs">气泡</span>
+              </div>
             </div>
           </div>
         </CardContent>
