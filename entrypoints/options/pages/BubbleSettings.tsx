@@ -3,8 +3,8 @@ import type { DropResult } from '@hello-pangea/dnd'
 import { SortableSheet } from '@/components/SortableSheet'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
 import { Toaster } from '@/components/ui/sonner'
 import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
 import { MoveVertical } from 'lucide-react'
@@ -37,8 +37,8 @@ export function BubbleSettings() {
   }, [])
 
   // 处理气泡偏移值变化
-  const handleBubbleOffsetChange = async (axis: 'x' | 'y', value: string) => {
-    const numValue = Number.parseInt(value) || 0
+  const handleBubbleOffsetChange = async (axis: 'x' | 'y', value: number[]) => {
+    const numValue = value[0]
     const newOffset = { ...bubbleOffset, [axis]: numValue }
     setBubbleOffset(newOffset)
     await BubbleOffsetStorage.setValue(newOffset)
@@ -125,12 +125,20 @@ export function BubbleSettings() {
           <h2 className="text-xl font-semibold mb-4">气泡位置设置</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="bubble-offset-x">气泡X轴偏移(像素)</Label>
-              <Input
+              <div className="flex items-center justify-between mb-2">
+                <Label htmlFor="bubble-offset-x">
+                  气泡X轴偏移:
+                  {bubbleOffset.x}
+                  px
+                </Label>
+              </div>
+              <Slider
                 id="bubble-offset-x"
-                type="number"
-                value={bubbleOffset.x}
-                onChange={e => handleBubbleOffsetChange('x', e.target.value)}
+                min={-100}
+                max={100}
+                step={1}
+                value={[bubbleOffset.x]}
+                onValueChange={value => handleBubbleOffsetChange('x', value)}
                 className="mt-2"
               />
               <p className="text-sm text-gray-500 mt-1">
@@ -138,12 +146,20 @@ export function BubbleSettings() {
               </p>
             </div>
             <div>
-              <Label htmlFor="bubble-offset-y">气泡Y轴偏移(像素)</Label>
-              <Input
+              <div className="flex items-center justify-between mb-2">
+                <Label htmlFor="bubble-offset-y">
+                  气泡Y轴偏移:
+                  {bubbleOffset.y}
+                  px
+                </Label>
+              </div>
+              <Slider
                 id="bubble-offset-y"
-                type="number"
-                value={bubbleOffset.y}
-                onChange={e => handleBubbleOffsetChange('y', e.target.value)}
+                min={-100}
+                max={100}
+                step={1}
+                value={[bubbleOffset.y]}
+                onValueChange={value => handleBubbleOffsetChange('y', value)}
                 className="mt-2"
               />
               <p className="text-sm text-gray-500 mt-1">
