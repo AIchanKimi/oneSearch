@@ -14,9 +14,9 @@ import { Route, Routes } from 'react-router-dom'
 import { Sidebar } from './components/Sidebar'
 
 import BubbleSettings from './pages/BubbleSettings'
+import PanelSettings from './pages/PanelSettings'
 // 导入页面
 import ProvidersSettings from './pages/ProvidersSettings'
-import SortSettings from './pages/SortSettings'
 
 function App() {
   const { setTheme } = useTheme()
@@ -64,7 +64,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ProvidersSettings />} />
             <Route path="/bubble" element={<BubbleSettings />} />
-            <Route path="/panel" element={<SortSettings />} />
+            <Route path="/panel" element={<PanelSettings />} />
           </Routes>
         </main>
       </div>
