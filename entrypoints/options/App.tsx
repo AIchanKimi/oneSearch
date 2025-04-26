@@ -64,7 +64,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ProvidersSettings />} />
             <Route path="/bubble" element={<BubbleSettings />} />
-            <Route path="/sort" element={<SortSettings />} />
+            <Route path="/panel" element={<SortSettings />} />
           </Routes>
         </main>
       </div>

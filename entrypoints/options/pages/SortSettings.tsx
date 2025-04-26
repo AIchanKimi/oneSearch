@@ -51,15 +51,15 @@ export function SortSettings() {
   return (
     <div className="container mx-auto px-4 py-8">
       <PageTitle
-        title="分组排序"
-        description="管理分组的显示顺序"
+        title="面板设置"
+        description="管理面板分组的显示顺序"
       />
 
       <Card className="mb-6">
         <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">分组排序设置</h2>
+          <h2 className="text-xl font-semibold mb-4">面板分组排序</h2>
           <p className="text-sm text-zinc-500 mb-4">
-            拖拽下方分组标签调整显示顺序，排序将自动保存
+            拖拽下方分组标签调整面板中的显示顺序，排序将自动保存
           </p>
 
           <div className="space-y-4">

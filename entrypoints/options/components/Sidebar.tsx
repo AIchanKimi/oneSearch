@@ -18,8 +18,8 @@ export function Sidebar() {
       icon: <Settings className="h-5 w-5" />,
     },
     {
-      title: '排序设置',
-      href: '/sort',
+      title: '面板设置',
+      href: '/panel',
       icon: <Sliders className="h-5 w-5" />,
     },
   ]
