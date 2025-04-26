@@ -1,6 +1,5 @@
 import type { ActionProvider } from '@/types'
 import type { DropResult } from '@hello-pangea/dnd'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
 import { Toaster } from '@/components/ui/sonner'
@@ -20,35 +19,6 @@ export function BubbleSettings() {
   // 气泡排序相关状态
   const [data, setData] = useState<ActionProvider[]>([])
   const [bubbleItemsForSort, setBubbleItemsForSort] = useState<SortableActionProvider[]>([])
-
-  useEffect(() => {
-    // 加载气泡偏移设置和服务提供商数据
-    const loadData = async () => {
-      const offset = await BubbleOffsetStorage.getValue()
-      setBubbleOffset(offset)
-
-      const storageData = await ActionProviderStorage.getValue()
-      setData(storageData)
-
-      // 初始化排序项目
-      initSortableItems(storageData)
-    }
-    loadData()
-  }, [])
-
-  // 处理气泡偏移值变化
-  const handleBubbleOffsetChange = async (axis: 'x' | 'y', value: number[]) => {
-    const numValue = value[0]
-    const newOffset = { ...bubbleOffset, [axis]: numValue }
-    setBubbleOffset(newOffset)
-    await BubbleOffsetStorage.setValue(newOffset)
-  }
-
-  // 处理气泡偏移值变化完成后的提示
-  const handleBubbleOffsetCommit = async (axis: 'x' | 'y') => {
-    toast.success(`气泡${axis === 'x' ? 'X' : 'Y'}轴偏移已更新`)
-  }
-
   // 初始化可排序气泡项目
   const initSortableItems = (items = data) => {
     const bubbleItems = items.filter(item => item.bubble === true)
@@ -65,6 +35,34 @@ export function BubbleSettings() {
       ...item,
       id: `${item.label}-${item.type}-${index}`,
     })))
+  }
+
+  useEffect(() => {
+    // 加载气泡偏移设置和服务提供商数据
+    const loadData = async () => {
+      const offset = await BubbleOffsetStorage.getValue()
+      setBubbleOffset(offset)
+
+      const storageData = await ActionProviderStorage.getValue()
+      setData(storageData)
+
+      // 初始化排序项目
+      initSortableItems(storageData)
+    }
+    loadData()
+  })
+
+  // 处理气泡偏移值变化
+  const handleBubbleOffsetChange = async (axis: 'x' | 'y', value: number[]) => {
+    const numValue = value[0]
+    const newOffset = { ...bubbleOffset, [axis]: numValue }
+    setBubbleOffset(newOffset)
+    await BubbleOffsetStorage.setValue(newOffset)
+  }
+
+  // 处理气泡偏移值变化完成后的提示
+  const handleBubbleOffsetCommit = async (axis: 'x' | 'y') => {
+    toast.success(`气泡${axis === 'x' ? 'X' : 'Y'}轴偏移已更新`)
   }
 
   const handleBubbleDragEnd = async (result: DropResult) => {
@@ -105,6 +103,46 @@ export function BubbleSettings() {
         title="气泡设置"
         description="定制气泡显示的位置和行为"
       />
+
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-semibold mb-4">气泡排序设置</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            拖拽下方气泡图标项目调整显示顺序，排序将自动保存
+          </p>
+
+          <div className="space-y-4">
+            <DragDropContext onDragEnd={handleBubbleDragEnd}>
+              <Droppable droppableId="sortable-list" direction="horizontal">
+                {provided => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="flex flex-wrap gap-2 overflow-y-auto max-h-[400px] scrollbar-thin p-2"
+                  >
+                    {bubbleItemsForSort.map((item, index) => (
+                      <Draggable key={item.id} draggableId={item.id} index={index}>
+                        {provided => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="size-9 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50
+                            inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*=\'size-\'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                          >
+                            <img src={item.icon} alt="" className="w-4 h-4" />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardContent className="p-6">
@@ -174,46 +212,6 @@ export function BubbleSettings() {
                 <span className="text-xs">气泡</span>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">气泡排序设置</h2>
-          <p className="text-sm text-gray-500 mb-4">
-            拖拽下方气泡图标项目调整显示顺序，排序将自动保存
-          </p>
-
-          <div className="space-y-4">
-            <DragDropContext onDragEnd={handleBubbleDragEnd}>
-              <Droppable droppableId="sortable-list" direction="horizontal">
-                {provided => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="flex flex-wrap gap-2 overflow-y-auto max-h-[400px] scrollbar-thin p-2"
-                  >
-                    {bubbleItemsForSort.map((item, index) => (
-                      <Draggable key={item.id} draggableId={item.id} index={index}>
-                        {provided => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="size-9 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50  
-                            inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*=\'size-\'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                          >
-                            <img src={item.icon} alt="" className="w-4 h-4" />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
           </div>
         </CardContent>
       </Card>
