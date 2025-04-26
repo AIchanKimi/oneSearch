@@ -98,6 +98,7 @@ function App() {
     const handleSelectionChange = () => {
       // 使用正则表达式删除所有不可见字符，包括空格、制表符、换行符和其他Unicode不可见字符
       const selectedText = (window.getSelection()?.toString() || '')
+        .trim()
         .replace(/^[\s\u200B-\u200D\u2060]+|[\s\u200B-\u200D\u2060]+$/g, '')
 
       if (selectedText) {
