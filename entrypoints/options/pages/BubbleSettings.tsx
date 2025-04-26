@@ -158,7 +158,7 @@ export function BubbleSettings() {
               <div className="w-10 flex flex-col justify-between mr-4">
                 <div className="text-sm text-gray-600">↑ 上</div>
                 <div className="font-medium text-sm text-center">
-                  {-bubbleOffset.y}
+                  {bubbleOffset.y}
                   px
                 </div>
                 <div className="text-sm text-gray-600">↓ 下</div>
@@ -168,8 +168,8 @@ export function BubbleSettings() {
                 min={-100}
                 max={100}
                 step={1}
-                value={[bubbleOffset.y]}
-                onValueChange={value => handleBubbleOffsetChange('y', value)}
+                value={[-bubbleOffset.y]}
+                onValueChange={value => handleBubbleOffsetChange('y', value.map(v => -v))}
                 onValueCommit={() => handleBubbleOffsetCommit('y')}
                 orientation="vertical"
               />
@@ -184,7 +184,7 @@ export function BubbleSettings() {
               <div
                 className="absolute w-10 h-10 bg-white rounded shadow-lg border flex items-center justify-center"
                 style={{
-                  transform: `translate(${bubbleOffset.x}px, ${-bubbleOffset.y}px)`,
+                  transform: `translate(${bubbleOffset.x}px, ${bubbleOffset.y}px)`,
                   top: 'calc(50%)',
                   left: 'calc(50%)',
                 }}
