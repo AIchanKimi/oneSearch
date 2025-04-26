@@ -1,13 +1,11 @@
 import type { ActionProvider } from '@/types'
 import type { DropResult } from '@hello-pangea/dnd'
-import { SortableSheet } from '@/components/SortableSheet'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { Toaster } from '@/components/ui/sonner'
 import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
-import { MoveVertical } from 'lucide-react'
+import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { PageTitle } from '../components/PageTitle'
@@ -21,7 +19,6 @@ export function BubbleSettings() {
   const [bubbleOffset, setBubbleOffset] = useState<{ x: number, y: number }>({ x: 20, y: 20 })
   // 气泡排序相关状态
   const [data, setData] = useState<ActionProvider[]>([])
-  const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false)
   const [bubbleItemsForSort, setBubbleItemsForSort] = useState<SortableActionProvider[]>([])
 
   useEffect(() => {
@@ -32,6 +29,9 @@ export function BubbleSettings() {
 
       const storageData = await ActionProviderStorage.getValue()
       setData(storageData)
+
+      // 初始化排序项目
+      initSortableItems(storageData)
     }
     loadData()
   }, [])
@@ -50,8 +50,8 @@ export function BubbleSettings() {
   }
 
   // 初始化可排序气泡项目
-  const initSortableItems = () => {
-    const bubbleItems = data.filter(item => item.bubble === true)
+  const initSortableItems = (items = data) => {
+    const bubbleItems = items.filter(item => item.bubble === true)
     const sorted = [...bubbleItems].sort((a, b) => {
       if (a.order === undefined && b.order === undefined)
         return 0
@@ -67,12 +67,7 @@ export function BubbleSettings() {
     })))
   }
 
-  const handleOpenSortSheet = () => {
-    initSortableItems()
-    setIsOrderSheetOpen(true)
-  }
-
-  const handleBubbleDragEnd = (result: DropResult) => {
+  const handleBubbleDragEnd = async (result: DropResult) => {
     if (!result.destination)
       return
 
@@ -81,12 +76,11 @@ export function BubbleSettings() {
     items.splice(result.destination.index, 0, reorderedItem)
 
     setBubbleItemsForSort(items)
-  }
 
-  const handleSaveBubbleOrder = async () => {
+    // 拖拽结束后立即保存排序
     const newData = [...data]
 
-    bubbleItemsForSort.forEach((item, index) => {
+    items.forEach((item, index) => {
       const dataIndex = newData.findIndex(d =>
         d.label === item.label
         && d.type === item.type
@@ -102,20 +96,8 @@ export function BubbleSettings() {
 
     setData(newData)
     await ActionProviderStorage.setValue(newData)
-    setIsOrderSheetOpen(false)
-    toast.success('气泡排序已保存')
+    toast.success('气泡排序已更新')
   }
-
-  const renderBubbleItem = (item: SortableActionProvider) => (
-    <div className="flex items-center">
-      {item.icon && (
-        <div className="mr-3 flex items-center justify-center w-6 h-6 flex-shrink-0">
-          <img src={item.icon} alt="" className="max-w-full max-h-full" />
-        </div>
-      )}
-      <span className="truncate">{item.label}</span>
-    </div>
-  )
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -200,25 +182,41 @@ export function BubbleSettings() {
         <CardContent className="p-6">
           <h2 className="text-xl font-semibold mb-4">气泡排序设置</h2>
           <p className="text-sm text-gray-500 mb-4">
-            调整气泡图标的显示顺序，点击下方按钮可打开排序面板
+            拖拽下方气泡图标项目调整显示顺序，排序将自动保存
           </p>
-          <Button onClick={handleOpenSortSheet} className="flex items-center gap-2">
-            <MoveVertical size={16} />
-            排序气泡
-          </Button>
+
+          <div className="space-y-4">
+            <DragDropContext onDragEnd={handleBubbleDragEnd}>
+              <Droppable droppableId="sortable-list" direction="horizontal">
+                {provided => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="flex flex-wrap gap-2 overflow-y-auto max-h-[400px] scrollbar-thin p-2"
+                  >
+                    {bubbleItemsForSort.map((item, index) => (
+                      <Draggable key={item.id} draggableId={item.id} index={index}>
+                        {provided => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="size-9 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50  
+                            inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*=\'size-\'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                          >
+                            <img src={item.icon} alt="" className="w-4 h-4" />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </div>
         </CardContent>
       </Card>
-
-      <SortableSheet<SortableActionProvider>
-        open={isOrderSheetOpen}
-        onOpenChange={setIsOrderSheetOpen}
-        title="排序气泡项目"
-        description="拖拽下方项目调整气泡显示顺序"
-        items={bubbleItemsForSort}
-        onDragEnd={handleBubbleDragEnd}
-        onSave={handleSaveBubbleOrder}
-        renderItem={renderBubbleItem}
-      />
 
       <Toaster richColors position="top-right" />
     </div>
