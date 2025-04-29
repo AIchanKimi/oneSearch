@@ -1,12 +1,10 @@
 name: Release Extension
 
 on:
-  # 手动触发工作流
   workflow_dispatch:
-  # 也可以在创建新标签时自动触发
-  # push:
-  #   tags:
-  #     - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   release:
