@@ -13,3 +13,11 @@ export const GroupOrderStorage = storage.defineItem<string[]>(
     fallback: [],
   },
 )
+
+// 气泡偏移值配置
+export const BubbleOffsetStorage = storage.defineItem<{ x: number, y: number }>(
+  'local:BubbleOffsetStorage',
+  {
+    fallback: { x: 20, y: 20 }, // 默认偏移值
+  },
+)

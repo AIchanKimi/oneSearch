@@ -1,7 +1,7 @@
 import type { ActionProvider } from '@/types'
 import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
-import { ActionProviderStorage } from '@/utils/storage'
+import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 type ContextType = {
@@ -82,12 +82,23 @@ function App() {
   const [selectedText, setSelectedText] = useState<string>('')
   const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
   const [showPanel, setShowPanel] = useState(false)
+  const [bubbleOffset, setBubbleOffset] = useState<{ x: number, y: number }>({ x: 20, y: 20 })
+
+  useEffect(() => {
+    // 加载气泡偏移配置
+    const loadBubbleOffset = async () => {
+      const offset = await BubbleOffsetStorage.getValue()
+      setBubbleOffset(offset)
+    }
+    loadBubbleOffset()
+  }, [])
 
   useEffect(() => {
     let lastMousePosition = { x: 0, y: 0 }
     const handleSelectionChange = () => {
       // 使用正则表达式删除所有不可见字符，包括空格、制表符、换行符和其他Unicode不可见字符
       const selectedText = (window.getSelection()?.toString() || '')
+        .trim()
         .replace(/^[\s\u200B-\u200D\u2060]+|[\s\u200B-\u200D\u2060]+$/g, '')
 
       if (selectedText) {
@@ -101,8 +112,8 @@ function App() {
 
     const handleMouseMove = (event: MouseEvent) => {
       lastMousePosition = {
-        x: event.clientX + 20,
-        y: event.clientY + 20,
+        x: event.clientX + bubbleOffset.x,
+        y: event.clientY + bubbleOffset.y,
       }
     }
 
@@ -113,7 +124,7 @@ function App() {
       document.removeEventListener('selectionchange', handleSelectionChange)
       document.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [bubbleOffset])
 
   const contextValue = useMemo(() => ({
     selectedText,
