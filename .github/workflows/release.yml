@@ -4,9 +4,11 @@ on:
   # 手动触发工作流
   workflow_dispatch:
   # 也可以在创建新标签时自动触发
-  # push:
-  #   tags:
-  #     - 'v*'
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
 
 jobs:
   release:
@@ -52,3 +54,13 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 提交到 Edge 商店
+        run: |
+          pnpm wxt submit \
+            --edge-zip .output/*-edge.zip
+        env:
+          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
+          EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
+          EDGE_SKIP_SUBMIT_REVIEW: ${{ secrets.EDGE_SKIP_SUBMIT_REVIEW }}
