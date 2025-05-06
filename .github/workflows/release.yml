@@ -35,6 +35,7 @@ jobs:
         run: |
           pnpm wxt zip
           pnpm wxt zip -b firefox
+          pnpm wxt zip -b edge
 
       - name: 提取版本号
         id: get_version
@@ -48,6 +49,7 @@ jobs:
           files: |
             .output/*-chrome.zip
             .output/*-firefox.zip
+            .output/*-edge.zip
             .output/*-sources.zip
           generate_release_notes: true
         env:
@@ -56,13 +58,13 @@ jobs:
       - name: 提交到 Edge 商店
         run: |
           pnpm wxt submit \
-            --edge-zip .output/*-chrome.zip
+            --edge-zip .output/*-edge.zip
         env:
           EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
           EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
           EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
           EDGE_SKIP_SUBMIT_REVIEW: ${{ secrets.EDGE_SKIP_SUBMIT_REVIEW }}
-          
+
       - name: 提交到 Firefox 商店
         run: |
           pnpm wxt submit \
