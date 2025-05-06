@@ -35,6 +35,7 @@ export function ProvidersSettings() {
     return data.filter((item) => {
       const matchesSearch = !searchTerm
         || item.label.toLowerCase().includes(searchTerm.toLowerCase())
+        || item.homepage.toLowerCase().includes(searchTerm.toLowerCase())
 
       const matchesType = typeFilter === 'all' || item.type === typeFilter
 
@@ -73,6 +74,7 @@ export function ProvidersSettings() {
   const handleAddNew = async () => {
     const newItem: ActionProvider = {
       label: '新项目',
+      homepage: '',
       bubble: false,
       panel: false,
       type: 'search',
