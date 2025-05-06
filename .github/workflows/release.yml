@@ -7,8 +7,6 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - main
 
 jobs:
   release:
@@ -58,7 +56,7 @@ jobs:
       - name: 提交到 Edge 商店
         run: |
           pnpm wxt submit \
-            --edge-zip .output/*-edge.zip
+            --edge-zip .output/*-chrome.zip
         env:
           EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
           EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
