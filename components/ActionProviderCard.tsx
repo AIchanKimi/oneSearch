@@ -66,14 +66,14 @@ export function ActionProviderCard({
           {/* 中间标签、类型和标签分类 */}
           <div className="flex-1">
             <div className="font-medium text-lg mb-1">{item.label || '无标签'}</div>
-            <div className="text-sm text-gray-600 flex gap-3">
-              <div>
+            <div className="text-sm text-gray-600 flex flex-wrap gap-3">
+              <div className="truncate">
                 类型:
                 {' '}
                 {item.type}
               </div>
               {item.tag !== undefined && (
-                <div>
+                <div className="truncate">
                   标签:
                   {' '}
                   {item.tag || '无分类'}

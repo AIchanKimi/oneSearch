@@ -1,5 +1,6 @@
 export type BaseProvider = {
   label: string
+  homepage: string
   icon: string
   tag: string
   bubble: boolean

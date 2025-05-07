@@ -3,10 +3,10 @@
 <div align="center">
 
 [![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)](https://github.com/AIchanKimi/oneSearch/releases)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Chrome](https://img.shields.io/chrome-web-store/v/gbmfnogamgapnaadfjaaingffdloekce?label=Chrome&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/onesearch/gbmfnogamgapnaadfjaaingffdloekce?authuser=0&hl=zh-CN)
 [![Firefox](https://img.shields.io/amo/v/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0?label=Firefox&logo=firefox&logoColor=white)](https://addons.mozilla.org/zh-CN/firefox/addon/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0/)
 [![Edge](https://img.shields.io/badge/Edge-Available-0078D7.svg?logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0/fmfeincfdmdagjilohgbfepfplhbhkaj)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 </div>
 
@@ -49,6 +49,8 @@ OneSearch 支持任意能通过URL传递搜索关键词的网站，包括但不�
 | ![Chrome](https://img.shields.io/badge/Chrome-4285F4?logo=google-chrome&logoColor=white)                                     | ![Firefox](https://img.shields.io/badge/Firefox-FF7139?logo=firefox&logoColor=white)                                                                  | ![Edge](https://img.shields.io/badge/Edge-0078D7?logo=microsoft-edge&logoColor=white)                                                                                                 | ![Releases](https://img.shields.io/badge/Releases-181717?logo=github&logoColor=white) |
 | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | [Chrome 网上应用店](https://chromewebstore.google.com/detail/onesearch/gbmfnogamgapnaadfjaaingffdloekce?authuser=0&hl=zh-CN) | [Firefox Add-ons](https://addons.mozilla.org/zh-CN/firefox/addon/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0/) | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0/fmfeincfdmdagjilohgbfepfplhbhkaj) | [Releases](https://github.com/AIchanKimi/oneSearch/releases)                          |
+
+**注意：** 商店中的版本可能会因为审核延迟而不是最新版本。如需最新版本，请访问 [GitHub Releases](https://github.com/AIchanKimi/oneSearch/releases)。
 
 ### 手动安装
 
