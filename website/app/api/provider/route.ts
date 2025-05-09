@@ -1,4 +1,5 @@
 import { actionProviders, getDb } from '@/db'
+import { formatResponse } from '@/utils/formatResponse'
 import { z } from 'zod'
 
 const postSchema = z.object({
@@ -11,21 +12,11 @@ const postSchema = z.object({
   }),
 })
 
-function formatResponse(data: any = null, message: string, code: number = 0, status: number = 200) {
-  return new Response(JSON.stringify({
-    data: data || {},
-    message,
-    code,
-  }), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
-
 export async function GET() {
   const db = getDb()
   const results = await db.query.actionProviders.findMany()
-  return formatResponse(results, 'Data retrieved successfully')
+  const response = formatResponse(results, 'Data retrieved successfully')
+  return Response.json(response)
 }
 
 export async function POST(request: Request) {
@@ -34,16 +25,19 @@ export async function POST(request: Request) {
 
   const parseResult = postSchema.safeParse(body)
   if (!parseResult.success) {
-    return formatResponse(parseResult.error.issues, 'Invalid request data', 1, 400)
+    const response = formatResponse(parseResult.error.issues, 'Invalid request data', 1)
+    return Response.json(response)
   }
 
   const { label, homepage, icon, tag, link } = parseResult.data
 
   try {
-    await db.insert(actionProviders).values({ label, homepage, icon, tag, link }).run()
-    return formatResponse({ label, homepage, icon, tag, link }, 'Data inserted successfully')
+    const result = await db.insert(actionProviders).values({ label, homepage, icon, tag, link }).returning()
+    const response = formatResponse(result, 'Data inserted successfully')
+    return Response.json(response)
   }
   catch {
-    return formatResponse('An error occurred while trying to save your data. Please try again later.', 'Failed to insert data', 1, 500)
+    const response = formatResponse({}, 'Failed to insert data', 1)
+    return Response.json(response)
   }
 }
