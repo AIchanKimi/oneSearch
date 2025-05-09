@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS ActionProviders (
     Icon TEXT NOT NULL,
     Tag TEXT NOT NULL,
     Link TEXT NOT NULL,
-    ObsoleteCount INTEGER DEFAULT 0
+    ObsoleteCount INTEGER DEFAULT 0,
+    UsageCount INTEGER DEFAULT 0
 );

@@ -8,4 +8,5 @@ export const actionProviders = sqliteTable('ActionProviders', {
   tag: text('Tag').notNull(),
   link: text('Link').notNull(),
   obsoleteCount: int('ObsoleteCount').default(0),
+  usageCount: int('UsageCount').default(0),
 })
