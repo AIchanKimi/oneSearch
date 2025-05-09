@@ -12,10 +12,51 @@ const postSchema = z.object({
   }),
 })
 
-export async function GET() {
+const getSchema = z.object({
+  page: z.string().regex(/^\d+$/).transform(Number).optional().default('1'),
+  pageSize: z.string().regex(/^\d+$/).transform(Number).optional().default('10'),
+})
+
+export async function GET(request: Request) {
   const db = getDb()
-  const results = await db.query.actionProviders.findMany()
-  const response = formatResponse(results, 'Data retrieved successfully')
+
+  // 验证分页参数
+  const url = new URL(request.url)
+  const parseResult = getSchema.safeParse(Object.fromEntries(url.searchParams))
+  if (!parseResult.success) {
+    const response = formatResponse(parseResult.error.issues, 'Invalid query parameters', 1)
+    return Response.json(response)
+  }
+
+  const { page, pageSize } = parseResult.data
+
+  // 确保分页参数有效
+  const validPage = Math.max(page, 1)
+  const validPageSize = Math.max(pageSize, 1)
+
+  // 计算偏移量
+  const offset = (validPage - 1) * validPageSize
+
+  // 查询总记录数
+  const totalCountResult = await db.query.actionProviders.findMany({
+    columns: { providerId: true },
+  })
+  const totalCount = totalCountResult.length
+
+  // 查询分页数据
+  const results = await db.query.actionProviders.findMany({
+    limit: validPageSize,
+    offset,
+  })
+
+  // 构造响应
+  const response = formatResponse({
+    providers: results,
+    total: totalCount,
+    page: validPage,
+    pageSize: validPageSize,
+  }, 'Data retrieved successfully')
+
   return Response.json(response)
 }
 
