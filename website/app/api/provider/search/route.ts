@@ -3,15 +3,15 @@ import { formatResponse } from '@/utils/formatResponse'
 import { sql } from 'drizzle-orm'
 import { z } from 'zod'
 
+// 定义 zod 模式
+const querySchema = z.object({
+  keyword: z.string().optional().default(''),
+  page: z.string().regex(/^\d+$/).transform(Number).optional().default('1'),
+  pageSize: z.string().regex(/^\d+$/).transform(Number).optional().default('5'),
+})
+
 export async function GET(request: Request) {
   const db = getDb()
-
-  // 定义 zod 模式
-  const querySchema = z.object({
-    keyword: z.string().optional().default(''),
-    page: z.string().regex(/^\d+$/).transform(Number).optional().default('1'),
-    pageSize: z.string().regex(/^\d+$/).transform(Number).optional().default('5'),
-  })
 
   // 解析和验证查询参数
   const url = new URL(request.url)

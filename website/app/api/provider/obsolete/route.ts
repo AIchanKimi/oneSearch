@@ -3,7 +3,7 @@ import { formatResponse } from '@/utils/formatResponse'
 import { sql } from 'drizzle-orm'
 import { z } from 'zod'
 
-const incrementSchema = z.object({
+const obsoleteSchema = z.object({
   providerId: z.number().int().positive(),
 })
 
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const db = getDb()
   const body = await request.json()
 
-  const parseResult = incrementSchema.safeParse(body)
+  const parseResult = obsoleteSchema.safeParse(body)
   if (!parseResult.success) {
     const response = formatResponse(parseResult.error.issues, 'Invalid request data', 1)
     return Response.json(response)

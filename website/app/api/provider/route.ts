@@ -1,6 +1,52 @@
 import { actionProviders, getDb } from '@/db'
 import { formatResponse } from '@/utils/formatResponse'
+import { sql } from 'drizzle-orm'
 import { z } from 'zod'
+
+// 定义 zod 模式
+const querySchema = z.object({
+  page: z.string().regex(/^\d+$/).transform(Number).optional().default('1'),
+  pageSize: z.string().regex(/^\d+$/).transform(Number).optional().default('10'),
+})
+
+export async function GET(request: Request) {
+  const db = getDb()
+
+  // 解析和验证查询参数
+  const url = new URL(request.url)
+  const parseResult = querySchema.safeParse(Object.fromEntries(url.searchParams))
+  if (!parseResult.success) {
+    const response = formatResponse(parseResult.error.issues, 'Invalid query parameters', 1)
+    return Response.json(response)
+  }
+
+  const { page, pageSize } = parseResult.data
+
+  try {
+    // 计算偏移量
+    const offset = (page - 1) * pageSize
+
+    // 添加排序逻辑
+    const results = await db.query.actionProviders.findMany({
+      limit: pageSize,
+      offset,
+      orderBy: (actionProviders, { desc }) => [desc(sql`${actionProviders.usageCount} - ${actionProviders.obsoleteCount}`)],
+    })
+
+    // 构造响应
+    const response = formatResponse({
+      providers: results,
+      hasMore: results.length === pageSize,
+    }, 'Data retrieved successfully')
+
+    return Response.json(response)
+  }
+  catch (error) {
+    console.error('Error during data retrieval:', error)
+    const response = formatResponse({}, 'Failed to retrieve data', 1)
+    return Response.json(response)
+  }
+}
 
 const postSchema = z.object({
   label: z.string(),
@@ -11,54 +57,6 @@ const postSchema = z.object({
     message: 'Link must contain {selectedText}',
   }),
 })
-
-const getSchema = z.object({
-  page: z.string().regex(/^\d+$/).transform(Number).optional().default('1'),
-  pageSize: z.string().regex(/^\d+$/).transform(Number).optional().default('10'),
-})
-
-export async function GET(request: Request) {
-  const db = getDb()
-
-  // 验证分页参数
-  const url = new URL(request.url)
-  const parseResult = getSchema.safeParse(Object.fromEntries(url.searchParams))
-  if (!parseResult.success) {
-    const response = formatResponse(parseResult.error.issues, 'Invalid query parameters', 1)
-    return Response.json(response)
-  }
-
-  const { page, pageSize } = parseResult.data
-
-  // 确保分页参数有效
-  const validPage = Math.max(page, 1)
-  const validPageSize = Math.max(pageSize, 1)
-
-  // 计算偏移量
-  const offset = (validPage - 1) * validPageSize
-
-  // 查询总记录数
-  const totalCountResult = await db.query.actionProviders.findMany({
-    columns: { providerId: true },
-  })
-  const totalCount = totalCountResult.length
-
-  // 查询分页数据
-  const results = await db.query.actionProviders.findMany({
-    limit: validPageSize,
-    offset,
-  })
-
-  // 构造响应
-  const response = formatResponse({
-    providers: results,
-    total: totalCount,
-    page: validPage,
-    pageSize: validPageSize,
-  }, 'Data retrieved successfully')
-
-  return Response.json(response)
-}
 
 export async function POST(request: Request) {
   const db = getDb()
