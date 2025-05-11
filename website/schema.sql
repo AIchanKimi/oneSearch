@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS ActionProviders;
+
+CREATE TABLE IF NOT EXISTS ActionProviders (
+    ProviderId INTEGER PRIMARY KEY AUTOINCREMENT,
+    Label TEXT NOT NULL,
+    Homepage TEXT NOT NULL,
+    Icon TEXT NOT NULL,
+    Tag TEXT NOT NULL,
+    Link TEXT NOT NULL,
+    ObsoleteCount INTEGER DEFAULT 0
+);
