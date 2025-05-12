@@ -24,8 +24,6 @@ export async function GET(request: Request) {
 
   const { keyword, page, pageSize, tag } = parseResult.data
 
-  const normalizedTag = tag === 'all' ? '' : tag
-
   try {
     // 计算偏移量
     const offset = (page - 1) * pageSize
@@ -37,7 +35,7 @@ export async function GET(request: Request) {
           like(actionProviders.label, `%${keyword}%`),
           like(actionProviders.homepage, `%${keyword}%`),
         )
-        const tagCondition = normalizedTag ? eq(actionProviders.tag, normalizedTag) : undefined
+        const tagCondition = tag ? eq(actionProviders.tag, tag) : undefined
         return tagCondition ? and(keywordCondition, tagCondition) : keywordCondition
       },
       limit: pageSize,

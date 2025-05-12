@@ -1,8 +1,8 @@
 import type { ActionProvider } from '@/types'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -129,14 +129,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-4/5 sm:max-w-4/5">
-        <DialogHeader>
-          <DialogTitle>从远程库添加提供商</DialogTitle>
-          <DialogDescription>
-            选择一个提供商添加到您的本地设置中
-          </DialogDescription>
-        </DialogHeader>
-
+      <DialogContent className="h-4/5 sm:max-w-4/5 flex flex-col">
         <div className="flex gap-4 mb-4 items-center">
           <Input
             placeholder="搜索关键词"
@@ -144,29 +137,25 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
             onChange={e => setKeyword(e.target.value)}
             className="flex-1"
           />
-          <Select value={tag} onValueChange={setTag}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="选择标签" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">全部</SelectItem>
-              <SelectItem value="tag1">标签1</SelectItem>
-              <SelectItem value="tag2">标签2</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            placeholder="输入标签"
+            value={tag}
+            onChange={e => setTag(e.target.value)}
+            className="w-40"
+          />
           {onCreateEmpty && (
             <Button variant="secondary" onClick={onCreateEmpty}>
-              创建空白提供商
+              创建空白项
             </Button>
           )}
         </div>
 
-        <div ref={containerRef} className="max-h-[400px] overflow-y-auto">
+        <div ref={containerRef} className="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {remoteProviders.length > 0
             ? (
-                <div className="space-y-2">
+                <>
                   {remoteProviders.map(provider => (
-                    <div key={provider.id} className="flex items-center justify-between border rounded-md p-3">
+                    <div key={provider.id} className="flex flex-col justify-between border rounded-md p-3">
                       <div>
                         <div className="font-medium">{provider.label}</div>
                         <div className="text-sm text-gray-500">{provider.homepage}</div>
@@ -174,10 +163,10 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
                           <div className="text-xs mt-1 bg-gray-100 inline-block px-2 py-0.5 rounded">{provider.tag}</div>
                         )}
                       </div>
-                      <Button onClick={() => handleSelectProvider(provider)}>添加</Button>
+                      <Button onClick={() => handleSelectProvider(provider)} className="mt-2">添加</Button>
                     </div>
                   ))}
-                </div>
+                </>
               )
             : loading && page === 1
               ? (
