@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { Upload } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 
 type ActionProviderEditDialogProps = {
   open: boolean
@@ -14,6 +15,7 @@ type ActionProviderEditDialogProps = {
   item: ActionProvider | null
   onSave: (item: ActionProvider) => void
   onCancel: () => void
+  onDelete: (item: ActionProvider) => void
 }
 
 export function ActionProviderEditDialog({
@@ -22,6 +24,7 @@ export function ActionProviderEditDialog({
   item: initialItem,
   onSave,
   onCancel,
+  onDelete,
 }: ActionProviderEditDialogProps) {
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -214,10 +217,27 @@ export function ActionProviderEditDialog({
           </div>
         )}
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>
-            取消
-          </Button>
-          <Button onClick={handleSave}>保存</Button>
+          <div className="w-full flex flex-col gap-4">
+            <div className="flex flex-row-reverse sm:flex-row sm:justify-between w-full">
+              <Button
+                variant="destructive"
+                onDoubleClick={() => editingItem && onDelete(editingItem)}
+                onClick={() => toast.error('双击删除')}
+              >
+                删除
+              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={onCancel}>
+                  取消
+                </Button>
+                <Button onClick={handleSave}>保存</Button>
+              </div>
+
+            </div>
+            <p className="text-sm text-gray-500 mt-1">
+              删除按钮仅限于本地删除，上传的数据无法被删除。
+            </p>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

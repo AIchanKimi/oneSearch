@@ -65,14 +65,6 @@ export function ProvidersSettings() {
     setIsDialogOpen(true)
   }
 
-  const handleDelete = async (index: number) => {
-    const newData = [...data]
-    newData.splice(index, 1)
-    setData(newData)
-    await ActionProviderStorage.setValue(newData)
-    toast.success('项目已删除')
-  }
-
   const handleAddNew = async () => {
     // 打开远程提供商对话框
     setIsRemoteDialogOpen(true)
@@ -132,6 +124,19 @@ export function ProvidersSettings() {
     }
   }
 
+  const handleDialogDelete = async () => {
+    if (editingIndex !== null) {
+      const newData = [...data]
+      newData.splice(editingIndex, 1) // 根据 editingIndex 删除项目
+      setData(newData)
+      await ActionProviderStorage.setValue(newData)
+      toast.success('项目已删除')
+      setIsDialogOpen(false)
+      setEditingItem(null)
+      setEditingIndex(null)
+    }
+  }
+
   const handleCancelEdit = () => {
     setIsDialogOpen(false)
     setEditingItem(null)
@@ -172,7 +177,6 @@ export function ProvidersSettings() {
                       item={item}
                       index={originalIndex}
                       onEdit={handleEdit}
-                      onDelete={handleDelete}
                       onPropertyChange={handlePropertyChange}
                     />
                   )
@@ -192,6 +196,7 @@ export function ProvidersSettings() {
         item={editingItem}
         onSave={handleDialogSave}
         onCancel={handleCancelEdit}
+        onDelete={handleDialogDelete}
       />
 
       <RemoteProviderDialog
