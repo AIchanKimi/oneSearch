@@ -3,7 +3,7 @@ import { RemoteProviderCard } from '@/components/RemoteProviderCard'
 
 // Adjust import order
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -120,6 +120,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTitle>远程提供商</DialogTitle>
       <DialogContent className="h-4/5 sm:max-w-4/5 flex flex-col">
         <div className="flex gap-4 mb-4 mr-8 items-center">
           <Input
