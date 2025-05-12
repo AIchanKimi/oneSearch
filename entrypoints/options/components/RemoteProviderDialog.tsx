@@ -121,7 +121,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="h-4/5 sm:max-w-4/5 flex flex-col">
-        <div className="flex gap-4 mb-4 mr-4 items-center">
+        <div className="flex gap-4 mb-4 mr-8 items-center">
           <Input
             placeholder="搜索关键词"
             value={keyword}
@@ -141,7 +141,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
           )}
         </div>
 
-        <div ref={containerRef} className="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div ref={containerRef} className="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {remoteProviders.length > 0
             ? (
                 <>
