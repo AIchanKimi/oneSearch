@@ -36,3 +36,22 @@ export type CopyAction = {
 export type ActionProvider = BaseProvider & (MenuAction | SearchAction | CopyAction)
 
 export type ActionType = ActionProvider['type']
+
+export type RemoteProvider = {
+  id: number
+  label: string
+  homepage: string
+  icon: string
+  tag: string
+  link: string
+  usageCount?: number
+  obsoleteCount?: number
+}
+
+export type FetchRemoteProvidersResponse = {
+  code: number
+  data: {
+    providers: RemoteProvider[]
+    hasMore: boolean
+  }
+}
