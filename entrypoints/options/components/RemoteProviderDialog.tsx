@@ -1,29 +1,13 @@
-import type { ActionProvider } from '@/types'
+import type { ActionProvider, FetchRemoteProvidersResponse, RemoteProvider } from '@/types'
+import { RemoteProviderCard } from '@/components/RemoteProviderCard'
+
+// Adjust import order
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
-
-type RemoteProvider = {
-  id: number
-  label: string
-  homepage: string
-  icon: string
-  tag: string
-  link: string
-  usageCount?: number
-  obsoleteCount?: number
-}
-
-type FetchRemoteProvidersResponse = {
-  code: number
-  data: {
-    providers: RemoteProvider[]
-    hasMore: boolean
-  }
-}
 
 type RemoteProviderDialogProps = {
   open: boolean
@@ -127,10 +111,17 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
     }
   }
 
+  const handleCreateEmpty = async () => {
+    if (onCreateEmpty) {
+      await onCreateEmpty()
+      onOpenChange(false) // 关闭对话框
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="h-4/5 sm:max-w-4/5 flex flex-col">
-        <div className="flex gap-4 mb-4 items-center">
+        <div className="flex gap-4 mb-4 mr-4 items-center">
           <Input
             placeholder="搜索关键词"
             value={keyword}
@@ -144,7 +135,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
             className="w-40"
           />
           {onCreateEmpty && (
-            <Button variant="secondary" onClick={onCreateEmpty}>
+            <Button variant="secondary" onClick={handleCreateEmpty}>
               创建空白项
             </Button>
           )}
@@ -155,16 +146,11 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
             ? (
                 <>
                   {remoteProviders.map(provider => (
-                    <div key={provider.id} className="flex flex-col justify-between border rounded-md p-3">
-                      <div>
-                        <div className="font-medium">{provider.label}</div>
-                        <div className="text-sm text-gray-500">{provider.homepage}</div>
-                        {provider.tag && (
-                          <div className="text-xs mt-1 bg-gray-100 inline-block px-2 py-0.5 rounded">{provider.tag}</div>
-                        )}
-                      </div>
-                      <Button onClick={() => handleSelectProvider(provider)} className="mt-2">添加</Button>
-                    </div>
+                    <RemoteProviderCard
+                      key={provider.id}
+                      provider={provider}
+                      onSelect={handleSelectProvider}
+                    />
                   ))}
                 </>
               )
