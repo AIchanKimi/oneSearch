@@ -1,6 +1,7 @@
 import type { ActionProvider } from '@/types'
 import { ActionProviderCard } from '@/components/ActionProviderCard'
 import { ActionProviderEditDialog } from '@/components/ActionProviderEditDialog'
+import { RemoteProviderDialog } from '@/components/RemoteProviderDialog'
 import { Toaster } from '@/components/ui/sonner'
 import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
@@ -13,6 +14,7 @@ export function ProvidersSettings() {
   const [data, setData] = useState<ActionProvider[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isRemoteDialogOpen, setIsRemoteDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
   const [parent] = useAutoAnimate()
 
@@ -72,6 +74,18 @@ export function ProvidersSettings() {
   }
 
   const handleAddNew = async () => {
+    // 打开远程提供商对话框
+    setIsRemoteDialogOpen(true)
+  }
+
+  const handleAddProvider = async (provider: ActionProvider) => {
+    const newData = [provider, ...data]
+    setData(newData)
+    await ActionProviderStorage.setValue(newData)
+    return Promise.resolve()
+  }
+
+  const handleCreateEmpty = async () => {
     const newItem: ActionProvider = {
       label: '新项目',
       homepage: '',
@@ -178,6 +192,13 @@ export function ProvidersSettings() {
         item={editingItem}
         onSave={handleDialogSave}
         onCancel={handleCancelEdit}
+      />
+
+      <RemoteProviderDialog
+        open={isRemoteDialogOpen}
+        onOpenChange={setIsRemoteDialogOpen}
+        onAddProvider={handleAddProvider}
+        onCreateEmpty={handleCreateEmpty}
       />
 
       <Toaster richColors position="top-right" />
