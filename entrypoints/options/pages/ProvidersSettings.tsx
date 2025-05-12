@@ -142,7 +142,46 @@ export function ProvidersSettings() {
     setEditingItem(null)
     setEditingIndex(null)
   }
+  const handleUpload = async () => {
+    if (!editingItem) {
+      toast.error('没有可上传的项目')
+      return
+    }
 
+    if (!('link' in editingItem.payload)) {
+      toast.error('当前项目缺少必要的链接信息')
+      return
+    }
+
+    const apiUrl = `${import.meta.env.VITE_API_URL}/api/provider`
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          label: editingItem.label,
+          homepage: editingItem.homepage,
+          icon: editingItem.icon,
+          tag: editingItem.tag,
+          link: editingItem.payload.link,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { message?: string }
+        toast.error(`上传失败: ${errorData.message || '未知错误'}`)
+        return
+      }
+
+      toast.success('上传成功')
+    }
+    catch (error) {
+      console.error('上传时发生错误:', error)
+      toast.error('上传失败: 网络错误')
+    }
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <PageTitle
@@ -197,6 +236,7 @@ export function ProvidersSettings() {
         onSave={handleDialogSave}
         onCancel={handleCancelEdit}
         onDelete={handleDialogDelete}
+        onUpload={handleUpload}
       />
 
       <RemoteProviderDialog

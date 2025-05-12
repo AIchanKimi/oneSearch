@@ -16,6 +16,7 @@ type ActionProviderEditDialogProps = {
   onSave: (item: ActionProvider) => void
   onCancel: () => void
   onDelete: (item: ActionProvider) => void
+  onUpload: () => void
 }
 
 export function ActionProviderEditDialog({
@@ -25,6 +26,7 @@ export function ActionProviderEditDialog({
   onSave,
   onCancel,
   onDelete,
+  onUpload,
 }: ActionProviderEditDialogProps) {
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -219,13 +221,19 @@ export function ActionProviderEditDialog({
         <DialogFooter>
           <div className="w-full flex flex-col gap-4">
             <div className="flex flex-row-reverse sm:flex-row sm:justify-between w-full">
-              <Button
-                variant="destructive"
-                onDoubleClick={() => editingItem && onDelete(editingItem)}
-                onClick={() => toast.error('双击删除')}
-              >
-                删除
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="destructive"
+                  onDoubleClick={() => editingItem && onDelete(editingItem)}
+                  onClick={() => toast.error('双击删除')}
+                >
+                  删除
+                </Button>
+                <Button variant="outline" onClick={onUpload}>
+                  上传
+                </Button>
+
+              </div>
               <div className="flex gap-2">
                 <Button variant="outline" onClick={onCancel}>
                   取消
