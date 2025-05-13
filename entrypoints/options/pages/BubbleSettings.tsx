@@ -2,7 +2,6 @@ import type { ActionProvider } from '@/types'
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
-import { Toaster } from '@/components/ui/sonner'
 import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
@@ -216,7 +215,6 @@ export function BubbleSettings() {
         </CardContent>
       </Card>
 
-      <Toaster richColors position="top-right" />
     </div>
   )
 }

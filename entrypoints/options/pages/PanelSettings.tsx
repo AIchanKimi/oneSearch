@@ -1,6 +1,5 @@
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
-import { Toaster } from '@/components/ui/sonner'
 import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
@@ -95,7 +94,6 @@ export function SortSettings() {
         </CardContent>
       </Card>
 
-      <Toaster richColors position="top-right" />
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import type { ActionProvider } from '@/types'
-import { Toaster } from '@/components/ui/sonner'
 import { ActionProviderCard } from '@/entrypoints/options/components/ActionProviderCard'
 import { ActionProviderEditDialog } from '@/entrypoints/options/components/ActionProviderEditDialog'
 import { RemoteProviderDialog } from '@/entrypoints/options/components/RemoteProviderDialog'
@@ -247,7 +246,6 @@ export function ProvidersSettings() {
         onCreateEmpty={handleCreateEmpty}
       />
 
-      <Toaster richColors position="top-right" />
     </div>
   )
 }

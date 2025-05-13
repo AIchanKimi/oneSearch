@@ -69,7 +69,7 @@ function App() {
         </main>
       </div>
 
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="top-right" expand closeButton />
     </div>
   )
 }
