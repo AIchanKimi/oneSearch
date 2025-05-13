@@ -11,7 +11,6 @@ import { PageTitle } from '../components/PageTitle'
 
 export function ProvidersSettings() {
   const [data, setData] = useState<ActionProvider[]>([])
-  const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isRemoteDialogOpen, setIsRemoteDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
@@ -58,9 +57,11 @@ export function ProvidersSettings() {
     fetchData()
   }, [])
 
-  const handleEdit = (index: number) => {
-    setEditingIndex(index)
-    setEditingItem({ ...data[index] })
+  const handleEdit = (providerId: number) => {
+    const item = data.find(d => d.providerId === providerId)
+    if (!item)
+      return
+    setEditingItem({ ...item })
     setIsDialogOpen(true)
   }
 
@@ -98,49 +99,40 @@ export function ProvidersSettings() {
     toast.success('已添加新项目')
   }
 
-  const handlePropertyChange = async (index: number, property: keyof ActionProvider, value: any) => {
-    const newData = [...data]
-    newData[index] = {
-      ...newData[index],
-      [property]: value,
-    }
+  const handlePropertyChange = async (providerId: number, property: keyof ActionProvider, value: any) => {
+    const newData = data.map(item =>
+      item.providerId === providerId ? { ...item, [property]: value } : item,
+    )
     setData(newData)
-
     await ActionProviderStorage.setValue(newData)
     toast.success('已更新')
   }
 
   const handleDialogSave = async (updatedItem: ActionProvider) => {
-    if (editingIndex !== null) {
-      const newData = [...data]
-      newData[editingIndex] = updatedItem
-      setData(newData)
-      await ActionProviderStorage.setValue(newData)
-      toast.success('更改已保存')
-
-      setIsDialogOpen(false)
-      setEditingItem(null)
-      setEditingIndex(null)
-    }
+    const newData = data.map(item =>
+      item.providerId === updatedItem.providerId ? updatedItem : item,
+    )
+    setData(newData)
+    await ActionProviderStorage.setValue(newData)
+    toast.success('更改已保存')
+    setIsDialogOpen(false)
+    setEditingItem(null)
   }
 
   const handleDialogDelete = async () => {
-    if (editingIndex !== null) {
-      const newData = [...data]
-      newData.splice(editingIndex, 1) // 根据 editingIndex 删除项目
-      setData(newData)
-      await ActionProviderStorage.setValue(newData)
-      toast.success('项目已删除')
-      setIsDialogOpen(false)
-      setEditingItem(null)
-      setEditingIndex(null)
-    }
+    if (!editingItem)
+      return
+    const newData = data.filter(item => item.providerId !== editingItem.providerId)
+    setData(newData)
+    await ActionProviderStorage.setValue(newData)
+    toast.success('项目已删除')
+    setIsDialogOpen(false)
+    setEditingItem(null)
   }
 
   const handleCancelEdit = () => {
     setIsDialogOpen(false)
     setEditingItem(null)
-    setEditingIndex(null)
   }
   const handleUpload = async () => {
     if (!editingItem) {
@@ -208,18 +200,14 @@ export function ProvidersSettings() {
         {filteredData.length > 0
           ? (
               <div ref={parent} className="data-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredData.map((item) => {
-                  const originalIndex = data.findIndex(d => d === item)
-                  return (
-                    <ActionProviderCard
-                      key={item.providerId}
-                      item={item}
-                      index={originalIndex}
-                      onEdit={handleEdit}
-                      onPropertyChange={handlePropertyChange}
-                    />
-                  )
-                })}
+                {filteredData.map(item => (
+                  <ActionProviderCard
+                    key={item.providerId}
+                    item={item}
+                    onEdit={handleEdit}
+                    onPropertyChange={handlePropertyChange}
+                  />
+                ))}
               </div>
             )
           : (

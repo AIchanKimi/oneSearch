@@ -7,14 +7,12 @@ import { Pencil } from 'lucide-react'
 
 type ActionProviderCardProps = {
   item: ActionProvider
-  index: number
-  onEdit: (index: number) => void
-  onPropertyChange: (index: number, property: keyof ActionProvider, value: any) => void
+  onEdit: (providerId: number) => void
+  onPropertyChange: (providerId: number, property: keyof ActionProvider, value: any) => void
 }
 
 export function ActionProviderCard({
   item,
-  index,
   onEdit,
   onPropertyChange,
 }: ActionProviderCardProps) {
@@ -46,13 +44,11 @@ export function ActionProviderCard({
             <div className="text-sm text-gray-600 flex flex-wrap gap-3">
               <div className="truncate">
                 类型:
-                {' '}
                 {item.type}
               </div>
               {item.tag !== undefined && (
                 <div className="truncate">
                   标签:
-                  {' '}
                   {item.tag || '无分类'}
                 </div>
               )}
@@ -61,7 +57,12 @@ export function ActionProviderCard({
 
           {/* 右侧操作按钮 */}
           <div className="flex space-x-1">
-            <Button variant="ghost" size="icon" onClick={() => onEdit(index)} title="编辑">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onEdit(item.providerId)}
+              title="编辑"
+            >
               <Pencil className="h-4 w-4" />
             </Button>
           </div>
@@ -70,20 +71,24 @@ export function ActionProviderCard({
         {/* 下部分：气泡显示和面板显示，使用Switch直接切换 */}
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center justify-between">
-            <Label htmlFor={`bubble-${index}`} className="cursor-pointer">气泡显示</Label>
+            <Label htmlFor={`bubble-${item.providerId}`} className="cursor-pointer">
+              气泡显示
+            </Label>
             <Switch
-              id={`bubble-${index}`}
+              id={`bubble-${item.providerId}`}
               checked={item.bubble}
-              onCheckedChange={checked => onPropertyChange(index, 'bubble', checked)}
+              onCheckedChange={checked => onPropertyChange(item.providerId, 'bubble', checked)}
             />
           </div>
 
           <div className="flex items-center justify-between">
-            <Label htmlFor={`panel-${index}`} className="cursor-pointer">面板显示</Label>
+            <Label htmlFor={`panel-${item.providerId}`} className="cursor-pointer">
+              面板显示
+            </Label>
             <Switch
-              id={`panel-${index}`}
+              id={`panel-${item.providerId}`}
               checked={item.panel}
-              onCheckedChange={checked => onPropertyChange(index, 'panel', checked)}
+              onCheckedChange={checked => onPropertyChange(item.providerId, 'panel', checked)}
             />
           </div>
         </div>
