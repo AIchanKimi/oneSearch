@@ -25,11 +25,17 @@ export function ActionProviderCard({
           <div className="flex-shrink-0">
             {item.icon
               ? (
-                  <img
-                    src={item.icon}
-                    alt="图标"
-                    className="w-12 h-12 object-contain border rounded p-1"
-                  />
+                  <a
+                    href={(item.type === 'search' && item.payload.link) || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={item.icon}
+                      alt="图标"
+                      className="w-12 h-12 object-contain border rounded p-1"
+                    />
+                  </a>
                 )
               : (
                   <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center">
@@ -40,15 +46,24 @@ export function ActionProviderCard({
 
           {/* 中间标签、类型和标签分类 */}
           <div className="flex-1">
-            <div className="font-medium text-lg mb-1">{item.label || '无标签'}</div>
+            <a
+              href={item.homepage || '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-lg mb-1 hover:underline underline-offset-4"
+            >
+              {item.label || '无标签'}
+            </a>
             <div className="text-sm text-gray-600 flex flex-wrap gap-3">
               <div className="truncate">
                 类型:
+                {' '}
                 {item.type}
               </div>
               {item.tag !== undefined && (
                 <div className="truncate">
                   标签:
+                  {' '}
                   {item.tag || '无分类'}
                 </div>
               )}

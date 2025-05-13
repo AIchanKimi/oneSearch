@@ -110,6 +110,16 @@ export function ActionProviderEditDialog({
                 onChange={e => handleDialogDataChange('label', e.target.value)}
               />
             </div>
+            
+            <div>
+              <Label htmlFor="edit-homepage">主页</Label>
+              <Input
+                id="edit-homepage"
+                value={editingItem.homepage || ''}
+                className="mt-1"
+                onChange={e => handleDialogDataChange('homepage', e.target.value)}
+              />
+            </div>
 
             <div className="flex items-center justify-between">
               <Label htmlFor="edit-bubble">气泡显示</Label>
