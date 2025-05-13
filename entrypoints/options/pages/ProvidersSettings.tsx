@@ -161,15 +161,15 @@ export function ProvidersSettings() {
         }),
       })
 
-      if (!response.ok) {
-        const errorData = (await response.json()) as { message?: string }
-        toast.error(`上传失败: ${errorData.message || '未知错误'}`)
+      const responseData: { code: number; message: string; data?: any } = await response.json()
+
+      if (!response.ok || responseData.code !== 0) {
+        toast.error(`上传失败: ${responseData.message || '未知错误'}${responseData.data ? ` (详情: ${JSON.stringify(responseData.data)})` : ''}`)
         return
       }
 
       toast.success('上传成功')
-    }
-    catch (error) {
+    } catch (error) {
       console.error('上传时发生错误:', error)
       toast.error('上传失败: 网络错误')
     }
