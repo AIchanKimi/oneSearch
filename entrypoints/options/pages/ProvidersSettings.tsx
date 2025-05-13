@@ -79,6 +79,7 @@ export function ProvidersSettings() {
 
   const handleCreateEmpty = async () => {
     const newItem: ActionProvider = {
+      providerId: Date.now(),
       label: '新项目',
       homepage: '',
       bubble: false,
@@ -212,7 +213,7 @@ export function ProvidersSettings() {
                   const originalIndex = data.findIndex(d => d === item)
                   return (
                     <ActionProviderCard
-                      key={`${item.label}-${item.type}-${originalIndex}`}
+                      key={item.providerId}
                       item={item}
                       index={originalIndex}
                       onEdit={handleEdit}

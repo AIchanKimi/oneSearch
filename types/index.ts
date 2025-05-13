@@ -1,4 +1,5 @@
 export type BaseProvider = {
+  providerId: number
   label: string
   homepage: string
   icon: string

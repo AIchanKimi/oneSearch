@@ -64,7 +64,7 @@ function Panel({ items, setShowPanel }: PanelProps) {
                 <div className={styles.itemsContainer}>
                   {providers.map(item => (
                     <MenuItem
-                      key={item.label}
+                      key={item.providerId}
                       provider={item}
                       menuAction={setShowPanel}
                     />

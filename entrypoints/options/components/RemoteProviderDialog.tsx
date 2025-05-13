@@ -100,6 +100,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   const handleSelectProvider = useCallback(async (remoteProvider: RemoteProvider) => {
     // 将远程提供商转换为本地ActionProvider格式
     const localProvider: ActionProvider = {
+      providerId: remoteProvider.providerId,
       label: remoteProvider.label,
       homepage: remoteProvider.homepage,
       bubble: true,
