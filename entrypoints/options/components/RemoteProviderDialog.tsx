@@ -1,12 +1,15 @@
 import type { ActionProvider, FetchRemoteProvidersResponse, RemoteProvider } from '@/types'
 import { RemoteProviderCard } from '@/components/RemoteProviderCard'
 
-// Adjust import order
+// UI组件
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+// React hooks和工具库
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useDebounce, useIntersection } from 'react-use'
 import { toast } from 'sonner'
 
 type RemoteProviderDialogProps = {
@@ -16,76 +19,85 @@ type RemoteProviderDialogProps = {
   onCreateEmpty?: () => Promise<void>
 }
 
+// 定义请求参数类型
+type FetchProvidersParams = {
+  pageParam?: number
+  keyword: string
+  tag: string
+}
+
 export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCreateEmpty }: RemoteProviderDialogProps) {
-  const [remoteProviders, setRemoteProviders] = useState<RemoteProvider[]>([])
-  const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
-  const [keyword, setKeyword] = useState('')
-  const [tag, setTag] = useState('')
+  // 将 keyword 和 tag 整合成一个数组共用逻辑
+  const [filters, setFilters] = useState({ keyword: '', tag: '' })
+  const [debouncedFilters, setDebouncedFilters] = useState({ keyword: '', tag: '' })
+
+  useDebounce(
+    () => setDebouncedFilters(filters),
+    500,
+    [filters],
+  )
+
+  // 底部加载参考元素和滚动容器
   const containerRef = useRef<HTMLDivElement>(null)
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
-  const fetchRemoteProviders = useCallback(async () => {
-    if (loading || !hasMore)
-      return
+  // 使用useIntersection监测底部元素是否可见，用于实现无限滚动
+  const intersection = useIntersection(loadMoreRef as React.RefObject<HTMLElement>, {
+    root: null,
+    rootMargin: '100px',
+    threshold: 0.1,
+  })
 
-    setLoading(true)
-    try {
-      const apiUrl = `${import.meta.env.VITE_API_URL}/api/provider?page=${page}&pageSize=10&keyword=${keyword}&tag=${tag === 'all' ? '' : tag}`
-      const response = await fetch(apiUrl)
-      const result: FetchRemoteProvidersResponse = await response.json()
+  // 获取远程提供商数据的查询函数
+  const fetchProviders = useCallback(async ({ pageParam = 1, keyword, tag }: FetchProvidersParams) => {
+    const apiUrl = `${import.meta.env.VITE_API_URL}/api/provider?page=${pageParam}&pageSize=10&keyword=${keyword}&tag=${tag === 'all' ? '' : tag}`
+    const response = await fetch(apiUrl)
+    const result: FetchRemoteProvidersResponse = await response.json()
 
-      if (result.code === 0 && result.data.providers) {
-        setRemoteProviders(prev => [...prev, ...result.data.providers])
-        setHasMore(result.data.hasMore)
-        setPage(prev => prev + 1)
-      }
-      else {
-        toast.error('获取远程提供商失败')
-      }
+    if (result.code !== 0) {
+      throw new Error('获取远程提供商失败')
     }
-    catch (error) {
-      console.error('获取远程提供商出错:', error)
-      toast.error('获取远程提供商出错')
-    }
-    finally {
-      setLoading(false)
-    }
-  }, [page, loading, hasMore, keyword, tag])
 
+    return result.data
+  }, [])
+
+  // 使用 useInfiniteQuery 获取数据
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['remoteProviders', debouncedFilters.keyword, debouncedFilters.tag],
+    queryFn: ({ pageParam }) => fetchProviders({
+      pageParam,
+      keyword: debouncedFilters.keyword,
+      tag: debouncedFilters.tag,
+    }),
+    initialPageParam: 1,
+    getNextPageParam: lastPage => lastPage.hasMore ? lastPage.providers.length / 10 + 1 : undefined,
+    enabled: open, // 只在对话框打开时启用查询
+  })
+
+  // 当对话框打开时重置状态
   useEffect(() => {
     if (open) {
-      fetchRemoteProviders()
+      refetch()
     }
-    else {
-      setPage(1)
-      setHasMore(true)
-      setRemoteProviders([])
-    }
-  }, [open, fetchRemoteProviders])
+  }, [open, refetch])
 
-  // 添加滚动监听
+  // 优化 intersection 的依赖项，只在必要时触发加载
+  const isIntersecting = intersection?.isIntersecting
   useEffect(() => {
-    const container = containerRef.current
-    if (!container)
-      return
-
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = container
-      // 当滚动到距离底部100px时，加载更多
-      if (scrollHeight - scrollTop - clientHeight < 100 && !loading && hasMore) {
-        fetchRemoteProviders()
-      }
+    if (isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
     }
+  }, [isIntersecting, fetchNextPage, hasNextPage, isFetchingNextPage])
 
-    container.addEventListener('scroll', handleScroll)
-
-    return () => {
-      container.removeEventListener('scroll', handleScroll)
-    }
-  }, [fetchRemoteProviders, loading, hasMore])
-
-  const handleSelectProvider = async (remoteProvider: RemoteProvider) => {
+  const handleSelectProvider = useCallback(async (remoteProvider: RemoteProvider) => {
     // 将远程提供商转换为本地ActionProvider格式
     const localProvider: ActionProvider = {
       label: remoteProvider.label,
@@ -97,7 +109,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
       tag: remoteProvider.tag,
       payload: {
         link: remoteProvider.link,
-        selectedText: '{selectedText}',
+        selectedText: '',
         source: '',
       },
     }
@@ -109,30 +121,33 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
     catch {
       toast.error('添加提供商失败')
     }
-  }
+  }, [onAddProvider])
 
-  const handleCreateEmpty = async () => {
+  const handleCreateEmpty = useCallback(async () => {
     if (onCreateEmpty) {
       await onCreateEmpty()
       onOpenChange(false) // 关闭对话框
     }
-  }
+  }, [onCreateEmpty, onOpenChange])
+
+  // 将所有页面的提供商合并为一个数组
+  const allProviders = useMemo(() =>
+    data?.pages.flatMap(page => page.providers) || [], [data?.pages])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTitle>远程提供商</DialogTitle>
       <DialogContent className="h-4/5 sm:max-w-4/5 flex flex-col">
         <div className="flex gap-4 mb-4 mr-8 items-center">
           <Input
             placeholder="搜索关键词"
-            value={keyword}
-            onChange={e => setKeyword(e.target.value)}
+            value={filters.keyword}
+            onChange={e => setFilters({ ...filters, keyword: e.target.value })}
             className="flex-1"
           />
           <Input
             placeholder="输入标签"
-            value={tag}
-            onChange={e => setTag(e.target.value)}
+            value={filters.tag}
+            onChange={e => setFilters({ ...filters, tag: e.target.value })}
             className="w-40"
           />
           {onCreateEmpty && (
@@ -143,29 +158,35 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
         </div>
 
         <div ref={containerRef} className="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {remoteProviders.length > 0
+          {allProviders.length > 0
             ? (
                 <>
-                  {remoteProviders.map(provider => (
+                  {allProviders.map(provider => (
                     <RemoteProviderCard
-                      key={provider.id}
+                      key={provider.providerId}
                       provider={provider}
                       onSelect={handleSelectProvider}
                     />
                   ))}
                 </>
               )
-            : loading && page === 1
+            : isLoading
               ? (
                   <div className="text-center py-4">加载中...</div>
                 )
-              : (
-                  <div className="text-center py-4">没有可用的远程提供商</div>
-                )}
+              : isError
+                ? (
+                    <div className="text-center py-4">获取数据出错，请重试</div>
+                  )
+                : (
+                    <div className="text-center py-4">没有可用的远程提供商</div>
+                  )}
 
-          {loading && page > 1 && (
-            <div className="text-center py-4">加载中...</div>
+          {isFetchingNextPage && (
+            <div className="text-center py-4 col-span-full">加载中...</div>
           )}
+          {/* 底部加载触发元素 */}
+          <div ref={loadMoreRef} className="h-1" />
         </div>
       </DialogContent>
     </Dialog>

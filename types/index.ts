@@ -38,14 +38,14 @@ export type ActionProvider = BaseProvider & (MenuAction | SearchAction | CopyAct
 export type ActionType = ActionProvider['type']
 
 export type RemoteProvider = {
-  id: number
+  providerId: number
   label: string
   homepage: string
   icon: string
   tag: string
   link: string
-  usageCount?: number
-  obsoleteCount?: number
+  usageCount: number
+  obsoleteCount: number
 }
 
 export type FetchRemoteProvidersResponse = {
