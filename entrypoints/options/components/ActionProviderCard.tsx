@@ -17,8 +17,8 @@ export function ActionProviderCard({
   onPropertyChange,
 }: ActionProviderCardProps) {
   return (
-    <Card className="flex flex-col">
-      <CardContent className="space-y-4 flex-1 p-4">
+    <Card className="flex flex-col h-48">
+      <CardContent className="flex flex-col items-stretch justify-center gap-4 flex-1 p-4">
         {/* 上部分：左边是icon，中间是label和类型与标签，右边是操作按钮 */}
         <div className="flex items-start gap-4 pb-3 border-b">
           {/* 左侧图标 */}
