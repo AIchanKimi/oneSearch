@@ -7,6 +7,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 
 // React hooks和工具库
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDebounce, useIntersection } from 'react-use'
@@ -31,6 +32,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   const [filters, setFilters] = useState({ keyword: '', tag: '' })
   const [debouncedFilters, setDebouncedFilters] = useState({ keyword: '', tag: '' })
 
+  const [containerRef] = useAutoAnimate()
   useDebounce(
     () => setDebouncedFilters(filters),
     500,
@@ -38,7 +40,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   )
 
   // 底部加载参考元素和滚动容器
-  const containerRef = useRef<HTMLDivElement>(null)
+  // const containerRef = useRef<HTMLDivElement>(null)
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
   // 使用useIntersection监测底部元素是否可见，用于实现无限滚动
@@ -85,6 +87,9 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   // 当对话框打开时重置状态
   useEffect(() => {
     if (open) {
+      // 重置过滤器
+      setFilters({ keyword: '', tag: '' })
+      setDebouncedFilters({ keyword: '', tag: '' })
       refetch()
     }
   }, [open, refetch])
@@ -158,7 +163,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
           )}
         </div>
 
-        <div ref={containerRef} className="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 scrollbar-none">
+        <div ref={containerRef} className="overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 scrollbar-none">
           {allProviders.length > 0
             ? (
                 <>
