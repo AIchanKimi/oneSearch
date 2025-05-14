@@ -78,7 +78,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
       tag: debouncedFilters.tag,
     }),
     initialPageParam: 1,
-    getNextPageParam: lastPage => lastPage.hasMore ? lastPage.providers.length / 10 + 1 : undefined,
+    getNextPageParam: (lastPage, allPages) => lastPage.hasMore ? allPages.length + 1 : undefined,
     enabled: open, // 只在对话框打开时启用查询
   })
 
@@ -158,7 +158,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
           )}
         </div>
 
-        <div ref={containerRef} className="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div ref={containerRef} className="flex-1 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 scrollbar-none">
           {allProviders.length > 0
             ? (
                 <>
