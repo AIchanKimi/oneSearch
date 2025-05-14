@@ -60,7 +60,7 @@ function App() {
         <Sidebar />
 
         {/* 主内容区域 */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto scrollbar-none">
           <Routes>
             <Route path="/" element={<ProvidersSettings />} />
             <Route path="/bubble" element={<BubbleSettings />} />
