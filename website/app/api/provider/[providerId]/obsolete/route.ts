@@ -4,14 +4,13 @@ import { sql } from 'drizzle-orm'
 import { z } from 'zod'
 
 const obsoleteSchema = z.object({
-  providerId: z.number().int().positive(),
+  providerId: z.string().regex(/^\d+$/), // 修改为字符串并验证为数字格式
 })
-
-export async function POST(request: Request) {
+export async function GET(request: Request, { params }: { params: Promise<{ providerId: string }> }) {
   const db = getDb()
-  const body = await request.json()
 
-  const parseResult = obsoleteSchema.safeParse(body)
+  const resolvedParams = await params // 解开 Promise
+  const parseResult = obsoleteSchema.safeParse({ providerId: resolvedParams.providerId })
   if (!parseResult.success) {
     const response = formatResponse(parseResult.error.issues, 'Invalid request data', 1)
     return Response.json(response)
