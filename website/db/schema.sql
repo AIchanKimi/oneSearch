@@ -10,3 +10,10 @@ CREATE TABLE IF NOT EXISTS ActionProviders (
     ObsoleteCount INTEGER DEFAULT 0,
     UsageCount INTEGER DEFAULT 0
 );
+
+DROP TABLE IF EXISTS InitialProviders;
+
+CREATE TABLE IF NOT EXISTS InitialProviders (
+    ProviderId INTEGER PRIMARY KEY REFERENCES ActionProviders(ProviderId),
+    Enabled INTEGER NOT NULL DEFAULT 1
+);
