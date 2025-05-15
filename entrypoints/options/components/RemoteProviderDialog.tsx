@@ -3,6 +3,7 @@ import { RemoteProviderCard } from '@/components/RemoteProviderCard'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { convertRemoteToActionProvider } from '@/utils/convert-provider'
 import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
@@ -110,22 +111,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   }, [open])
 
   const handleSelectProvider = useCallback(async (remoteProvider: RemoteProvider) => {
-    // 将远程提供商转换为本地ActionProvider格式
-    const localProvider: ActionProvider = {
-      providerId: remoteProvider.providerId,
-      label: remoteProvider.label,
-      homepage: remoteProvider.homepage,
-      bubble: true,
-      panel: true,
-      type: 'search',
-      icon: remoteProvider.icon,
-      tag: remoteProvider.tag,
-      payload: {
-        link: remoteProvider.link,
-        selectedText: '',
-        source: '',
-      },
-    }
+    const localProvider = convertRemoteToActionProvider(remoteProvider)
 
     try {
       await onAddProvider(localProvider)

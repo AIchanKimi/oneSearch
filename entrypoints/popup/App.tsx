@@ -74,21 +74,7 @@ function App() {
 
   // 处理提供者点击，存储到本地
   const handleSelectProvider = async (remoteProvider: RemoteProvider) => {
-    const localProvider: ActionProvider = {
-      providerId: remoteProvider.providerId,
-      label: remoteProvider.label,
-      homepage: remoteProvider.homepage,
-      bubble: true,
-      panel: true,
-      type: 'search', // 确保类型与 ActionProvider 定义一致
-      icon: remoteProvider.icon,
-      tag: remoteProvider.tag,
-      payload: {
-        link: remoteProvider.link,
-        selectedText: '',
-        source: '',
-      },
-    }
+    const localProvider = convertRemoteToActionProvider(remoteProvider)
 
     try {
       // 存储到本地

@@ -1,23 +1,6 @@
-import type { ActionProvider, FetchRemoteProvidersResponse, RemoteProvider } from '@/types'
+import type { FetchRemoteProvidersResponse } from '@/types'
+import { convertRemoteToActionProvider } from '@/utils/convert-provider'
 import { ActionProviderStorage } from '@/utils/storage'
-
-function convertRemoteToActionProvider(remoteProvider: RemoteProvider): ActionProvider {
-  return {
-    providerId: remoteProvider.providerId,
-    label: remoteProvider.label,
-    homepage: remoteProvider.homepage,
-    icon: remoteProvider.icon,
-    tag: remoteProvider.tag,
-    bubble: true, // 默认值
-    panel: true, // 默认值
-    type: 'search', // 假设默认类型为 'search'
-    payload: {
-      link: remoteProvider.link,
-      selectedText: '',
-      source: '',
-    },
-  }
-}
 
 export default defineBackground(() => {
   // 监听扩展安装事件
