@@ -62,6 +62,16 @@ function App() {
     enabled: Boolean(searchTerm),
   })
 
+  const [addedProviderIds, setAddedProviderIds] = useState<number[]>([])
+
+  useEffect(() => {
+    async function fetchLocalProviderIds() {
+      const localProviders = await ActionProviderStorage.getValue()
+      setAddedProviderIds(localProviders.map(item => item.providerId))
+    }
+    fetchLocalProviderIds()
+  })
+
   // 处理提供者点击，存储到本地
   const handleSelectProvider = async (remoteProvider: RemoteProvider) => {
     const localProvider: ActionProvider = {
@@ -124,6 +134,7 @@ function App() {
                         key={provider.providerId}
                         provider={provider}
                         onSelect={handleSelectProvider}
+                        isAdded={addedProviderIds.includes(provider.providerId)}
                       />
                     ))}
                   </div>

@@ -5,11 +5,12 @@ import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
 type RemoteProviderCardProps = {
   provider: RemoteProvider
   onSelect: (provider: RemoteProvider) => void
+  isAdded: boolean // 新增属性，用于判断是否已添加
 }
 
-export function RemoteProviderCard({ provider, onSelect }: RemoteProviderCardProps) {
+export function RemoteProviderCard({ provider, onSelect, isAdded }: RemoteProviderCardProps) {
   return (
-    <div className="relative flex flex-col justify-between border rounded-md p-4 h-48  hover:shadow-lg transition-shadow duration-200">
+    <div className="relative flex flex-col justify-between border rounded-md p-4 h-48 hover:shadow-lg transition-shadow duration-200">
       {provider.tag && (
         <div className="absolute top-2 right-2 text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-700">{provider.tag}</div>
       )}
@@ -32,7 +33,13 @@ export function RemoteProviderCard({ provider, onSelect }: RemoteProviderCardPro
             <span>{provider.obsoleteCount ?? 0}</span>
           </div>
         </div>
-        <Button onClick={() => onSelect(provider)} className="bg-green-500 hover:bg-green-600 text-white">添加</Button>
+        <Button
+          onClick={() => onSelect(provider)}
+          className="bg-green-500 hover:bg-green-600 text-white"
+          disabled={isAdded} // 根据是否已添加禁用按钮
+        >
+          {isAdded ? '已添加' : '添加'}
+        </Button>
       </div>
     </div>
   )

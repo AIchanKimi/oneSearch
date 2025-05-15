@@ -1,12 +1,9 @@
 import type { ActionProvider, FetchRemoteProvidersResponse, RemoteProvider } from '@/types'
 import { RemoteProviderCard } from '@/components/RemoteProviderCard'
-
-// UI组件
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-
-// React hooks和工具库
+import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -102,6 +99,16 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
     }
   }, [isIntersecting, fetchNextPage, hasNextPage, isFetchingNextPage])
 
+  const [addedProviderIds, setAddedProviderIds] = useState<number[]>([])
+
+  useEffect(() => {
+    async function fetchLocalProviderIds() {
+      const localProviders = await ActionProviderStorage.getValue()
+      setAddedProviderIds(localProviders.map(item => item.providerId))
+    }
+    fetchLocalProviderIds()
+  }, [open])
+
   const handleSelectProvider = useCallback(async (remoteProvider: RemoteProvider) => {
     // 将远程提供商转换为本地ActionProvider格式
     const localProvider: ActionProvider = {
@@ -123,6 +130,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
     try {
       await onAddProvider(localProvider)
       toast.success('已添加到本地提供商')
+      setAddedProviderIds(prev => [...prev, remoteProvider.providerId])
     }
     catch {
       toast.error('添加提供商失败')
@@ -143,6 +151,9 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="h-4/5 sm:max-w-4/5 flex flex-col">
+        <div className="mb-4">
+          <DialogTitle>添加远程服务商</DialogTitle>
+        </div>
         <div className="flex gap-4 mb-4 mr-8 items-center">
           <Input
             placeholder="搜索关键词"
@@ -172,6 +183,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
                       key={provider.providerId}
                       provider={provider}
                       onSelect={handleSelectProvider}
+                      isAdded={addedProviderIds.includes(provider.providerId)} // 判断是否已添加
                     />
                   ))}
                 </>

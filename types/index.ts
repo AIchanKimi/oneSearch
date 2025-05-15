@@ -55,4 +55,5 @@ export type FetchRemoteProvidersResponse = {
     providers: RemoteProvider[]
     hasMore: boolean
   }
+  message: string
 }
