@@ -110,7 +110,7 @@ export function ActionProviderEditDialog({
                 onChange={e => handleDialogDataChange('label', e.target.value)}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="edit-homepage">主页</Label>
               <Input

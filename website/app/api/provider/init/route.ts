@@ -1,6 +1,6 @@
-import { actionProviders, getDb, initialProviders } from '@/db'
+import { getDb, initialProviders } from '@/db'
 import { formatResponse } from '@/utils/formatResponse'
-import { eq, inArray, sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { z } from 'zod'
 
 export async function GET(_request: Request) {
