@@ -30,6 +30,7 @@ export function ActionProviderEditDialog({
 }: ActionProviderEditDialogProps) {
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const clickTimer = useRef<NodeJS.Timeout | null>(null)
 
   // 当初始item改变时更新内部状态
   useEffect(() => {
@@ -234,8 +235,19 @@ export function ActionProviderEditDialog({
               <div className="flex gap-2">
                 <Button
                   variant="destructive"
-                  onDoubleClick={() => editingItem && onDelete(editingItem)}
-                  onClick={() => toast.error('双击删除')}
+                  onClick={() => {
+                    if (clickTimer.current)
+                      clearTimeout(clickTimer.current)
+                    clickTimer.current = setTimeout(() => {
+                      toast.error('双击删除')
+                    }, 250)
+                  }}
+                  onDoubleClick={() => {
+                    if (clickTimer.current)
+                      clearTimeout(clickTimer.current)
+                    if (editingItem)
+                      onDelete(editingItem)
+                  }}
                 >
                   删除
                 </Button>
