@@ -1,4 +1,4 @@
-import type { ActionProvider } from '@/types'
+import type { ActionProvider, RemoteProvider } from '@/types'
 import { ActionProviderCard } from '@/entrypoints/options/components/ActionProviderCard'
 import { ActionProviderEditDialog } from '@/entrypoints/options/components/ActionProviderEditDialog'
 import { RemoteProviderDialog } from '@/entrypoints/options/components/RemoteProviderDialog'
@@ -161,11 +161,23 @@ export function ProvidersSettings() {
         }),
       })
 
-      const responseData: { code: number, message: string, data?: any } = await response.json()
+      const responseData: { code: number, message: string, data?: RemoteProvider } = await response.json()
 
       if (!response.ok || responseData.code !== 0) {
         toast.error(`上传失败: ${responseData.message || '未知错误'}${responseData.data ? ` (详情: ${JSON.stringify(responseData.data)})` : ''}`)
         return
+      }
+
+      // 上传成功后用远程的 providerId 替换本地的
+      if (responseData.data && responseData.data.providerId) {
+        const newProviderId = responseData.data.providerId
+        const updatedItem = { ...editingItem, providerId: newProviderId }
+        const newData = data.map(item =>
+          item.providerId === editingItem.providerId ? updatedItem : item,
+        )
+        setData(newData)
+        await ActionProviderStorage.setValue(newData)
+        setEditingItem(updatedItem)
       }
 
       toast.success('上传成功')

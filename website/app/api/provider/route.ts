@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
   try {
     const result = await db.insert(actionProviders).values({ label, homepage, icon, tag, link }).returning()
-    const response = formatResponse(result, 'Data inserted successfully')
+    const response = formatResponse(result[0], 'Data inserted successfully')
     return Response.json(response)
   }
   catch {
