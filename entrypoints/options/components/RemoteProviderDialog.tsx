@@ -29,6 +29,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   // 将 keyword 和 tag 整合成一个数组共用逻辑
   const [filters, setFilters] = useState({ keyword: '', tag: '' })
   const [debouncedFilters, setDebouncedFilters] = useState({ keyword: '', tag: '' })
+  const [emptyBtnDisabled, setEmptyBtnDisabled] = useState(false)
 
   const [containerRef] = useAutoAnimate()
   useDebounce(
@@ -124,11 +125,17 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   }, [onAddProvider])
 
   const handleCreateEmpty = useCallback(async () => {
-    if (onCreateEmpty) {
+    if (!onCreateEmpty || emptyBtnDisabled)
+      return
+    setEmptyBtnDisabled(true)
+    try {
       await onCreateEmpty()
       onOpenChange(false) // 关闭对话框
     }
-  }, [onCreateEmpty, onOpenChange])
+    finally {
+      setEmptyBtnDisabled(false)
+    }
+  }, [onCreateEmpty, onOpenChange, emptyBtnDisabled])
 
   // 将所有页面的提供商合并为一个数组
   const allProviders = useMemo(() =>
@@ -154,7 +161,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
             className="w-40"
           />
           {onCreateEmpty && (
-            <Button variant="secondary" onClick={handleCreateEmpty}>
+            <Button variant="secondary" onClick={handleCreateEmpty} disabled={emptyBtnDisabled}>
               创建空白项
             </Button>
           )}
