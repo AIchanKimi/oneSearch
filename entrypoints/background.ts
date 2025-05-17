@@ -1,4 +1,5 @@
 import type { FetchRemoteProvidersResponse } from '@/types'
+import { actionProvider } from '@/provider/action'
 import { convertRemoteToActionProvider } from '@/utils/convert-provider'
 import { ActionProviderStorage } from '@/utils/storage'
 
@@ -16,11 +17,28 @@ export default defineBackground(() => {
         const data = await response.json() as FetchRemoteProvidersResponse
 
         // 转换并装填到存储中
-        const actionProviders = data.data.providers.map(convertRemoteToActionProvider)
-        await ActionProviderStorage.setValue(actionProviders)
+        const remoteProviders = data.data.providers.map(convertRemoteToActionProvider)
+        const allProviders = [...actionProvider, ...remoteProviders]
+        await ActionProviderStorage.setValue(allProviders)
       }
       catch (error) {
         console.error('Error fetching providers:', error)
+      }
+    }
+    else if (details.reason === 'update') {
+      try {
+        // 获取本地 provider
+        const localProviders = await ActionProviderStorage.getValue() || []
+        // 检查 actionProvider 中是否有本地没有的 provider
+        const localIds = new Set(localProviders.map((p: any) => p.providerId))
+        const newProviders = actionProvider.filter(p => !localIds.has(p.providerId))
+        if (newProviders.length > 0) {
+          const updatedProviders = [...localProviders, ...newProviders]
+          await ActionProviderStorage.setValue(updatedProviders)
+        }
+      }
+      catch (error) {
+        console.error('Error updating local providers:', error)
       }
     }
   })
