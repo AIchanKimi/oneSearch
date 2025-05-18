@@ -2,8 +2,11 @@ import type { ActionProvider, FetchRemoteProvidersResponse, RemoteProvider } fro
 import { RemoteProviderCard } from '@/components/RemoteProviderCard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { convertRemoteToActionProvider } from '@/utils/convert-provider'
 import { ActionProviderStorage } from '@/utils/storage'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useQuery } from '@tanstack/react-query'
+import { Cog, Home } from 'lucide-react'
 import psl from 'psl'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -13,6 +16,7 @@ declare const __APP_VERSION__: string
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [parent] = useAutoAnimate()
 
   // 获取当前活动标签页的URL
   useEffect(() => {
@@ -75,7 +79,6 @@ function App() {
   // 处理提供者点击，存储到本地
   const handleSelectProvider = async (remoteProvider: RemoteProvider) => {
     const localProvider = convertRemoteToActionProvider(remoteProvider)
-
     try {
       // 存储到本地
       const storageData = await ActionProviderStorage.getValue()
@@ -89,77 +92,134 @@ function App() {
     }
   }
 
+  // 检查是否有搜索词，以决定UI布局
+  const hasSearchTerm = Boolean(searchTerm)
+
   return (
-    <div className="w-96 p-4 font-sans bg-white">
-      <header className="text-center mb-4 border-b border-gray-200 pb-3">
-        <h1 className="m-0 text-xl text-gray-800">OneSearch</h1>
-        <p className="mt-2 text-sm text-gray-500">一键搜索多个平台</p>
-      </header>
+    <div ref={parent} className="w-96 p-4 font-sans bg-white">
+      {hasSearchTerm ? (
+        // 紧凑布局 - 有搜索词时
+        <>
+          <header className="flex justify-between items-center mb-2">
+            <h1 className="m-0 text-lg text-gray-800">OneSearch</h1>
+            <div className="text-xs text-gray-400">
+              v
+              {__APP_VERSION__}
+            </div>
+          </header>
 
-      <div className="flex flex-col gap-4">
-        <Input
-          placeholder="搜索域名"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          className="w-full"
-        />
+          <div className="flex flex-col justify-between gap-2 min-h-60">
+            <Input
+              placeholder="搜索域名"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full"
+            />
 
-        {isLoading
-          ? (
-              <div className="text-center py-4">加载中...</div>
-            )
-          : isError
-            ? (
-                <div className="text-center py-4">获取数据失败</div>
-              )
-            : data?.providers && data.providers.length > 0
+            {isLoading
               ? (
-                  <div className="grid grid-cols-1 gap-3 max-h-[300px] overflow-y-auto">
-                    {data.providers.map(provider => (
-                      <RemoteProviderCard
-                        key={provider.providerId}
-                        provider={provider}
-                        onSelect={handleSelectProvider}
-                        isAdded={addedProviderIds.includes(provider.providerId)}
-                      />
-                    ))}
-                  </div>
+                  <div className="text-center py-3">加载中...</div>
                 )
-              : searchTerm
+              : isError
                 ? (
-                    <div className="text-center py-4">没有找到相关结果</div>
+                    <div className="text-center py-3">获取数据失败</div>
                   )
-                : null}
+                : data?.providers && data.providers.length > 0
+                  ? (
+                      <div className="grid grid-cols-1 gap-2 max-h-80 overflow-y-auto scrollbar-none">
+                        {data.providers.map(provider => (
+                          <RemoteProviderCard
+                            key={provider.providerId}
+                            provider={provider}
+                            onSelect={handleSelectProvider}
+                            isAdded={addedProviderIds.includes(provider.providerId)}
+                          />
+                        ))}
+                      </div>
+                    )
+                  : (
+                      <div className="text-center py-3">没有找到相关结果</div>
+                    )}
 
-        <div className="flex flex-col gap-3 mt-2">
-          <Button asChild variant="default" size="default">
-            <a
-              href="options.html"
-              target="_blank"
-              className="w-full"
-            >
-              打开设置
-            </a>
-          </Button>
-          <Button asChild variant="default" size="default">
-            <a
-              href="https://github.com/AIchanKimi/oneSearch"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full"
-            >
-              项目主页
-            </a>
-          </Button>
-        </div>
-      </div>
+            <div className="flex gap-2 mt-1">
+              <Button asChild variant="outline" size="sm" className="flex-1">
+                <a href="options.html" target="_blank">
+                  <Cog className="h-4 w-4 mr-1" />
+                  {' '}
+                  设置
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="flex-1">
+                <a
+                  href="https://github.com/AIchanKimi/oneSearch"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Home className="h-4 w-4 mr-1" />
+                  {' '}
+                  主页
+                </a>
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        // 常规布局 - 无搜索结果时
+        <>
+          <header className="text-center mb-4 border-b border-gray-200 pb-3">
+            <h1 className="m-0 text-xl text-gray-800">OneSearch</h1>
+            <p className="mt-2 text-sm text-gray-500">一键搜索多个平台</p>
+          </header>
 
-      <footer className="text-center text-xs text-gray-400 mt-4 border-t border-gray-200 pt-3">
-        <p className="m-0">
-          v
-          {__APP_VERSION__}
-        </p>
-      </footer>
+          <div className="flex flex-col gap-4">
+            <Input
+              placeholder="搜索域名"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full"
+            />
+
+            {isLoading
+              ? (
+                  <div className="text-center py-4">加载中...</div>
+                )
+              : isError
+                ? (
+                    <div className="text-center py-4">获取数据失败</div>
+                  )
+                : searchTerm
+                  ? (
+                      <div className="text-center py-4">没有找到相关结果</div>
+                    )
+                  : null}
+
+            <div className="flex flex-col gap-3 mt-2">
+              <Button asChild variant="outline" size="default">
+                <a href="options.html" target="_blank" className="w-full">
+                  打开设置
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="default">
+                <a
+                  href="https://github.com/AIchanKimi/oneSearch"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full"
+                >
+                  项目主页
+                </a>
+              </Button>
+            </div>
+          </div>
+
+          <footer className="text-center text-xs text-gray-400 mt-4 border-t border-gray-200 pt-3">
+            <p className="m-0">
+              v
+              {__APP_VERSION__}
+            </p>
+          </footer>
+        </>
+      )}
     </div>
   )
 }
