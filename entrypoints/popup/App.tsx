@@ -111,7 +111,7 @@ function App() {
 
           <div className="flex flex-col justify-between gap-2 min-h-60">
             <Input
-              placeholder="搜索域名"
+              placeholder="搜索域名或名称"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className="w-full"
