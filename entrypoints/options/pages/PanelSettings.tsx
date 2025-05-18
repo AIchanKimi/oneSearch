@@ -17,8 +17,9 @@ export function SortSettings() {
   useEffect(() => {
     async function fetchData() {
       const storageData = await ActionProviderStorage.getValue()
-
-      const tags = Array.from(new Set(storageData.map(item => item.tag || '其他')))
+      // 只筛选panel为true的provider
+      const panelItems = storageData.filter(item => item.panel)
+      const tags = Array.from(new Set(panelItems.map(item => item.tag || '其他')))
       const storedOrder = await GroupOrderStorage.getValue()
 
       // 排序标签：先显示已存储排序中的标签，再显示新标签
