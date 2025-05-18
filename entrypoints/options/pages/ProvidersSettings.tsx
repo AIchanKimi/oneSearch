@@ -128,6 +128,19 @@ export function ProvidersSettings() {
     toast.success('项目已删除')
     setIsDialogOpen(false)
     setEditingItem(null)
+
+    // 删除后调用 obsoleteCount API
+    try {
+      // providerId 需为远程 id（假设本地临时 id 不会出现在远程）
+      if (editingItem.providerId && editingItem.providerId > 0) {
+        const apiUrl = `${import.meta.env.VITE_API_URL}/api/provider/${editingItem.providerId}/obsolete`
+        await fetch(apiUrl)
+      }
+    }
+    catch (error) {
+      console.error('obsoleteCount API 调用失败', error)
+      // 失败不影响本地删除
+    }
   }
 
   const handleCancelEdit = () => {
