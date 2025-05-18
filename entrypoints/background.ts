@@ -9,7 +9,7 @@ export default defineBackground(() => {
     if (details.reason === 'install') {
       try {
         // 通过 fetch 获取全部 provider
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/provider`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/provider/init`)
         if (!response.ok) {
           throw new Error('Failed to fetch providers')
         }
