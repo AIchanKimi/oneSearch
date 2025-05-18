@@ -2,6 +2,7 @@ import type { ActionProvider, FetchRemoteProvidersResponse, RemoteProvider } fro
 import { RemoteProviderCard } from '@/components/RemoteProviderCard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Toaster } from '@/components/ui/sonner'
 import { convertRemoteToActionProvider } from '@/utils/convert-provider'
 import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
@@ -220,6 +221,8 @@ function App() {
           </footer>
         </>
       )}
+
+      <Toaster richColors position="top-right" expand closeButton />
     </div>
   )
 }
