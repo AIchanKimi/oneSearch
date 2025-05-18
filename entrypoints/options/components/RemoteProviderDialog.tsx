@@ -3,6 +3,8 @@ import { RemoteProviderCard } from '@/components/RemoteProviderCard'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { convertRemoteToActionProvider } from '@/utils/convert-provider'
 import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
@@ -30,6 +32,7 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   const [filters, setFilters] = useState({ keyword: '', tag: '' })
   const [debouncedFilters, setDebouncedFilters] = useState({ keyword: '', tag: '' })
   const [emptyBtnDisabled, setEmptyBtnDisabled] = useState(false)
+  const [showAdded, setShowAdded] = useState(true)
 
   const [containerRef] = useAutoAnimate()
   useDebounce(
@@ -155,13 +158,20 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   const allProviders = useMemo(() =>
     data?.pages.flatMap(page => page.providers) || [], [data?.pages])
 
+  // 根据 showAdded 控制显示的 providers
+  const filteredProviders = useMemo(() => {
+    if (showAdded)
+      return allProviders
+    return allProviders.filter(p => !addedProviderIds.includes(p.providerId))
+  }, [allProviders, showAdded, addedProviderIds])
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="h-4/5 sm:max-w-4/5 flex flex-col">
         <div className="mb-4">
           <DialogTitle>添加远程服务商</DialogTitle>
         </div>
-        <div className="flex gap-4 mb-4 mr-8 items-center">
+        <div className="flex gap-4 mb-4 items-center">
           <Input
             placeholder="搜索关键词"
             value={filters.keyword}
@@ -174,6 +184,10 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
             onChange={e => setFilters({ ...filters, tag: e.target.value })}
             className="w-40"
           />
+          <div className="flex items-center gap-2">
+            <Switch id="show-added-switch" checked={showAdded} onCheckedChange={setShowAdded} />
+            <Label htmlFor="show-added-switch">显示已添加</Label>
+          </div>
           {onCreateEmpty && (
             <Button variant="secondary" onClick={handleCreateEmpty} disabled={emptyBtnDisabled}>
               创建空白项
@@ -182,10 +196,10 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
         </div>
 
         <div ref={containerRef} className="overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 scrollbar-none">
-          {allProviders.length > 0
+          {filteredProviders.length > 0
             ? (
                 <>
-                  {allProviders.map(provider => (
+                  {filteredProviders.map(provider => (
                     <RemoteProviderCard
                       key={provider.providerId}
                       provider={provider}
