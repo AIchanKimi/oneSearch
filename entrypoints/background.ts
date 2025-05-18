@@ -17,7 +17,7 @@ export default defineBackground(() => {
         const data = await response.json() as FetchRemoteProvidersResponse
 
         // 转换并装填到存储中
-        const remoteProviders = data.data.providers.map(convertRemoteToActionProvider)
+        const remoteProviders = data.data.providers.map(item => convertRemoteToActionProvider(item, true, true))
         const allProviders = [...actionProvider, ...remoteProviders]
         await ActionProviderStorage.setValue(allProviders)
       }
