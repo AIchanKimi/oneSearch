@@ -116,13 +116,27 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
 
     try {
       await onAddProvider(localProvider)
+
+      // 调用use API增加使用计数
+      try {
+        const apiUrl = `${import.meta.env.VITE_API_URL}/api/provider/${remoteProvider.providerId}/use`
+        await fetch(apiUrl)
+
+        // 刷新列表以显示最新数据
+        await refetch()
+      }
+      catch (error) {
+        console.error('增加使用计数失败', error)
+        // 非关键错误，不影响用户操作，仅记录日志
+      }
+
       toast.success('已添加到本地提供商')
       setAddedProviderIds(prev => [...prev, remoteProvider.providerId])
     }
     catch {
       toast.error('添加提供商失败')
     }
-  }, [onAddProvider])
+  }, [onAddProvider, refetch])
 
   const handleCreateEmpty = useCallback(async () => {
     if (!onCreateEmpty || emptyBtnDisabled)

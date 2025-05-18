@@ -48,7 +48,7 @@ function App() {
   }, [])
 
   // 从API获取远程提供者
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['domainProviders', searchTerm],
     queryFn: async () => {
       if (!searchTerm)
@@ -85,6 +85,22 @@ function App() {
       const storageData = await ActionProviderStorage.getValue()
       const newData: ActionProvider[] = [localProvider, ...storageData]
       await ActionProviderStorage.setValue(newData)
+
+      // 调用use API增加使用计数
+      try {
+        const apiUrl = `${import.meta.env.VITE_API_URL}/api/provider/${remoteProvider.providerId}/use`
+        await fetch(apiUrl)
+
+        // 刷新列表以显示最新数据
+        if (searchTerm) {
+          await refetch()
+        }
+      }
+      catch (error) {
+        console.error('增加使用计数失败', error)
+        // 非关键错误，不影响用户操作，仅记录日志
+      }
+
       toast.success('提供者已成功存储到本地')
     }
     catch (error) {
