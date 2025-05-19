@@ -58,7 +58,7 @@ export function SortSettings() {
       <Card className="mb-6">
         <CardContent className="p-6">
           <h2 className="text-xl font-semibold mb-4">面板分组排序</h2>
-          <p className="text-sm text-zinc-500 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             拖拽下方分组标签调整面板中的显示顺序，排序将自动保存
           </p>
 

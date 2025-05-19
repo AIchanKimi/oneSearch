@@ -38,8 +38,8 @@ export function ActionProviderCard({
                   </a>
                 )
               : (
-                  <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center">
-                    <span className="text-gray-400 text-xs">无图标</span>
+                  <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
+                    <span className="text-muted-foreground text-xs">无图标</span>
                   </div>
                 )}
           </div>
@@ -54,7 +54,7 @@ export function ActionProviderCard({
             >
               {item.label || '无标签'}
             </a>
-            <div className="text-sm text-gray-600 flex flex-wrap gap-3">
+            <div className="text-sm text-muted-foreground flex flex-wrap gap-3">
               <div className="truncate">
                 类型:
                 {' '}
