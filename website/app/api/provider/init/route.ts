@@ -23,9 +23,21 @@ export async function GET(_request: Request) {
       ],
     })
 
+    // 对每个 providerId 触发 useapi（调用 use 接口，增加 usageCount）
+    const origin = new URL(_request.url).origin
+    await Promise.all(ids.map(async (providerId) => {
+      try {
+        // 直接调用 use API GET 端点（需绝对路径）
+        const apiUrl = `${origin}/api/provider/${providerId}/use`
+        await fetch(apiUrl)
+      }
+      catch (error) {
+        console.error(error)
+      }
+    }))
+
     // 构造响应
     const response = formatResponse({ providers: results }, 'Search results retrieved successfully')
-
     return Response.json(response)
   }
   catch (error) {
@@ -55,7 +67,6 @@ export async function POST(request: Request) {
   if (!providerExists) {
     return Response.json(formatResponse({}, 'Provider not found', 1))
   }
-
   try {
     // 检查是否已存在
     const existing = await db.query.initialProviders.findFirst({
