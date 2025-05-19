@@ -237,7 +237,7 @@ export function ProvidersSettings() {
               </div>
             )
           : (
-              <p className="text-center py-8 text-gray-500">
+              <p className="text-center py-8 text-muted-foreground">
                 没有符合条件的数据
               </p>
             )}

@@ -184,7 +184,7 @@ export function ActionProviderEditDialog({
                         />
                       )
                     : (
-                        <Upload className="h-4 w-4 text-gray-400" />
+                        <Upload className="h-4 w-4 text-muted-foreground" />
                       )}
                 </div>
                 <Input
@@ -216,7 +216,7 @@ export function ActionProviderEditDialog({
                     className="mt-1"
                     onChange={e => handleDialogDataChange('payload.link', e.target.value)}
                   />
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     搜索关键词用
                     {' '}
                     {'{selectedText}'}
@@ -264,7 +264,7 @@ export function ActionProviderEditDialog({
               </div>
 
             </div>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               删除按钮仅限于本地删除，上传的数据无法被删除。
             </p>
           </div>
