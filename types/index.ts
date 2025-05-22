@@ -1,9 +1,27 @@
+export enum ProviderTagEnum {
+  general = '通用',
+  translation = '翻译',
+  cloud = '网盘',
+  knowledge = '知识',
+  map = '地图',
+  image = '图片',
+  social = '社交',
+  news = '新闻',
+  technology = '技术',
+  shopping = '购物',
+  music = '音乐',
+  video = '视频',
+  other = '其他',
+}
+
+export type ProviderTag = keyof typeof ProviderTagEnum
+
 export type BaseProvider = {
   providerId: number
   label: string
   homepage: string
   icon: string
-  tag: string
+  tag: ProviderTag
   bubble: boolean
   panel: boolean
   order?: number // 添加可选的排序属性
@@ -43,7 +61,7 @@ export type RemoteProvider = {
   label: string
   homepage: string
   icon: string
-  tag: string
+  tag: ProviderTag
   link: string
   usageCount: number
   obsoleteCount: number
