@@ -22,7 +22,6 @@ type FetchProvidersParams = {
 export default function ProvidersPage() {
   const [filters, setFilters] = useState({ keyword: '', tag: '' })
   const [debouncedFilters, setDebouncedFilters] = useState({ keyword: '', tag: '' })
-  const [tags, setTags] = useState<string[]>([])
 
   // 用于无限滚动的引用
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
@@ -54,24 +53,6 @@ export default function ProvidersPage() {
 
     return result.data
   }
-
-  // 获取所有不同的标签
-  useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const res = await fetch('/api/provider/init')
-        const data: { code: number, data: { tags: string[] } } = await res.json()
-        if (data.code === 0 && data.data.tags) {
-          setTags(data.data.tags)
-        }
-      }
-      catch (err) {
-        console.error('Failed to fetch tags:', err)
-      }
-    }
-
-    fetchTags()
-  }, [])
 
   // 使用 useInfiniteQuery 获取数据
   const {
@@ -143,7 +124,7 @@ export default function ProvidersPage() {
         <div>
           <h2 className="text-lg font-medium mb-2">按标签筛选：</h2>
           <div className="flex flex-wrap gap-2">
-            {tags.map(tag => (
+            {[...new Set(allProviders.map(p => p.tag).filter(Boolean))].map(tag => (
               <Badge
                 key={tag}
                 variant={filters.tag === tag ? 'default' : 'outline'}
