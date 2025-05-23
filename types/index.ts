@@ -11,6 +11,7 @@ export enum ProviderTagEnum {
   shopping = '购物',
   music = '音乐',
   video = '视频',
+  action = '操作',
   other = '其他',
 }
 
