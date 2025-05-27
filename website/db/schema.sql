@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS InitialProviders;
 DROP TABLE IF EXISTS ActionProviders;
 
 CREATE TABLE IF NOT EXISTS ActionProviders (
@@ -11,9 +12,8 @@ CREATE TABLE IF NOT EXISTS ActionProviders (
     UsageCount INTEGER DEFAULT 0
 );
 
-DROP TABLE IF EXISTS InitialProviders;
-
 CREATE TABLE IF NOT EXISTS InitialProviders (
-    ProviderId INTEGER PRIMARY KEY REFERENCES ActionProviders(ProviderId),
-    Enabled INTEGER NOT NULL DEFAULT 1
+    ProviderId INTEGER PRIMARY KEY,
+    Enabled INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY (ProviderId) REFERENCES ActionProviders(ProviderId) ON DELETE CASCADE
 );

@@ -12,6 +12,6 @@ export const actionProviders = sqliteTable('ActionProviders', {
 })
 
 export const initialProviders = sqliteTable('InitialProviders', {
-  providerId: int('ProviderId').primaryKey().references(() => actionProviders.providerId),
+  providerId: int('ProviderId').primaryKey().references(() => actionProviders.providerId, { onDelete: 'cascade' }),
   enabled: int('Enabled').notNull().default(1),
 })
