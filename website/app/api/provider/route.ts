@@ -1,4 +1,5 @@
 import { actionProviders, getDb } from '@/db'
+import { ProviderTagEnum } from '@/types/index'
 import { formatResponse } from '@/utils/formatResponse'
 import { sql } from 'drizzle-orm'
 import { z } from 'zod'
@@ -30,12 +31,23 @@ export async function GET(request: Request) {
 
     // 使用 Drizzle ORM 的结构化查询格式构建模糊查询
     const results = await db.query.actionProviders.findMany({
-      where: (actionProviders, { or, like, eq, and }) => {
+      where: (actionProviders, { or, like, eq, and, sql: dsql }) => {
         const keywordCondition = or(
           like(actionProviders.label, `%${keyword}%`),
           like(actionProviders.homepage, `%${keyword}%`),
         )
-        const tagCondition = tag ? eq(actionProviders.tag, tag) : undefined
+        let tagCondition
+        if (tag === 'other') {
+          // tag为other时，筛选tag为other或不在ProviderTagEnum中的自定义tag
+          const enumTagKeys = Object.keys(ProviderTagEnum)
+          // 构造SQL: tag = 'other' OR tag NOT IN (...所有枚举key)
+          tagCondition = dsql.raw(
+            `(${actionProviders.tag.name} = 'other' OR ${actionProviders.tag.name} NOT IN (${enumTagKeys.map(k => `'${k}'`).join(',')}))`,
+          )
+        }
+        else if (tag && tag !== 'all') {
+          tagCondition = eq(actionProviders.tag, tag)
+        }
         return tagCondition ? and(keywordCondition, tagCondition) : keywordCondition
       },
       limit: pageSize,

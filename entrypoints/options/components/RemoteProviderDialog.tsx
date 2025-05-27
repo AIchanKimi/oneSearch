@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { ProviderTagEnum } from '@/types'
 import { convertRemoteToActionProvider } from '@/utils/convert-provider'
 import { ActionProviderStorage } from '@/utils/storage'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
@@ -29,8 +31,8 @@ type FetchProvidersParams = {
 
 export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCreateEmpty }: RemoteProviderDialogProps) {
   // 将 keyword 和 tag 整合成一个数组共用逻辑
-  const [filters, setFilters] = useState({ keyword: '', tag: '' })
-  const [debouncedFilters, setDebouncedFilters] = useState({ keyword: '', tag: '' })
+  const [filters, setFilters] = useState({ keyword: '', tag: 'all' })
+  const [debouncedFilters, setDebouncedFilters] = useState({ keyword: '', tag: 'all' })
   const [emptyBtnDisabled, setEmptyBtnDisabled] = useState(false)
   const [showAdded, setShowAdded] = useState(true)
 
@@ -90,8 +92,8 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
   useEffect(() => {
     if (open) {
       // 重置过滤器
-      setFilters({ keyword: '', tag: '' })
-      setDebouncedFilters({ keyword: '', tag: '' })
+      setFilters({ keyword: '', tag: 'all' })
+      setDebouncedFilters({ keyword: '', tag: 'all' })
       refetch()
     }
   }, [open, refetch])
@@ -178,12 +180,20 @@ export function RemoteProviderDialog({ open, onOpenChange, onAddProvider, onCrea
             onChange={e => setFilters({ ...filters, keyword: e.target.value })}
             className="flex-1"
           />
-          <Input
-            placeholder="输入标签"
-            value={filters.tag}
-            onChange={e => setFilters({ ...filters, tag: e.target.value })}
-            className="w-40"
-          />
+          <Select
+            value={filters.tag || 'all'}
+            onValueChange={value => setFilters({ ...filters, tag: value })}
+          >
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="选择标签" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全部</SelectItem>
+              {Object.entries(ProviderTagEnum).map(([key, label]) => (
+                <SelectItem key={key} value={key}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <div className="flex items-center gap-2">
             <Switch id="show-added-switch" checked={showAdded} onCheckedChange={setShowAdded} />
             <Label htmlFor="show-added-switch">显示已添加</Label>
