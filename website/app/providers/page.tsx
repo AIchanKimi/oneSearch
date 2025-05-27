@@ -2,6 +2,7 @@
 
 // 从types目录导入类型
 import type { FetchRemoteProvidersResponse, RemoteProvider } from '../../../types'
+import { ProviderTagEnum } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,6 +12,8 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
 import { useDebounce, useIntersection } from 'react-use'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { convertProviderTag } from '@/utils/convert-provider-tag'
 
 // 定义请求参数类型
 type FetchProvidersParams = {
@@ -101,14 +104,15 @@ export default function ProvidersPage() {
   // 将所有页面的提供商合并为一个数组
   const allProviders = data?.pages.flatMap(page => page.providers) || []
 
+  // 标签选项集合，基于 ProviderTagEnum 枚举，包含 'all' 选项
+  const tagOptions = ['all', ...Object.keys(ProviderTagEnum)]
+
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">搜索提供商</h1>
-
       {/* 搜索和过滤控制 */}
       <div className="mb-6">
         <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 items-start md:items-center mb-6">
-          <div className="flex gap-2 flex-1">
+          <div className="flex gap-2 flex-1 items-center">
             <Input
               type="text"
               placeholder="搜索提供商..."
@@ -116,26 +120,23 @@ export default function ProvidersPage() {
               onChange={e => handleFilterChange('keyword', e.target.value)}
               className="flex-1"
             />
+            <div className="w-52">
+              <Select value={filters.tag || 'all'} onValueChange={value => handleFilterChange('tag', value)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="选择标签" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tagOptions.map(tag => (
+                    <SelectItem key={tag} value={tag}>
+                      {tag === 'all' ? '全部标签' : convertProviderTag(tag)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <Button type="submit">搜索</Button>
           </div>
         </form>
-
-        {/* 标签过滤 */}
-        <div>
-          <h2 className="text-lg font-medium mb-2">按标签筛选：</h2>
-          <div className="flex flex-wrap gap-2">
-            {[...new Set(allProviders.map(p => p.tag).filter(Boolean))].map(tag => (
-              <Badge
-                key={tag}
-                variant={filters.tag === tag ? 'default' : 'outline'}
-                className="cursor-pointer"
-                onClick={() => handleTagClick(tag)}
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* 错误提示 */}
