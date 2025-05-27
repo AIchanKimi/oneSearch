@@ -1,4 +1,4 @@
-import type { ActionProvider } from '@/types'
+import type { ActionProvider, ProviderTag } from '@/types'
 
 export const ActionProviderStorage = storage.defineItem<ActionProvider[]>(
   'local:ActionProviderStorage',
@@ -7,7 +7,7 @@ export const ActionProviderStorage = storage.defineItem<ActionProvider[]>(
   },
 )
 
-export const GroupOrderStorage = storage.defineItem<string[]>(
+export const GroupOrderStorage = storage.defineItem<ProviderTag[]>(
   'local:GroupOrderStorage',
   {
     fallback: [],

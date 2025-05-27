@@ -1,6 +1,8 @@
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
+import { ProviderTagEnum } from '@/types'
 import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
+import { convertProviderTag } from '@/utils/convert-provider-tag'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -19,7 +21,8 @@ export function SortSettings() {
       const storageData = await ActionProviderStorage.getValue()
       // 只筛选panel为true的provider
       const panelItems = storageData.filter(item => item.panel)
-      const tags = Array.from(new Set(panelItems.map(item => item.tag || '其他')))
+      // tags 为 ProviderTag 类型的数组
+      const tags = Array.from(new Set(panelItems.map(item => item.tag || 'other')))
       const storedOrder = await GroupOrderStorage.getValue()
 
       // 排序标签：先显示已存储排序中的标签，再显示新标签
@@ -28,7 +31,7 @@ export function SortSettings() {
         ...tags.filter(tag => !storedOrder.includes(tag)),
       ]
 
-      setGroupOrderTags(sortedTags.map(tag => ({ id: tag, label: tag })))
+      setGroupOrderTags(sortedTags.map(tag => ({ id: tag, label: convertProviderTag(tag) })))
     }
     fetchData()
   }, [])
@@ -43,8 +46,8 @@ export function SortSettings() {
 
     setGroupOrderTags(newTags)
 
-    // 拖拽结束后立即保存排序
-    await GroupOrderStorage.setValue(newTags.map(tag => tag.label))
+    // 拖拽结束后立即保存排序，存储 ProviderTag（key）
+    await GroupOrderStorage.setValue(newTags.map(tag => tag.id as import('@/types').ProviderTag))
     toast.success('分组排序已更新')
   }
 
