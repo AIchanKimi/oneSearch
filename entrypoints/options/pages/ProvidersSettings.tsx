@@ -86,7 +86,7 @@ export function ProvidersSettings() {
       panel: false,
       type: 'search',
       icon: '',
-      tag: '',
+      tag: 'other',
       payload: {
         link: '',
         selectedText: '',

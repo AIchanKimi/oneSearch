@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { ProviderTagEnum } from '@/types'
 import { Upload } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -29,6 +30,7 @@ export function ActionProviderEditDialog({
   onUpload,
 }: ActionProviderEditDialogProps) {
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
+  const [customTagInput, setCustomTagInput] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const clickTimer = useRef<NodeJS.Timeout | null>(null)
 
@@ -36,6 +38,7 @@ export function ActionProviderEditDialog({
   useEffect(() => {
     if (initialItem) {
       setEditingItem({ ...initialItem })
+      setCustomTagInput('')
     }
   }, [initialItem])
 
@@ -61,6 +64,17 @@ export function ActionProviderEditDialog({
       }
 
       // 处理普通属性
+      if (field === 'tag') {
+        if (value === 'custom') {
+          setCustomTagInput('')
+          return { ...prev, tag: '' }
+        }
+        else {
+          setCustomTagInput('')
+          return { ...prev, tag: value }
+        }
+      }
+
       return {
         ...prev,
         [field]: value,
@@ -90,7 +104,12 @@ export function ActionProviderEditDialog({
 
   const handleSave = () => {
     if (editingItem) {
-      onSave(editingItem)
+      let itemToSave = { ...editingItem }
+      // 判断是否为自定义标签（tag不是枚举值）
+      if (!(Object.values(ProviderTagEnum) as string[]).includes(editingItem.tag)) {
+        itemToSave = { ...itemToSave, tag: customTagInput as any }
+      }
+      onSave(itemToSave as ActionProvider)
     }
   }
 
@@ -159,12 +178,29 @@ export function ActionProviderEditDialog({
 
             <div>
               <Label htmlFor="edit-tag">标签分类</Label>
-              <Input
-                id="edit-tag"
-                value={editingItem.tag}
-                className="mt-1"
-                onChange={e => handleDialogDataChange('tag', e.target.value)}
-              />
+              <Select
+                value={Object.keys(ProviderTagEnum).includes(editingItem.tag) ? editingItem.tag : 'custom'}
+                onValueChange={value => handleDialogDataChange('tag', value)}
+              >
+                <SelectTrigger id="edit-tag" className="mt-1">
+                  <SelectValue placeholder="选择标签分类" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(ProviderTagEnum).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>{label}</SelectItem>
+                  ))}
+                  <SelectItem value="custom">自定义</SelectItem>
+                </SelectContent>
+              </Select>
+              {(!Object.keys(ProviderTagEnum).includes(editingItem.tag)) && (
+                <Input
+                  id="edit-tag-custom"
+                  className="mt-2"
+                  placeholder="请输入自定义标签"
+                  value={customTagInput}
+                  onChange={e => setCustomTagInput(e.target.value)}
+                />
+              )}
             </div>
 
             <div>

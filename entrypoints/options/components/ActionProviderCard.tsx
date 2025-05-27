@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { convertProviderType } from '@/utils/convert-provider-type'
 import { Pencil } from 'lucide-react'
 
 type ActionProviderCardProps = {
@@ -64,7 +65,7 @@ export function ActionProviderCard({
                 <div className="truncate">
                   标签:
                   {' '}
-                  {item.tag || '无分类'}
+                  {convertProviderType(item.tag)}
                 </div>
               )}
             </div>
