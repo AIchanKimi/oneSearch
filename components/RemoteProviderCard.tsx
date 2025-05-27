@@ -12,10 +12,10 @@ export function RemoteProviderCard({ provider, onSelect, isAdded }: RemoteProvid
   return (
     <div className="relative flex flex-col justify-between border rounded-md p-4 h-48 hover:shadow-lg transition-shadow duration-200">
       {provider.tag && (
-        <div className="absolute top-2 right-2 text-xs bg-muted px-3 py-1 rounded-full text-muted-foreground">{provider.tag}</div>
+        <div className="absolute top-2 right-2 text-xs bg-muted px-3 py-1 rounded-full text-muted-foreground">{convertProviderTag(provider.tag)}</div>
       )}
       <div className="flex items-center gap-3 mb-3">
-        <img src={provider.icon} alt={provider.label} className="w-10 h-10 rounded-full" />
+        <img src={provider.icon} alt={provider.label} className="w-12 h-12 object-contain border rounded p-1" />
         <div className="overflow-hidden">
           <div className="font-semibold text-lg text-foreground">{provider.label}</div>
           <div className="text-sm text-muted-foreground truncate">{provider.homepage}</div>
