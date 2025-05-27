@@ -251,7 +251,13 @@ export function ActionProviderEditDialog({
                 >
                   删除
                 </Button>
-                <Button variant="outline" onClick={onUpload}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleSave()
+                    onUpload()
+                  }}
+                >
                   上传
                 </Button>
 
