@@ -13,7 +13,7 @@ export async function GET(_request: Request) {
     })
     const ids = initial.map(item => item.providerId)
     if (ids.length === 0) {
-      return Response.json(formatResponse({ providers: [] }, 'Search results retrieved successfully'))
+      return Response.json(formatResponse({ providers: [] }, 'Initialized provider list retrieved successfully'))
     }
     // 查询对应 actionProviders
     const results = await db.query.actionProviders.findMany({
@@ -37,7 +37,7 @@ export async function GET(_request: Request) {
     }))
 
     // 构造响应
-    const response = formatResponse({ providers: results }, 'Search results retrieved successfully')
+    const response = formatResponse({ providers: results }, 'Initialized provider list retrieved successfully')
     return Response.json(response)
   }
   catch (error) {
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
         .values({ providerId, enabled })
         .returning()
     }
-    return Response.json(formatResponse(result, 'InitialProviders updated successfully'))
+    return Response.json(formatResponse(result, 'Initialized provider status updated successfully'))
   }
   catch (error) {
     console.error('Error updating InitialProviders:', error)
