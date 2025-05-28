@@ -11,9 +11,7 @@ export default function Header() {
       <div className="h-full py-2 container flex items-center justify-between">
         {/* 左侧只保留Logo且不可点击 */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center">
-            <Image src="/icon.png" alt="OneSearch Logo" width={32} height={32} />
-          </Link>
+          <Image src="/icon.png" alt="OneSearch Logo" width={32} height={32} />
         </div>
 
         <Separator orientation="vertical" className="mx-4 h-8" />
