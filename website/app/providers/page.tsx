@@ -1,15 +1,14 @@
 'use client'
 
-// 从types目录导入类型
 import type { FetchRemoteProvidersResponse, RemoteProvider } from '../../../types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ProviderTagEnum } from '@/types'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { ArrowBigDown, ArrowBigUp, Loader2 } from 'lucide-react'
-
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useDebounce, useIntersection } from 'react-use'
@@ -101,8 +100,10 @@ export default function ProvidersPage() {
   // 标签选项集合，基于 ProviderTagEnum 枚举，包含 'all' 选项
   const tagOptions = ['all', ...Object.keys(ProviderTagEnum)]
 
+  const [parent] = useAutoAnimate()
+
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container min-h-screen mx-auto py-8 px-4">
       {/* 搜索和过滤控制 */}
       <div className="mb-6">
         <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4 items-start md:items-center mb-6">
@@ -141,7 +142,7 @@ export default function ProvidersPage() {
       )}
 
       {/* 提供商列表 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div ref={parent} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {allProviders.length > 0
           ? allProviders.map((provider: RemoteProvider) => (
               <div key={provider.providerId} className="relative flex flex-col justify-between border rounded-md p-4 h-56 bg-white hover:shadow-lg transition-shadow duration-200">
