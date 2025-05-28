@@ -22,13 +22,17 @@ export default function Header() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuLink href="/">
-                  首页
+                <NavigationMenuLink asChild>
+                  <Link href="/">
+                    首页
+                  </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink href="/providers">
-                  搜索提供商
+                <NavigationMenuLink asChild>
+                  <Link href="/providers">
+                    搜索提供商
+                  </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
