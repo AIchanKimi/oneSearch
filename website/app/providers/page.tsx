@@ -2,18 +2,17 @@
 
 // 从types目录导入类型
 import type { FetchRemoteProvidersResponse, RemoteProvider } from '../../../types'
-import { ProviderTagEnum } from '@/types'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ProviderTagEnum } from '@/types'
+import { convertProviderTag } from '@/utils/convert-provider-tag'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { ArrowBigDown, ArrowBigUp, Loader2 } from 'lucide-react'
+
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-
 import { useDebounce, useIntersection } from 'react-use'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { convertProviderTag } from '@/utils/convert-provider-tag'
 
 // 定义请求参数类型
 type FetchProvidersParams = {
@@ -96,11 +95,6 @@ export default function ProvidersPage() {
     setFilters(prev => ({ ...prev, [key]: value }))
   }
 
-  // 标签筛选
-  const handleTagClick = (tag: string) => {
-    handleFilterChange('tag', filters.tag === tag ? '' : tag)
-  }
-
   // 将所有页面的提供商合并为一个数组
   const allProviders = data?.pages.flatMap(page => page.providers) || []
 
@@ -152,7 +146,7 @@ export default function ProvidersPage() {
           ? allProviders.map((provider: RemoteProvider) => (
               <div key={provider.providerId} className="relative flex flex-col justify-between border rounded-md p-4 h-56 bg-white hover:shadow-lg transition-shadow duration-200">
                 {provider.tag && (
-                  <div className="absolute top-2 right-2 text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-700">{provider.tag}</div>
+                  <div className="absolute top-2 right-2 text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-700">{convertProviderTag(provider.tag)}</div>
                 )}
                 <div className="flex items-center gap-3 mb-3">
                   <Image src={provider.icon} alt={provider.label} width={40} height={40} className="w-10 h-10 rounded-full object-cover" />

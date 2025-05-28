@@ -1,6 +1,6 @@
 import type { ActionProvider } from '@/types'
-import { GroupOrderStorage } from '@/utils/storage'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
+import { GroupOrderStorage } from '@/utils/storage'
 import { X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import MenuItem from './menu-item'
