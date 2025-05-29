@@ -1,7 +1,36 @@
+import type { Metadata } from 'next'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Chrome, Download, Github, Globe, Search, Share2, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: '首页 - oneSearch 一键搜索多个平台',
+  description: 'OneSearch 是一个浏览器扩展，支持一键在多个平台搜索，支持社区共享和自定义搜索引擎。',
+  keywords: ['OneSearch', '一键搜索', '多平台搜索', '浏览器扩展', '搜索引擎', '社区共享', '自定义搜索'],
+  openGraph: {
+    title: '首页 - oneSearch 一键搜索多个平台',
+    description: 'OneSearch 是一个浏览器扩展，支持一键在多个平台搜索，支持社区共享和自定义搜索引擎。',
+    url: 'https://onesearch.aichan.site',
+    siteName: 'oneSearch',
+    images: [
+      {
+        url: '/img/icon.svg',
+        width: 120,
+        height: 120,
+        alt: 'oneSearch Logo',
+      },
+    ],
+    locale: 'zh_CN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '首页 - oneSearch 一键搜索多个平台',
+    description: 'OneSearch 是一个浏览器扩展，支持一键在多个平台搜索，支持社区共享和自定义搜索引擎。',
+    images: ['/img/icon.svg'],
+  },
+}
 
 export default function Home() {
   return (
