@@ -150,7 +150,7 @@ export default function ProvidersPage() {
                   <div className="absolute top-2 right-2 text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-700">{convertProviderTag(provider.tag)}</div>
                 )}
                 <div className="flex items-center gap-3 mb-3">
-                  <Image src={provider.icon} alt={provider.label} width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
+                  <Image src={provider.icon} alt={provider.label} width={40} height={40} className="w-12 h-12 object-contain border rounded p-1" />
                   <div className="overflow-hidden">
                     <div className="font-semibold text-lg truncate">{provider.label}</div>
                     <div className="text-sm text-gray-500 truncate">
