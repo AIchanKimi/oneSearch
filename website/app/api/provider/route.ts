@@ -1,12 +1,15 @@
 import { actionProviders, getDb } from '@/db'
+import { ProviderTagEnum } from '@/types/index'
 import { formatResponse } from '@/utils/formatResponse'
 import { sql } from 'drizzle-orm'
 import { z } from 'zod'
 
 // 定义 zod 模式
 const querySchema = z.object({
+  keyword: z.string().optional().default(''),
   page: z.string().regex(/^\d+$/).transform(Number).optional().default('1'),
-  pageSize: z.string().regex(/^\d+$/).transform(Number).optional().default('10'),
+  pageSize: z.string().regex(/^\d+$/).transform(Number).optional().default('5'),
+  tag: z.string().optional(), // 新增 tag 参数
 })
 
 export async function GET(request: Request) {
@@ -20,14 +23,33 @@ export async function GET(request: Request) {
     return Response.json(response)
   }
 
-  const { page, pageSize } = parseResult.data
+  const { keyword, page, pageSize, tag } = parseResult.data
 
   try {
     // 计算偏移量
     const offset = (page - 1) * pageSize
 
-    // 添加排序逻辑
+    // 使用 Drizzle ORM 的结构化查询格式构建模糊查询
     const results = await db.query.actionProviders.findMany({
+      where: (actionProviders, { or, like, eq, and, sql: dsql }) => {
+        const keywordCondition = or(
+          like(actionProviders.label, `%${keyword}%`),
+          like(actionProviders.homepage, `%${keyword}%`),
+        )
+        let tagCondition
+        if (tag === 'other') {
+          // tag为other时，筛选tag为other或不在ProviderTagEnum中的自定义tag
+          const enumTagKeys = Object.keys(ProviderTagEnum)
+          // 构造SQL: tag = 'other' OR tag NOT IN (...所有枚举key)
+          tagCondition = dsql.raw(
+            `(${actionProviders.tag.name} = 'other' OR ${actionProviders.tag.name} NOT IN (${enumTagKeys.map(k => `'${k}'`).join(',')}))`,
+          )
+        }
+        else if (tag && tag !== 'all') {
+          tagCondition = eq(actionProviders.tag, tag)
+        }
+        return tagCondition ? and(keywordCondition, tagCondition) : keywordCondition
+      },
       limit: pageSize,
       offset,
       orderBy: (actionProviders, { desc }) => [desc(sql`${actionProviders.usageCount} - ${actionProviders.obsoleteCount}`)],
@@ -37,13 +59,13 @@ export async function GET(request: Request) {
     const response = formatResponse({
       providers: results,
       hasMore: results.length === pageSize,
-    }, 'Data retrieved successfully')
+    }, 'Search results retrieved successfully')
 
     return Response.json(response)
   }
   catch (error) {
-    console.error('Error during data retrieval:', error)
-    const response = formatResponse({}, 'Failed to retrieve data', 1)
+    console.error('Error during search:', error)
+    const response = formatResponse({}, 'Failed to retrieve search results', 1)
     return Response.json(response)
   }
 }
@@ -72,7 +94,7 @@ export async function POST(request: Request) {
 
   try {
     const result = await db.insert(actionProviders).values({ label, homepage, icon, tag, link }).returning()
-    const response = formatResponse(result, 'Data inserted successfully')
+    const response = formatResponse(result[0], 'Data inserted successfully')
     return Response.json(response)
   }
   catch {

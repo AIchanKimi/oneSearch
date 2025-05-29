@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS InitialProviders;
 DROP TABLE IF EXISTS ActionProviders;
 
 CREATE TABLE IF NOT EXISTS ActionProviders (
@@ -9,4 +10,10 @@ CREATE TABLE IF NOT EXISTS ActionProviders (
     Link TEXT NOT NULL,
     ObsoleteCount INTEGER DEFAULT 0,
     UsageCount INTEGER DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS InitialProviders (
+    ProviderId INTEGER PRIMARY KEY,
+    Enabled INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY (ProviderId) REFERENCES ActionProviders(ProviderId) ON DELETE CASCADE
 );

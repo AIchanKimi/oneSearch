@@ -1,0 +1,16 @@
+export enum ProviderTagEnum {
+  general = '通用',
+  translation = '翻译',
+  cloud = '网盘',
+  knowledge = '知识',
+  map = '地图',
+  image = '图片',
+  social = '社交',
+  news = '新闻',
+  technology = '技术',
+  shopping = '购物',
+  music = '音乐',
+  video = '视频',
+  action = '操作',
+  other = '其他',
+}

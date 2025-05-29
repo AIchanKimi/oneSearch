@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client'
-import { createShadowRootUi } from 'wxt/client'
+import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'
 import App from './App.tsx'
 import '@/assets/globals.css'
 
@@ -17,8 +17,7 @@ export default defineContentScript({
       zIndex: 2147483646,
       onMount: (container) => {
         const wrapper = document.createElement('div')
-        container.append(wrapper)
-
+        container.appendChild(wrapper)
         const root = ReactDOM.createRoot(wrapper)
         root.render(<App />)
         return { root, wrapper }

@@ -10,3 +10,8 @@ export const actionProviders = sqliteTable('ActionProviders', {
   obsoleteCount: int('ObsoleteCount').default(0),
   usageCount: int('UsageCount').default(0),
 })
+
+export const initialProviders = sqliteTable('InitialProviders', {
+  providerId: int('ProviderId').primaryKey().references(() => actionProviders.providerId, { onDelete: 'cascade' }),
+  enabled: int('Enabled').notNull().default(1),
+})

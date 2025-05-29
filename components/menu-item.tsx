@@ -13,7 +13,7 @@ function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
   return (
     <button
       type="button"
-      key={provider.label}
+      key={provider.providerId}
       className={cn(
         styles.button,
         styles.ghost,

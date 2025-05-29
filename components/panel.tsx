@@ -1,4 +1,5 @@
 import type { ActionProvider } from '@/types'
+import { convertProviderTag } from '@/utils/convert-provider-tag'
 import { GroupOrderStorage } from '@/utils/storage'
 import { X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -60,11 +61,11 @@ function Panel({ items, setShowPanel }: PanelProps) {
           <div className={styles.groupsContainer}>
             {groupedItems.map(([tag, providers]) => (
               <div key={tag} className={styles.groupItem}>
-                <h3 className={styles.groupTitle}>{tag}</h3>
+                <h3 className={styles.groupTitle}>{convertProviderTag(tag)}</h3>
                 <div className={styles.itemsContainer}>
                   {providers.map(item => (
                     <MenuItem
-                      key={item.label}
+                      key={item.providerId}
                       provider={item}
                       menuAction={setShowPanel}
                     />

@@ -5,8 +5,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { ProviderTagEnum } from '@/types'
 import { Upload } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 
 type ActionProviderEditDialogProps = {
   open: boolean
@@ -14,6 +16,8 @@ type ActionProviderEditDialogProps = {
   item: ActionProvider | null
   onSave: (item: ActionProvider) => void
   onCancel: () => void
+  onDelete: (item: ActionProvider) => void
+  onUpload: () => void
 }
 
 export function ActionProviderEditDialog({
@@ -22,14 +26,19 @@ export function ActionProviderEditDialog({
   item: initialItem,
   onSave,
   onCancel,
+  onDelete,
+  onUpload,
 }: ActionProviderEditDialogProps) {
   const [editingItem, setEditingItem] = useState<ActionProvider | null>(null)
+  const [customTagInput, setCustomTagInput] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const clickTimer = useRef<NodeJS.Timeout | null>(null)
 
   // 当初始item改变时更新内部状态
   useEffect(() => {
     if (initialItem) {
       setEditingItem({ ...initialItem })
+      setCustomTagInput('')
     }
   }, [initialItem])
 
@@ -55,6 +64,17 @@ export function ActionProviderEditDialog({
       }
 
       // 处理普通属性
+      if (field === 'tag') {
+        if (value === 'custom') {
+          setCustomTagInput('')
+          return { ...prev, tag: '' }
+        }
+        else {
+          setCustomTagInput('')
+          return { ...prev, tag: value }
+        }
+      }
+
       return {
         ...prev,
         [field]: value,
@@ -84,7 +104,12 @@ export function ActionProviderEditDialog({
 
   const handleSave = () => {
     if (editingItem) {
-      onSave(editingItem)
+      let itemToSave = { ...editingItem }
+      // 判断是否为自定义标签（tag不是枚举值）
+      if (!(Object.values(ProviderTagEnum) as string[]).includes(editingItem.tag)) {
+        itemToSave = { ...itemToSave, tag: customTagInput as any }
+      }
+      onSave(itemToSave as ActionProvider)
     }
   }
 
@@ -103,6 +128,16 @@ export function ActionProviderEditDialog({
                 value={editingItem.label || ''}
                 className="mt-1"
                 onChange={e => handleDialogDataChange('label', e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="edit-homepage">主页</Label>
+              <Input
+                id="edit-homepage"
+                value={editingItem.homepage || ''}
+                className="mt-1"
+                onChange={e => handleDialogDataChange('homepage', e.target.value)}
               />
             </div>
 
@@ -143,12 +178,29 @@ export function ActionProviderEditDialog({
 
             <div>
               <Label htmlFor="edit-tag">标签分类</Label>
-              <Input
-                id="edit-tag"
-                value={editingItem.tag}
-                className="mt-1"
-                onChange={e => handleDialogDataChange('tag', e.target.value)}
-              />
+              <Select
+                value={Object.keys(ProviderTagEnum).includes(editingItem.tag) ? editingItem.tag : 'custom'}
+                onValueChange={value => handleDialogDataChange('tag', value)}
+              >
+                <SelectTrigger id="edit-tag" className="mt-1">
+                  <SelectValue placeholder="选择标签分类" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(ProviderTagEnum).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>{label}</SelectItem>
+                  ))}
+                  <SelectItem value="custom">自定义</SelectItem>
+                </SelectContent>
+              </Select>
+              {(!Object.keys(ProviderTagEnum).includes(editingItem.tag)) && (
+                <Input
+                  id="edit-tag-custom"
+                  className="mt-2"
+                  placeholder="请输入自定义标签"
+                  value={customTagInput}
+                  onChange={e => setCustomTagInput(e.target.value)}
+                />
+              )}
             </div>
 
             <div>
@@ -168,7 +220,7 @@ export function ActionProviderEditDialog({
                         />
                       )
                     : (
-                        <Upload className="h-4 w-4 text-gray-400" />
+                        <Upload className="h-4 w-4 text-muted-foreground" />
                       )}
                 </div>
                 <Input
@@ -200,7 +252,7 @@ export function ActionProviderEditDialog({
                     className="mt-1"
                     onChange={e => handleDialogDataChange('payload.link', e.target.value)}
                   />
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     搜索关键词用
                     {' '}
                     {'{selectedText}'}
@@ -214,10 +266,50 @@ export function ActionProviderEditDialog({
           </div>
         )}
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>
-            取消
-          </Button>
-          <Button onClick={handleSave}>保存</Button>
+          <div className="w-full flex flex-col gap-4">
+            <div className="flex flex-row-reverse sm:flex-row sm:justify-between w-full">
+              <div className="flex gap-2">
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    if (clickTimer.current)
+                      clearTimeout(clickTimer.current)
+                    clickTimer.current = setTimeout(() => {
+                      toast.error('双击删除')
+                    }, 250)
+                  }}
+                  onDoubleClick={() => {
+                    if (clickTimer.current)
+                      clearTimeout(clickTimer.current)
+                    if (editingItem)
+                      onDelete(editingItem)
+                  }}
+                >
+                  删除
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleSave()
+                    onUpload()
+                  }}
+                >
+                  上传
+                </Button>
+
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={onCancel}>
+                  取消
+                </Button>
+                <Button onClick={handleSave}>保存</Button>
+              </div>
+
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              删除按钮仅限于本地删除，上传的数据无法被删除。
+            </p>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

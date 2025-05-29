@@ -1,16 +1,29 @@
 import { ThemeProvider } from '@/components/theme-provider'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import App from './App.tsx'
 import '@/assets/globals.css'
 
+// 创建 QueryClient 实例
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+})
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider storageKey="vite-ui-theme">
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider storageKey="vite-ui-theme">
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </ThemeProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 )

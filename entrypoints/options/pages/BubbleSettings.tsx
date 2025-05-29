@@ -2,7 +2,6 @@ import type { ActionProvider } from '@/types'
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
-import { Toaster } from '@/components/ui/sonner'
 import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
@@ -107,7 +106,7 @@ export function BubbleSettings() {
       <Card className="mb-6">
         <CardContent className="p-6">
           <h2 className="text-xl font-semibold mb-4">气泡排序设置</h2>
-          <p className="text-sm text-zinc-500 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             拖拽下方气泡图标项目调整显示顺序，排序将自动保存
           </p>
 
@@ -155,12 +154,12 @@ export function BubbleSettings() {
             {/* 右上角单元格 - X轴滑块 */}
             <div className="flex flex-col items-center">
               <div className="flex justify-between w-full mb-1">
-                <div className="text-sm text-zinc-600 dark:text-zinc-400">← 左</div>
+                <div className="text-sm text-muted-foreground">← 左</div>
                 <div className="font-medium text-sm">
                   {bubbleOffset.x}
                   px
                 </div>
-                <div className="text-sm text-zinc-600 dark:text-zinc-400">右 →</div>
+                <div className="text-sm text-muted-foreground">右 →</div>
               </div>
               <Slider
                 id="bubble-offset-x"
@@ -176,12 +175,12 @@ export function BubbleSettings() {
             {/* 左下角单元格 - Y轴滑块，使用h-full适应与预览区域相同的高度 */}
             <div className="flex h-full justify-self-end">
               <div className="w-10 flex flex-col justify-between mr-4">
-                <div className="text-sm text-zinc-600 dark:text-zinc-400">↑ 上</div>
+                <div className="text-sm text-muted-foreground">↑ 上</div>
                 <div className="font-medium text-sm text-center">
                   {bubbleOffset.y}
                   px
                 </div>
-                <div className="text-sm text-zinc-600 dark:text-zinc-400">↓ 下</div>
+                <div className="text-sm text-muted-foreground">↓ 下</div>
               </div>
               <Slider
                 id="bubble-offset-y"
@@ -196,27 +195,26 @@ export function BubbleSettings() {
             </div>
 
             {/* 右下角单元格 - 预览区域，使用aspect-square确保是正方形 */}
-            <div className="aspect-square w-full bg-zinc-100 dark:bg-zinc-800 relative rounded-lg flex items-center justify-center border dark:border-zinc-700">
+            <div className="aspect-square w-full bg-muted relative rounded-lg flex items-center justify-center border border-border">
               {/* 水平虚线表示 Y 轴的 0 位置 */}
-              <div className="absolute top-1/2 left-0 right-0 border-t border-dashed border-zinc-400 dark:border-zinc-500"></div>
+              <div className="absolute top-1/2 left-0 right-0 border-t border-dashed border-border"></div>
               {/* 垂直虚线表示 X 轴的 0 位置 */}
-              <div className="absolute bottom-0 top-0 left-1/2 border-l border-dashed border-zinc-400 dark:border-zinc-500"></div>
+              <div className="absolute bottom-0 top-0 left-1/2 border-l border-dashed border-border"></div>
               <div
-                className="absolute w-10 h-10 bg-white dark:bg-zinc-700 rounded shadow-lg border dark:border-zinc-600 flex items-center justify-center"
+                className="absolute w-10 h-10 bg-background rounded shadow-lg border border-border flex items-center justify-center"
                 style={{
                   transform: `translate(${bubbleOffset.x}px, ${bubbleOffset.y}px)`,
                   top: 'calc(50%)',
                   left: 'calc(50%)',
                 }}
               >
-                <span className="text-xs dark:text-zinc-300">气泡</span>
+                <span className="text-xs text-muted-foreground">气泡</span>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Toaster richColors position="top-right" />
     </div>
   )
 }

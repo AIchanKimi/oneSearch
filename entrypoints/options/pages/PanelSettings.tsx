@@ -1,6 +1,6 @@
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
-import { Toaster } from '@/components/ui/sonner'
+import { convertProviderTag } from '@/utils/convert-provider-tag'
 import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
@@ -18,8 +18,10 @@ export function SortSettings() {
   useEffect(() => {
     async function fetchData() {
       const storageData = await ActionProviderStorage.getValue()
-
-      const tags = Array.from(new Set(storageData.map(item => item.tag || '其他')))
+      // 只筛选panel为true的provider
+      const panelItems = storageData.filter(item => item.panel)
+      // tags 为 ProviderTag 类型的数组
+      const tags = Array.from(new Set(panelItems.map(item => item.tag || 'other')))
       const storedOrder = await GroupOrderStorage.getValue()
 
       // 排序标签：先显示已存储排序中的标签，再显示新标签
@@ -28,7 +30,7 @@ export function SortSettings() {
         ...tags.filter(tag => !storedOrder.includes(tag)),
       ]
 
-      setGroupOrderTags(sortedTags.map(tag => ({ id: tag, label: tag })))
+      setGroupOrderTags(sortedTags.map(tag => ({ id: tag, label: convertProviderTag(tag) })))
     }
     fetchData()
   }, [])
@@ -43,8 +45,8 @@ export function SortSettings() {
 
     setGroupOrderTags(newTags)
 
-    // 拖拽结束后立即保存排序
-    await GroupOrderStorage.setValue(newTags.map(tag => tag.label))
+    // 拖拽结束后立即保存排序，存储 ProviderTag（key）
+    await GroupOrderStorage.setValue(newTags.map(tag => tag.id as import('@/types').ProviderTag))
     toast.success('分组排序已更新')
   }
 
@@ -58,7 +60,7 @@ export function SortSettings() {
       <Card className="mb-6">
         <CardContent className="p-6">
           <h2 className="text-xl font-semibold mb-4">面板分组排序</h2>
-          <p className="text-sm text-zinc-500 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             拖拽下方分组标签调整面板中的显示顺序，排序将自动保存
           </p>
 
@@ -95,7 +97,6 @@ export function SortSettings() {
         </CardContent>
       </Card>
 
-      <Toaster richColors position="top-right" />
     </div>
   )
 }

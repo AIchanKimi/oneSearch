@@ -140,7 +140,7 @@ export function FilterHeader({
                             tagFilter === tag ? 'opacity-100' : 'opacity-0',
                           )}
                         />
-                        {tag}
+                        {convertProviderTag(tag)}
                       </CommandItem>
                     ))}
                   </CommandGroup>
