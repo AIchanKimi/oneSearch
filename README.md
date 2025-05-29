@@ -2,7 +2,6 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)](https://github.com/AIchanKimi/oneSearch/releases)
 [![Chrome](https://img.shields.io/chrome-web-store/v/gbmfnogamgapnaadfjaaingffdloekce?label=Chrome&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/onesearch/gbmfnogamgapnaadfjaaingffdloekce?authuser=0&hl=zh-CN)
 [![Firefox](https://img.shields.io/amo/v/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0?label=Firefox&logo=firefox&logoColor=white)](https://addons.mozilla.org/zh-CN/firefox/addon/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0/)
 [![Edge](https://img.shields.io/badge/Edge-Available-0078D7.svg?logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/onesearch-%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%A4%9A%E4%B8%AA%E5%B9%B3%E5%8F%B0/fmfeincfdmdagjilohgbfepfplhbhkaj)
@@ -16,10 +15,10 @@ OneSearch 是一个强大的浏览器扩展，让您能够在选择文本后，�
 
 <div align="center">
   <h3>选择文本后的气泡菜单</h3>
-  <img src="./assets/bubble.gif" alt="气泡功能演示" width="600">
+  <img src="./website/public/img/bubble.gif" alt="气泡功能演示" width="600">
 
   <h3>自定义搜索引擎设置</h3>
-  <img src="./assets/options.png" alt="设置页面" width="600">
+  <img src="./website/public/img/options.jpg" alt="设置页面" width="600">
 </div>
 
 ## ✨ 功能特点
@@ -29,6 +28,8 @@ OneSearch 是一个强大的浏览器扩展，让您能够在选择文本后，�
 - **搜索面板**: 展开更多搜索提供商和操作选项
 - **自定义操作**: 支持搜索、复制、菜单等多种操作类型
 - **可配置**: 自定义搜索引擎和显示顺序
+- **社区共享**: 上传和分享自定义搜索提供商到云端
+- **云端同步**: 从社区获取其他用户分享的搜索提供商
 
 ## 🔍 支持的搜索网站
 
@@ -82,15 +83,49 @@ OneSearch 支持任意能通过URL传递搜索关键词的网站，包括但不�
    - 调整搜索引擎显示顺序
    - 配置气泡和面板中显示的选项
    - 自定义搜索URL模板
+   - 上传您的自定义提供商到云端与社区分享
+   - 从社区浏览和添加其他用户分享的提供商
+
+## 🌐 社区共享功能
+
+OneSearch 提供了强大的社区共享功能，让用户能够分享和获取自定义搜索提供商：
+
+### 上传分享
+
+- 在扩展设置中，您可以将自定义的搜索提供商上传到云端
+- 分享您发现的有用搜索引擎和工具
+- 帮助其他用户发现新的搜索资源
+
+### 浏览获取
+
+- 访问 [OneSearch 社区](https://onesearch.aichan.space/providers) 浏览所有共享的提供商
+- 支持按关键词搜索和标签分类筛选
+- 查看提供商的使用统计和受欢迎程度
+- 一键添加感兴趣的提供商到您的扩展中
+
+### 统计反馈
+
+- 自动统计每个提供商的使用次数
+- 用户可以标记过时或无效的提供商
+- 基于社区反馈优化推荐算法
 
 ## 🛠️ 开发说明
 
 OneSearch 是使用以下技术构建的：
 
+### 浏览器扩展
+
 - [WXT](https://wxt.dev) - WebExtension开发框架
 - [React](https://react.dev) - 用户界面库
 - [Tailwind CSS](https://tailwindcss.com) - CSS框架
 - [Radix UI](https://www.radix-ui.com) - 无障碍组件库
+
+### 项目主页与API
+
+- [Next.js](https://nextjs.org) - 全栈React框架
+- [Drizzle ORM](https://orm.drizzle.team) - 类型安全的ORM
+- [SQLite](https://www.sqlite.org) - 轻量级数据库
+- [Cloudflare](https://www.cloudflare.com) - 部署平台
 
 ### 本地开发
 
@@ -128,6 +163,18 @@ pnpm zip
 - `provider/` - 搜索提供商定义
 - `utils/` - 工具函数
 - `types/` - TypeScript类型定义
+- `website/` - 项目主页和API服务
+
+## 🌍 项目主页
+
+OneSearch 拥有一个功能完善的项目主页，提供以下服务：
+
+- **提供商浏览**: 查看所有用户共享的搜索提供商
+- **搜索过滤**: 支持按关键词搜索和标签分类
+- **使用统计**: 展示提供商的使用次数和受欢迎程度
+- **API服务**: 为扩展提供数据同步和共享功能
+
+访问地址：[https://onesearch.aichan.space](https://onesearch.aichan.space)
 
 ## 📄 许可证
 
@@ -135,7 +182,9 @@ pnpm zip
 
 ## 🔗 相关链接
 
-- [项目主页](https://github.com/AIchanKimi/oneSearch)
+- [项目主页](https://onesearch.aichan.space)
+- [GitHub 仓库](https://github.com/AIchanKimi/oneSearch)
+- [社区提供商](https://onesearch.aichan.space/providers)
 - [问题反馈](https://github.com/AIchanKimi/oneSearch/issues)
 
 ---
