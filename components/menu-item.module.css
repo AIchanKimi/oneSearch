@@ -12,6 +12,7 @@
   outline: none;
   border: none;
   background: none;
+  color: #0f172a;
 }
 
 .button:disabled {
@@ -26,8 +27,7 @@
 
 /* 只保留ghost变体 */
 .ghost:hover {
-  background-color: #f1f5f9; /* 替换 var(--accent) 为 #f1f5f9 */
-  color: #0f172a; /* 替换 var(--accent-foreground) 为 #0f172a */
+  background-color: #f1f5f9;
 }
 
 /* 只保留需要的尺寸 */
