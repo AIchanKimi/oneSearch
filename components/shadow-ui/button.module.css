@@ -10,6 +10,7 @@
   transition: all 0.2s;
   flex-shrink: 0;
   outline: none;
+  color: #0f172a;
 }
 
 .button:disabled {
