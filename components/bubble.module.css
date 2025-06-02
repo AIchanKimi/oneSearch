@@ -10,3 +10,39 @@
     0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
   gap: 4px; /* 将 0.25rem 替换为 4px */
 }
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 32px;
+  color: #666;
+  cursor: grab;
+  user-select: none;
+  font-size: 12px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.dragHandle:hover {
+  color: #374151;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+/* 左侧handle样式 */
+.leftHandle {
+  border-right: 1px solid #e5e7eb;
+  margin-right: 4px;
+  padding-right: 4px;
+}
+
+/* 右侧handle样式 */
+.rightHandle {
+  border-left: 1px solid #e5e7eb;
+  margin-left: 4px;
+  padding-left: 4px;
+}
