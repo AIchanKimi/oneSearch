@@ -13,11 +13,20 @@ type BubbleMenuProps = {
 function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
   const [position, setPosition] = useState({ x: mousePosition.x, y: mousePosition.y })
   const [isDragging, setIsDragging] = useState(false)
+  const [hasBeenDragged, setHasBeenDragged] = useState(false) // 记录是否被手动拖动过
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const bubbleRef = useRef<HTMLDivElement>(null)
 
+  // 当mousePosition更新且用户没有手动拖动过时，自动跟随新位置
+  React.useEffect(() => {
+    if (!hasBeenDragged && !isDragging) {
+      setPosition({ x: mousePosition.x, y: mousePosition.y })
+    }
+  }, [mousePosition.x, mousePosition.y, hasBeenDragged, isDragging])
+
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true)
+    setHasBeenDragged(true) // 标记为已被手动拖动
     setDragStart({
       x: e.clientX - position.x,
       y: e.clientY - position.y,
