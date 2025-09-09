@@ -18,7 +18,7 @@ export default defineBackground(() => {
 
         // 转换并装填到存储中
         const remoteProviders = data.data.providers.map(item => convertRemoteToActionProvider(item, true, true))
-        const allProviders = [...actionProvider, ...remoteProviders]
+        const allProviders = [...remoteProviders, ...actionProvider]
         await ActionProviderStorage.setValue(allProviders)
       }
       catch (error) {
@@ -33,7 +33,7 @@ export default defineBackground(() => {
         const localIds = new Set(localProviders.map((p: any) => p.providerId))
         const newProviders = actionProvider.filter(p => !localIds.has(p.providerId))
         if (newProviders.length > 0) {
-          const updatedProviders = [...localProviders, ...newProviders]
+          const updatedProviders = [...newProviders, ...localProviders]
           await ActionProviderStorage.setValue(updatedProviders)
         }
       }
