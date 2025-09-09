@@ -38,7 +38,13 @@ export function ActionProviderEditDialog({
   useEffect(() => {
     if (initialItem) {
       setEditingItem({ ...initialItem })
-      setCustomTagInput('')
+      // 如果当前标签不是预定义的枚举值，则设置为自定义输入
+      if (!Object.keys(ProviderTagEnum).includes(initialItem.tag)) {
+        setCustomTagInput(initialItem.tag)
+      }
+      else {
+        setCustomTagInput('')
+      }
     }
   }, [initialItem])
 
@@ -66,10 +72,11 @@ export function ActionProviderEditDialog({
       // 处理普通属性
       if (field === 'tag') {
         if (value === 'custom') {
-          setCustomTagInput('')
-          return { ...prev, tag: '' }
+          // 当选择自定义时，不改变当前的tag值，让用户在自定义输入框中输入
+          return prev
         }
         else {
+          // 选择预定义标签时，清空自定义输入
           setCustomTagInput('')
           return { ...prev, tag: value }
         }
@@ -105,9 +112,10 @@ export function ActionProviderEditDialog({
   const handleSave = () => {
     if (editingItem) {
       let itemToSave = { ...editingItem }
-      // 判断是否为自定义标签（tag不是枚举值）
-      if (!(Object.values(ProviderTagEnum) as string[]).includes(editingItem.tag)) {
-        itemToSave = { ...itemToSave, tag: customTagInput as any }
+      // 如果当前选择的是自定义标签且有自定义输入内容，使用自定义输入的值
+      const currentSelectValue = Object.keys(ProviderTagEnum).includes(editingItem.tag) ? editingItem.tag : 'custom'
+      if (currentSelectValue === 'custom' && customTagInput.trim()) {
+        itemToSave = { ...itemToSave, tag: customTagInput.trim() as any }
       }
       onSave(itemToSave as ActionProvider)
     }
@@ -192,7 +200,7 @@ export function ActionProviderEditDialog({
                   <SelectItem value="custom">自定义</SelectItem>
                 </SelectContent>
               </Select>
-              {(!Object.keys(ProviderTagEnum).includes(editingItem.tag)) && (
+              {!Object.keys(ProviderTagEnum).includes(editingItem.tag) && (
                 <Input
                   id="edit-tag-custom"
                   className="mt-2"
