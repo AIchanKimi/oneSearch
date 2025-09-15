@@ -12,7 +12,12 @@
   outline: none;
   border: none;
   background: none;
-  color: #0f172a;
+  color: #0f172a; /* 浅色模式文字颜色 */
+}
+
+/* 暗黑模式按钮文字颜色 */
+[data-dark-mode="true"] .button {
+  color: #f9fafb;
 }
 
 .button:disabled {
@@ -27,7 +32,12 @@
 
 /* 只保留ghost变体 */
 .ghost:hover {
-  background-color: #f1f5f9;
+  background-color: #f1f5f9; /* 浅色模式悬浮背景 */
+}
+
+/* 暗黑模式ghost悬浮背景 */
+[data-dark-mode="true"] .ghost:hover {
+  background-color: #374151;
 }
 
 /* 只保留需要的尺寸 */

@@ -1,8 +1,10 @@
 import type { ActionProvider } from '@/types'
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
-import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
+import { Switch } from '@/components/ui/switch'
+import { ActionProviderStorage, BubbleOffsetStorage, BubblePinStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -15,6 +17,8 @@ type SortableActionProvider = {
 export function BubbleSettings() {
   // 气泡偏移值
   const [bubbleOffset, setBubbleOffset] = useState<{ x: number, y: number }>({ x: 20, y: 20 })
+  // 气泡固定状态
+  const [bubblePinEnabled, setBubblePinEnabled] = useState<boolean>(false)
   // 气泡排序相关状态
   const [data, setData] = useState<ActionProvider[]>([])
   const [bubbleItemsForSort, setBubbleItemsForSort] = useState<SortableActionProvider[]>([])
@@ -45,6 +49,10 @@ export function BubbleSettings() {
       const storageData = await ActionProviderStorage.getValue()
       setData(storageData)
 
+      // 加载气泡固定设置
+      const bubblePin = await BubblePinStorage.getValue()
+      setBubblePinEnabled(bubblePin)
+
       // 初始化排序项目
       initSortableItems(storageData)
     }
@@ -62,6 +70,13 @@ export function BubbleSettings() {
   // 处理气泡偏移值变化完成后的提示
   const handleBubbleOffsetCommit = async (axis: 'x' | 'y') => {
     toast.success(`气泡${axis === 'x' ? 'X' : 'Y'}轴偏移已更新`)
+  }
+
+  // 处理气泡固定开关变化
+  const handleBubblePinChange = async (checked: boolean) => {
+    setBubblePinEnabled(checked)
+    await BubblePinStorage.setValue(checked)
+    toast.success(`气泡固定功能已${checked ? '启用' : '禁用'}`)
   }
 
   const handleBubbleDragEnd = async (result: DropResult) => {
@@ -102,6 +117,25 @@ export function BubbleSettings() {
         title="气泡设置"
         description="定制气泡显示的位置和行为"
       />
+
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-semibold mb-4">气泡行为设置</h2>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <Label className="text-base font-medium">气泡固定模式</Label>
+                <p className="text-sm text-muted-foreground">启用后，点击气泡后不会自动关闭，可以继续选择其他功能</p>
+              </div>
+              <Switch
+                checked={bubblePinEnabled}
+                onCheckedChange={handleBubblePinChange}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardContent className="p-6">
