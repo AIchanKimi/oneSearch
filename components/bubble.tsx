@@ -1,7 +1,6 @@
 import type { ActionProvider } from '@/types'
-import { BubblePinStorage, DarkModeStorage } from '@/utils/storage'
 import { GripVertical } from 'lucide-react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styles from './bubble.module.css'
 import MenuItem from './menu-item'
 
@@ -19,42 +18,7 @@ function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
   const [handleSide, setHandleSide] = useState<'left' | 'right'>(() =>
     mousePosition.x < window.innerWidth * 2 / 3 ? 'right' : 'left',
   ) // 记录handle应该显示在哪一侧
-  // 读取气泡固定设置
-  const [bubblePinEnabled, setBubblePinEnabled] = useState<boolean>(false)
-  // 读取暗黑模式设置
-  const [darkModeEnabled, setDarkModeEnabled] = useState<boolean>(false)
   const bubbleRef = useRef<HTMLDivElement>(null)
-
-  // 加载气泡固定设置
-  useEffect(() => {
-    async function fetchBubblePin() {
-      const pinEnabled = await BubblePinStorage.getValue()
-      setBubblePinEnabled(pinEnabled)
-    }
-    fetchBubblePin()
-  }, [])
-
-  // 加载暗黑模式设置
-  useEffect(() => {
-    async function fetchDarkMode() {
-      const darkMode = await DarkModeStorage.getValue()
-      setDarkModeEnabled(darkMode)
-    }
-    fetchDarkMode()
-  }, [])
-
-  // 创建一个专门用于气泡的 menuAction 函数
-  const handleBubbleMenuAction = (shouldShowPanel: boolean) => {
-    if (shouldShowPanel) {
-      // 如果要显示面板，则隐藏气泡（显示面板）
-      setShowPanel(true)
-    } else {
-      // 如果是其他动作且不是固定模式，则关闭气泡
-      if (!bubblePinEnabled) {
-        setShowPanel(false)
-      }
-    }
-  }
 
   // 只在非拖动状态下判断handle位置
   const isOnLeftSide = handleSide === 'right'
@@ -113,7 +77,6 @@ function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
         left: `${position.x}px`,
         cursor: isDragging ? 'grabbing' : 'default',
       }}
-      data-dark-mode={darkModeEnabled}
     >
       {/* 左侧handle - 仅在右侧显示时显示 */}
       {!isOnLeftSide && (
@@ -131,7 +94,7 @@ function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
           size="icon"
           key={item.providerId}
           provider={item}
-          menuAction={handleBubbleMenuAction}
+          menuAction={setShowPanel}
         />
       ))}
 

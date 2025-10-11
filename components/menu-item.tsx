@@ -7,10 +7,9 @@ type MenuItemProps = {
   provider: ActionProvider
   size?: 'icon' | 'normal'
   menuAction: (arg: boolean) => void
-  panelPinEnabled?: boolean
 }
 
-function MenuItem({ provider, size = 'normal', menuAction, panelPinEnabled = false }: MenuItemProps) {
+function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
   return (
     <button
       type="button"
@@ -22,7 +21,7 @@ function MenuItem({ provider, size = 'normal', menuAction, panelPinEnabled = fal
         styles.menuItem,
         size === 'normal' && styles.normal,
       )}
-      onClick={() => handleAction(provider, menuAction, panelPinEnabled)}
+      onClick={() => handleAction(provider, menuAction)}
     >
       <div className={styles.contentContainer}>
         <img className={styles.icon} src={provider.icon} alt="" />

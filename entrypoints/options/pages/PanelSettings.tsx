@@ -1,9 +1,7 @@
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
-import { ActionProviderStorage, DarkModeStorage, GroupOrderStorage, PanelPinStorage } from '@/utils/storage'
+import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -16,8 +14,6 @@ type SortableTag = {
 
 export function SortSettings() {
   const [groupOrderTags, setGroupOrderTags] = useState<SortableTag[]>([])
-  const [panelPinEnabled, setPanelPinEnabled] = useState<boolean>(false)
-  const [darkModeEnabled, setDarkModeEnabled] = useState<boolean>(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -35,12 +31,6 @@ export function SortSettings() {
       ]
 
       setGroupOrderTags(sortedTags.map(tag => ({ id: tag, label: convertProviderTag(tag) })))
-
-      // 加载面板固定和暗黑模式设置
-      const panelPin = await PanelPinStorage.getValue()
-      const darkMode = await DarkModeStorage.getValue()
-      setPanelPinEnabled(panelPin)
-      setDarkModeEnabled(darkMode)
     }
     fetchData()
   }, [])
@@ -60,56 +50,12 @@ export function SortSettings() {
     toast.success('分组排序已更新')
   }
 
-  // 处理面板固定开关变化
-  const handlePanelPinChange = async (checked: boolean) => {
-    setPanelPinEnabled(checked)
-    await PanelPinStorage.setValue(checked)
-    toast.success(`面板固定功能已${checked ? '启用' : '禁用'}`)
-  }
-
-  // 处理暗黑模式开关变化
-  const handleDarkModeChange = async (checked: boolean) => {
-    setDarkModeEnabled(checked)
-    await DarkModeStorage.setValue(checked)
-    toast.success(`暗黑模式已${checked ? '启用' : '禁用'}`)
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <PageTitle
         title="面板设置"
         description="管理面板分组的显示顺序"
       />
-
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">面板行为设置</h2>
-          
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col">
-                <Label className="text-base font-medium">面板固定模式</Label>
-                <p className="text-sm text-muted-foreground">启用后，点击面板中的项目后面板不会自动关闭</p>
-              </div>
-              <Switch
-                checked={panelPinEnabled}
-                onCheckedChange={handlePanelPinChange}
-              />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col">
-                <Label className="text-base font-medium">暗黑模式</Label>
-                <p className="text-sm text-muted-foreground">为面板和气泡启用暗黑主题</p>
-              </div>
-              <Switch
-                checked={darkModeEnabled}
-                onCheckedChange={handleDarkModeChange}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       <Card className="mb-6">
         <CardContent className="p-6">

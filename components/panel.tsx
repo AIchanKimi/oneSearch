@@ -1,6 +1,6 @@
 import type { ActionProvider } from '@/types'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
-import { DarkModeStorage, GroupOrderStorage, PanelPinStorage } from '@/utils/storage'
+import { GroupOrderStorage } from '@/utils/storage'
 import { X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import MenuItem from './menu-item'
@@ -15,10 +15,6 @@ type PanelProps = {
 function Panel({ items, setShowPanel }: PanelProps) {
   // 读取存储的分组顺序
   const [groupOrder, setGroupOrder] = useState<string[]>([])
-  // 读取面板固定设置
-  const [panelPinEnabled, setPanelPinEnabled] = useState<boolean>(false)
-  // 读取暗黑模式设置
-  const [darkModeEnabled, setDarkModeEnabled] = useState<boolean>(false)
 
   useEffect(() => {
     async function fetchOrder() {
@@ -26,22 +22,6 @@ function Panel({ items, setShowPanel }: PanelProps) {
       setGroupOrder(order)
     }
     fetchOrder()
-  }, [])
-
-  useEffect(() => {
-    async function fetchPanelPin() {
-      const pinEnabled = await PanelPinStorage.getValue()
-      setPanelPinEnabled(pinEnabled)
-    }
-    fetchPanelPin()
-  }, [])
-
-  useEffect(() => {
-    async function fetchDarkMode() {
-      const darkMode = await DarkModeStorage.getValue()
-      setDarkModeEnabled(darkMode)
-    }
-    fetchDarkMode()
   }, [])
 
   // 按tag对items进行分组并应用存储顺序
@@ -69,7 +49,6 @@ function Panel({ items, setShowPanel }: PanelProps) {
       <div
         className={styles.panelContainer}
         onClick={e => e.stopPropagation()}
-        data-dark-mode={darkModeEnabled}
       >
         <div className={styles.panelHeader}>
           <h2 className={styles.panelTitle}>应用列表</h2>
@@ -89,7 +68,6 @@ function Panel({ items, setShowPanel }: PanelProps) {
                       key={item.providerId}
                       provider={item}
                       menuAction={setShowPanel}
-                      panelPinEnabled={panelPinEnabled}
                     />
                   ))}
                 </div>

@@ -1,5 +1,5 @@
 .bubbleContainer {
-  background-color: #fff; /* 浅色模式背景 */
+  background-color: #fff;
   border-radius: 6px; /* 将 0.375rem 替换为 6px */
   position: fixed;
   display: flex;
@@ -11,22 +11,13 @@
   gap: 4px; /* 将 0.25rem 替换为 4px */
 }
 
-/* 暗黑模式气泡容器样式 */
-[data-dark-mode="true"] .bubbleContainer {
-  background-color: #1f2937; /* 暗黑模式背景 */
-  border: 1px solid #374151; /* 暗黑模式边框 */
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.3),
-    0 2px 4px -2px rgb(0 0 0 / 0.2); /* 更明显的阴影 */
-}
-
 .dragHandle {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 20px;
   height: 32px;
-  color: #666; /* 浅色模式颜色 */
+  color: #666;
   cursor: grab;
   user-select: none;
   font-size: 12px;
@@ -34,18 +25,8 @@
   transition: color 0.2s ease;
 }
 
-/* 暗黑模式拖拽手柄颜色 */
-[data-dark-mode="true"] .dragHandle {
-  color: #9ca3af;
-}
-
 .dragHandle:hover {
-  color: #374151; /* 浅色模式悬浮颜色 */
-}
-
-/* 暗黑模式拖拽手柄悬浮颜色 */
-[data-dark-mode="true"] .dragHandle:hover {
-  color: #d1d5db;
+  color: #374151;
 }
 
 .dragHandle:active {
@@ -54,24 +35,14 @@
 
 /* 左侧handle样式 */
 .leftHandle {
-  border-right: 1px solid #e5e7eb; /* 浅色模式边框 */
+  border-right: 1px solid #e5e7eb;
   margin-right: 4px;
   padding-right: 4px;
 }
 
-/* 暗黑模式左侧手柄边框 */
-[data-dark-mode="true"] .leftHandle {
-  border-right: 1px solid #4b5563;
-}
-
 /* 右侧handle样式 */
 .rightHandle {
-  border-left: 1px solid #e5e7eb; /* 浅色模式边框 */
+  border-left: 1px solid #e5e7eb;
   margin-left: 4px;
   padding-left: 4px;
-}
-
-/* 暗黑模式右侧手柄边框 */
-[data-dark-mode="true"] .rightHandle {
-  border-left: 1px solid #4b5563;
 }
