@@ -9,6 +9,7 @@
     0 4px 6px -1px rgb(0 0 0 / 0.1),
     0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
   gap: 4px; /* 将 0.25rem 替换为 4px */
+  border: 1px solid #e5e7eb;
 }
 
 .dragHandle {

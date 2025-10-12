@@ -7,9 +7,10 @@ type MenuItemProps = {
   provider: ActionProvider
   size?: 'icon' | 'normal'
   menuAction: (arg: boolean) => void
+  setPinnedAction?: (pinned: boolean) => void
 }
 
-function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
+function MenuItem({ provider, size = 'normal', menuAction, setPinnedAction }: MenuItemProps) {
   return (
     <button
       type="button"
@@ -21,7 +22,7 @@ function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
         styles.menuItem,
         size === 'normal' && styles.normal,
       )}
-      onClick={() => handleAction(provider, menuAction)}
+      onClick={async () => await handleAction(provider, menuAction, setPinnedAction)}
     >
       <div className={styles.contentContainer}>
         <img className={styles.icon} src={provider.icon} alt="" />

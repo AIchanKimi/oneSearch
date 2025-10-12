@@ -1,7 +1,9 @@
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
-import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
+import { ActionProviderStorage, GroupOrderStorage, PanelPinStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -14,9 +16,15 @@ type SortableTag = {
 
 export function SortSettings() {
   const [groupOrderTags, setGroupOrderTags] = useState<SortableTag[]>([])
+  const [keepPanelOpen, setKeepPanelOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchSettings() {
+      // 加载面板固定设置
+      const panelPin = await PanelPinStorage.getValue()
+      setKeepPanelOpen(panelPin)
+
+      // 加载分组排序数据
       const storageData = await ActionProviderStorage.getValue()
       // 只筛选panel为true的provider
       const panelItems = storageData.filter(item => item.panel)
@@ -32,8 +40,14 @@ export function SortSettings() {
 
       setGroupOrderTags(sortedTags.map(tag => ({ id: tag, label: convertProviderTag(tag) })))
     }
-    fetchData()
+    fetchSettings()
   }, [])
+
+  const handlePanelPinChange = async (checked: boolean) => {
+    setKeepPanelOpen(checked)
+    await PanelPinStorage.setValue(checked)
+    toast.success(checked ? '面板固定已开启' : '面板固定已关闭')
+  }
 
   const handleGroupDragEnd = async (result: DropResult) => {
     if (!result.destination)
@@ -54,8 +68,29 @@ export function SortSettings() {
     <div className="container mx-auto px-4 py-8">
       <PageTitle
         title="面板设置"
-        description="管理面板分组的显示顺序"
+        description="管理面板分组的显示顺序和面板行为"
       />
+
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-semibold mb-4">面板行为</h2>
+          <div className="flex items-center justify-between space-y-0">
+            <div className="space-y-0.5">
+              <Label htmlFor="panel-pin" className="text-base font-medium">
+                固定面板
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                开启后，点击气泡菜单项后面板会保持显示状态，可以选择相同内容后点击其他选项
+              </p>
+            </div>
+            <Switch
+              id="panel-pin"
+              checked={keepPanelOpen}
+              onCheckedChange={handlePanelPinChange}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardContent className="p-6">

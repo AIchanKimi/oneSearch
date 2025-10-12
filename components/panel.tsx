@@ -10,9 +10,10 @@ import { Button } from './shadow-ui/button'
 type PanelProps = {
   items: ActionProvider[]
   setShowPanel: (_: boolean) => void
+  setPinnedAction?: (pinned: boolean) => void
 }
 
-function Panel({ items, setShowPanel }: PanelProps) {
+function Panel({ items, setShowPanel, setPinnedAction }: PanelProps) {
   // 读取存储的分组顺序
   const [groupOrder, setGroupOrder] = useState<string[]>([])
 
@@ -68,6 +69,7 @@ function Panel({ items, setShowPanel }: PanelProps) {
                       key={item.providerId}
                       provider={item}
                       menuAction={setShowPanel}
+                      setPinnedAction={setPinnedAction}
                     />
                   ))}
                 </div>

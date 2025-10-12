@@ -8,9 +8,10 @@ type BubbleMenuProps = {
   mousePosition: { x: number, y: number }
   items: ActionProvider[]
   setShowPanel: (_: boolean) => void
+  setPinnedAction?: (pinned: boolean) => void
 }
 
-function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
+function Bubble({ mousePosition, items, setShowPanel, setPinnedAction }: BubbleMenuProps) {
   const [position, setPosition] = useState({ x: mousePosition.x, y: mousePosition.y })
   const [isDragging, setIsDragging] = useState(false)
   const [hasBeenDragged, setHasBeenDragged] = useState(false) // 记录是否被手动拖动过
@@ -95,6 +96,7 @@ function Bubble({ mousePosition, items, setShowPanel }: BubbleMenuProps) {
           key={item.providerId}
           provider={item}
           menuAction={setShowPanel}
+          setPinnedAction={setPinnedAction}
         />
       ))}
 

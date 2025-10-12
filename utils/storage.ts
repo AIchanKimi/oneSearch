@@ -21,3 +21,11 @@ export const BubbleOffsetStorage = storage.defineItem<{ x: number, y: number }>(
     fallback: { x: 20, y: 20 }, // 默认偏移值
   },
 )
+
+// 面板固定设置
+export const PanelPinStorage = storage.defineItem<boolean>(
+  'local:PanelPinStorage',
+  {
+    fallback: false, // 默认不固定面板
+  },
+)
