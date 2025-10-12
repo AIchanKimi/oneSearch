@@ -1,4 +1,5 @@
 import type { ActionProvider } from '@/types'
+import type { Theme } from './utils/theme-utils'
 import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
 import { ActionProviderStorage, BubbleOffsetStorage, PanelPinStorage } from '@/utils/storage'
@@ -12,6 +13,7 @@ type ContextType = {
   setShowPanel: (_: boolean) => void
   isPinned: boolean
   setIsPinned: (_: boolean) => void
+  theme: Theme
 }
 
 export const Context = createContext<ContextType>({
@@ -22,6 +24,7 @@ export const Context = createContext<ContextType>({
   setShowPanel: () => {},
   isPinned: false,
   setIsPinned: () => {},
+  theme: 'light',
 })
 
 function Container() {
@@ -131,7 +134,11 @@ function Container() {
   )
 }
 
-function App() {
+type AppProps = {
+  theme: Theme
+}
+
+function App({ theme }: AppProps) {
   const [selectedText, setSelectedText] = useState<string>('')
   const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
   const [showPanel, setShowPanel] = useState(false)
@@ -152,7 +159,6 @@ function App() {
     loadSettings()
   }, [])
 
-  
   useEffect(() => {
     let lastMousePosition = { x: 0, y: 0 }
     const handleSelectionChange = () => {
@@ -197,7 +203,8 @@ function App() {
     setShowPanel,
     isPinned,
     setIsPinned,
-  }), [selectedText, setSelectedText, mousePosition, showPanel, isPinned])
+    theme,
+  }), [selectedText, setSelectedText, mousePosition, showPanel, isPinned, theme])
 
   return (
     <Context value={contextValue}>
