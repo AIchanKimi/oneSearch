@@ -32,7 +32,7 @@ function Container() {
   const [bubbleItems, setBubbleItems] = useState<ActionProvider[]>([])
   const [panelItems, setPanelItems] = useState<ActionProvider[]>([])
   const [showBackground, setShowBackground] = useState(false)
-  const { selectedText, setSelectedText, mousePosition, showPanel, setShowPanel, isPinned, setIsPinned } = context
+  const { selectedText, setSelectedText, mousePosition, showPanel, setShowPanel, setIsPinned } = context
 
   useEffect(() => {
     async function fetchItems() {

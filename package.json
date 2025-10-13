@@ -17,7 +17,8 @@
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "lint:ai": "eslint . --fix && tsc --noEmit"
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
