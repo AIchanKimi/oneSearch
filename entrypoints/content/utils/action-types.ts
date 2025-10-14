@@ -1,8 +1,9 @@
 export type ActionResult = {
   success: boolean
   error?: string
-  shouldCloseUI?: boolean
-  shouldShowPanel?: boolean
+  effect?: {
+    shouldShowPanel?: boolean
+  }
 }
 
 export type CopyActionInput = {

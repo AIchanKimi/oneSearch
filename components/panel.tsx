@@ -9,11 +9,19 @@ import { Button } from './shadow-ui/button'
 
 type PanelProps = {
   items: ActionProvider[]
-  setShowPanel: (_: boolean) => void
-  setPinnedAction?: (pinned: boolean) => void
+  isPinned: boolean
+  onClose: () => void
+  onTogglePin: () => void
+  onMenuItemClick: (provider: ActionProvider) => void // 新增：统一的action处理
 }
 
-function Panel({ items, setShowPanel, setPinnedAction }: PanelProps) {
+function Panel({
+  items,
+  isPinned,
+  onClose,
+  onTogglePin,
+  onMenuItemClick,
+}: PanelProps) {
   // 读取存储的分组顺序
   const [groupOrder, setGroupOrder] = useState<string[]>([])
 
@@ -45,7 +53,7 @@ function Panel({ items, setShowPanel, setPinnedAction }: PanelProps) {
   return (
     <div
       className={styles.overlay}
-      onClick={() => setShowPanel(false)}
+      onClick={onClose}
     >
       <div
         className={styles.panelContainer}
@@ -53,28 +61,53 @@ function Panel({ items, setShowPanel, setPinnedAction }: PanelProps) {
       >
         <div className={styles.panelHeader}>
           <h2 className={styles.panelTitle}>应用列表</h2>
-          <Button variant="ghost" size="icon" onClick={() => setShowPanel(false)}>
-            <X />
-          </Button>
+          <div className={styles.panelControls}>
+            {/* 固定按钮 */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onTogglePin}
+              title={isPinned ? '取消固定' : '固定面板'}
+              className={isPinned ? styles.pinned : ''}
+            >
+              {isPinned ? '📍' : '📌'}
+            </Button>
+            {/* 关闭按钮 */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              title="关闭面板"
+            >
+              <X />
+            </Button>
+          </div>
         </div>
 
         <div className={styles.contentArea}>
           <div className={styles.groupsContainer}>
-            {groupedItems.map(([tag, providers]) => (
-              <div key={tag} className={styles.groupItem}>
-                <h3 className={styles.groupTitle}>{convertProviderTag(tag)}</h3>
-                <div className={styles.itemsContainer}>
-                  {providers.map(item => (
-                    <MenuItem
-                      key={item.providerId}
-                      provider={item}
-                      menuAction={setShowPanel}
-                      setPinnedAction={setPinnedAction}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+            {groupedItems.length > 0
+              ? (
+                  groupedItems.map(([tag, providers]) => (
+                    <div key={tag} className={styles.groupItem}>
+                      <h3 className={styles.groupTitle}>{convertProviderTag(tag)}</h3>
+                      <div className={styles.itemsContainer}>
+                        {providers.map(item => (
+                          <MenuItem
+                            key={item.providerId}
+                            provider={item}
+                            onClick={onMenuItemClick}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )
+              : (
+                  <div className={styles.emptyState}>
+                    <span>无选项</span>
+                  </div>
+                )}
           </div>
         </div>
       </div>

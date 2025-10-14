@@ -11,7 +11,6 @@ export const copyExecutor: ActionExecutor<CopyActionInput> = {
 
       return {
         success: true,
-        shouldCloseUI: true, // 默认复制后关闭UI
         error: undefined,
       }
     }

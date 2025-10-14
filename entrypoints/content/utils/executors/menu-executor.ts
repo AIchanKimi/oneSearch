@@ -9,8 +9,9 @@ export const menuExecutor: ActionExecutor<MenuActionInput> = {
     try {
       return {
         success: true,
-        shouldCloseUI: false, // 菜单动作不关闭UI，而是切换到面板
-        shouldShowPanel: true, // 显示面板
+        effect: {
+          shouldShowPanel: true, // 显示面板
+        },
         error: undefined,
       }
     }

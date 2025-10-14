@@ -8,15 +8,13 @@ export const searchExecutor: ActionExecutor<SearchActionInput> = {
   async execute(input: SearchActionInput): Promise<ActionResult> {
     try {
       // 替换链接中的占位符
-      const url = input.link.replaceAll('{selectedText}', encodeURIComponent(input.selectedText))
-
+      const url = input.link.replaceAll('{selectedText}', input.selectedText)
       // 在新窗口中打开链接
       const newWindow = window.open(url, '_blank')
       newWindow?.focus()
 
       return {
         success: true,
-        shouldCloseUI: true, // 默认搜索后关闭UI
         error: undefined,
       }
     }

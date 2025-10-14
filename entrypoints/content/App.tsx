@@ -2,17 +2,15 @@ import type { ActionProvider } from '@/types'
 import type { Theme } from './utils/theme-utils'
 import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
-import { ActionProviderStorage, BubbleOffsetStorage, PanelPinStorage } from '@/utils/storage'
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useUIControl } from './hooks/useUIControl'
+import { createActionHandler } from './utils/action-handler'
 
 type ContextType = {
   selectedText: string
   setSelectedText: (_: string) => void
   mousePosition: { x: number, y: number }
-  showPanel: boolean
-  setShowPanel: (_: boolean) => void
-  isPinned: boolean
-  setIsPinned: (_: boolean) => void
   theme: Theme
 }
 
@@ -20,10 +18,6 @@ export const Context = createContext<ContextType>({
   selectedText: '',
   setSelectedText: () => {},
   mousePosition: { x: 0, y: 0 },
-  showPanel: false,
-  setShowPanel: () => {},
-  isPinned: false,
-  setIsPinned: () => {},
   theme: 'light',
 })
 
@@ -31,8 +25,54 @@ function Container() {
   const context = useContext(Context)
   const [bubbleItems, setBubbleItems] = useState<ActionProvider[]>([])
   const [panelItems, setPanelItems] = useState<ActionProvider[]>([])
-  const [showBackground, setShowBackground] = useState(false)
-  const { selectedText, setSelectedText, mousePosition, showPanel, setShowPanel, setIsPinned } = context
+  const { selectedText, mousePosition } = context
+
+  // 使用两个独立的UI控制
+  const [bubbleState, bubbleActions] = useUIControl({
+    defaultVisible: true,
+    defaultPosition: mousePosition,
+    selectedText,
+  })
+  const [panelState, panelActions] = useUIControl({
+    defaultVisible: false,
+    defaultPosition: { x: 0, y: 0 },
+    selectedText,
+  })
+
+  // 协调逻辑：显示panel时隐藏bubble
+  const showPanel = useCallback(() => {
+    bubbleActions.hide()
+    panelActions.show()
+  }, [bubbleActions, panelActions])
+
+  // Action处理逻辑
+  const actionHandler = createActionHandler()
+
+  // 统一的action处理函数
+  const handleMenuItemClick = useCallback(async (provider: ActionProvider, uiState: { isPinned: boolean, isVisible: boolean, actions: { hide: () => void } }) => {
+    try {
+      const result = await actionHandler.executeAction(provider)
+
+      // 直接处理UI副作用
+      if (result.effect?.shouldShowPanel) {
+        showPanel()
+      }
+
+      // 默认情况下，如果UI没有被固定，关闭UI并清除选中
+      if (uiState.isVisible && !uiState.isPinned) {
+        uiState.actions.hide()
+        window.getSelection()?.removeAllRanges() // 只有在没有固定时才清除选中
+      }
+
+      // 处理错误情况
+      if (!result.success && result.error) {
+        console.error('Action failed:', result.error)
+      }
+    }
+    catch (error) {
+      console.error('Error executing action:', error)
+    }
+  }, [actionHandler, showPanel])
 
   useEffect(() => {
     async function fetchItems() {
@@ -62,73 +102,37 @@ function Container() {
     fetchItems()
   }, [selectedText])
 
-  // 处理背景层显示 - 监听鼠标弹起事件
-  useEffect(() => {
-    const handleMouseUp = () => {
-      if (selectedText) {
-        setShowBackground(true)
-      }
-    }
-
-    const handleSelectionChange = () => {
-      const selection = window.getSelection()?.toString() || ''
-      if (!selection.trim()) {
-        setShowBackground(false)
-      }
-    }
-
-    document.addEventListener('mouseup', handleMouseUp)
-    document.addEventListener('selectionchange', handleSelectionChange)
-
-    return () => {
-      document.removeEventListener('mouseup', handleMouseUp)
-      document.removeEventListener('selectionchange', handleSelectionChange)
-    }
-  }, [selectedText])
-
   return (
-    <div
-      onMouseDown={e => e.preventDefault()}
-    >
-      {selectedText && (
-        <>
-          {/* 透明背景层 - 延迟显示，点击时关闭面板 */}
-          {showBackground && (
-            <div
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                zIndex: -1,
-                backgroundColor: 'transparent',
-              }}
-              onClick={() => {
-                setSelectedText('')
-                setShowPanel(false)
-                window.getSelection()?.removeAllRanges()
-              }}
-            />
-          )}
+    <div onMouseDown={e => e.preventDefault()}>
+      {/* Bubble组件 */}
+      {bubbleState.isVisible && (
+        <Bubble
+          mousePosition={bubbleState.position}
+          items={bubbleItems}
+          isPinned={bubbleState.isPinned}
+          onTogglePin={bubbleActions.togglePin}
+          onPositionChange={bubbleActions.setPosition}
+          onMenuItemClick={provider => handleMenuItemClick(provider, {
+            isPinned: bubbleState.isPinned,
+            isVisible: bubbleState.isVisible,
+            actions: { hide: bubbleActions.hide },
+          })}
+        />
+      )}
 
-          {!showPanel
-            ? (
-                <Bubble
-                  mousePosition={mousePosition}
-                  items={bubbleItems}
-                  setShowPanel={setShowPanel}
-                  setPinnedAction={setIsPinned}
-                />
-              )
-            : (
-                <Panel
-                  items={panelItems}
-                  setShowPanel={setShowPanel}
-                  setPinnedAction={setIsPinned}
-                />
-              )}
-        </>
+      {/* Panel组件 */}
+      {panelState.isVisible && (
+        <Panel
+          items={panelItems}
+          isPinned={panelState.isPinned}
+          onClose={panelActions.hide}
+          onTogglePin={panelActions.togglePin}
+          onMenuItemClick={provider => handleMenuItemClick(provider, {
+            isPinned: panelState.isPinned,
+            isVisible: panelState.isVisible,
+            actions: { hide: panelActions.hide },
+          })}
+        />
       )}
     </div>
   )
@@ -141,8 +145,6 @@ type AppProps = {
 function App({ theme }: AppProps) {
   const [selectedText, setSelectedText] = useState<string>('')
   const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
-  const [showPanel, setShowPanel] = useState(false)
-  const [isPinned, setIsPinned] = useState(false)
   const [bubbleOffset, setBubbleOffset] = useState<{ x: number, y: number }>({ x: 20, y: 20 })
 
   useEffect(() => {
@@ -151,10 +153,6 @@ function App({ theme }: AppProps) {
       // 加载气泡偏移配置
       const offset = await BubbleOffsetStorage.getValue()
       setBubbleOffset(offset)
-
-      // 加载面板固定设置
-      const panelPin = await PanelPinStorage.getValue()
-      setIsPinned(panelPin)
     }
     loadSettings()
   }, [])
@@ -172,10 +170,7 @@ function App({ theme }: AppProps) {
         setMousePosition(lastMousePosition)
       }
       else {
-        // 只有在UI没有被固定时才清除selectedText
-        if (!isPinned) {
-          setSelectedText('')
-        }
+        setSelectedText('')
       }
     }
 
@@ -193,18 +188,14 @@ function App({ theme }: AppProps) {
       document.removeEventListener('selectionchange', handleSelectionChange)
       document.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [bubbleOffset, isPinned])
+  }, [bubbleOffset])
 
   const contextValue = useMemo(() => ({
     selectedText,
     setSelectedText,
     mousePosition,
-    showPanel,
-    setShowPanel,
-    isPinned,
-    setIsPinned,
     theme,
-  }), [selectedText, setSelectedText, mousePosition, showPanel, isPinned, theme])
+  }), [selectedText, setSelectedText, mousePosition, theme])
 
   return (
     <Context value={contextValue}>
