@@ -39,12 +39,28 @@ export function useUIControl(options: UseUIControlOptions): [UIState, UIActions]
   const [isPinned, setIsPinned] = useState(defaultPinned)
   const [position, setPosition] = useState(defaultPosition)
 
-  // 监听整个options对象，统一更新所有状态
+  // 当selectedText变化时，更新显示状态
+  const [prevSelectedText, setPrevSelectedText] = useState(selectedText)
+  const [prevDefaultPosition, setPrevDefaultPosition] = useState(defaultPosition)
+
+  // 监听selectedText变化
+  if (prevSelectedText !== selectedText) {
+    setPrevSelectedText(selectedText)
+    setIsVisible(defaultVisible && selectedText.trim().length > 0)
+  }
+
+  // 监听defaultPinned变化，更新当前pinned状态
   useEffect(() => {
     setIsPinned(defaultPinned)
-    setPosition(defaultPosition)
-    setIsVisible(defaultVisible && selectedText.trim().length > 0)
-  }, [defaultPinned, defaultPosition, defaultVisible, selectedText])
+  }, [defaultPinned])
+
+  // 监听defaultPosition变化，更新当前position
+  useEffect(() => {
+    if (prevDefaultPosition.x !== defaultPosition.x || prevDefaultPosition.y !== defaultPosition.y) {
+      setPrevDefaultPosition(defaultPosition)
+      setPosition(defaultPosition)
+    }
+  }, [defaultPosition, prevDefaultPosition])
 
   // 操作方法
   const show = useCallback(() => {

@@ -2,7 +2,6 @@ import type { ActionProvider } from '@/types'
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
-import { Switch } from '@/components/ui/switch'
 import { ActionProviderStorage, UISettingsStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useCallback, useEffect, useState } from 'react'
@@ -73,20 +72,6 @@ export function BubbleSettings() {
     toast.success(`气泡${axis === 'x' ? 'X' : 'Y'}轴偏移已更新`)
   }
 
-  // 处理气泡默认显示状态变化
-  const handleDefaultVisibleChange = async (checked: boolean) => {
-    const newSettings = {
-      ...uiSettings,
-      bubble: {
-        ...uiSettings.bubble,
-        defaultVisible: checked,
-      },
-    }
-    setUISettings(newSettings)
-    await UISettingsStorage.setValue(newSettings)
-    toast.success(`气泡默认${checked ? '显示' : '隐藏'}已更新`)
-  }
-
   const handleBubbleDragEnd = async (result: DropResult) => {
     if (!result.destination)
       return
@@ -136,24 +121,6 @@ export function BubbleSettings() {
         title="气泡设置"
         description="定制气泡显示的位置和行为"
       />
-
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">气泡默认设置</h2>
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="font-medium">默认显示</div>
-              <div className="text-sm text-muted-foreground">
-                松开鼠标时是否默认显示气泡（需要开启文本选择检测）
-              </div>
-            </div>
-            <Switch
-              checked={uiSettings?.bubble?.defaultVisible ?? true}
-              onCheckedChange={handleDefaultVisibleChange}
-            />
-          </div>
-        </CardContent>
-      </Card>
 
       <Card className="mb-6">
         <CardContent className="p-6">

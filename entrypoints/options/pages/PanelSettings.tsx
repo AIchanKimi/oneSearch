@@ -71,20 +71,6 @@ export function SortSettings() {
     toast.success(`面板默认${checked ? '固定' : '不固定'}已更新`)
   }
 
-  // 处理面板默认显示状态变化
-  const handleDefaultVisibleChange = async (checked: boolean) => {
-    const newSettings = {
-      ...uiSettings,
-      panel: {
-        ...uiSettings.panel,
-        defaultVisible: checked,
-      },
-    }
-    setUISettings(newSettings)
-    await UISettingsStorage.setValue(newSettings)
-    toast.success(`面板默认${checked ? '显示' : '隐藏'}已更新`)
-  }
-
   // 如果UI设置还没加载完，显示加载状态
   if (!uiSettings) {
     return (
@@ -106,31 +92,17 @@ export function SortSettings() {
       <Card className="mb-6">
         <CardContent className="p-6">
           <h2 className="text-xl font-semibold mb-4">面板默认设置</h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <div className="font-medium">默认显示</div>
-                <div className="text-sm text-muted-foreground">
-                  点击气泡项目时是否默认显示面板
-                </div>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="font-medium">默认固定状态</div>
+              <div className="text-sm text-muted-foreground">
+                设置面板打开时是否默认为固定状态
               </div>
-              <Switch
-                checked={uiSettings.panel.defaultVisible}
-                onCheckedChange={handleDefaultVisibleChange}
-              />
             </div>
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <div className="font-medium">默认固定状态</div>
-                <div className="text-sm text-muted-foreground">
-                  设置面板打开时是否默认为固定状态
-                </div>
-              </div>
-              <Switch
-                checked={uiSettings.panel.defaultPinned}
-                onCheckedChange={handleDefaultPinnedChange}
-              />
-            </div>
+            <Switch
+              checked={uiSettings.panel.defaultPinned}
+              onCheckedChange={handleDefaultPinnedChange}
+            />
           </div>
         </CardContent>
       </Card>
