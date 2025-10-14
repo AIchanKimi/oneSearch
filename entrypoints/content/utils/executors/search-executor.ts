@@ -7,8 +7,14 @@ import type { ActionExecutor, ActionResult, SearchActionInput } from '../action-
 export const searchExecutor: ActionExecutor<SearchActionInput> = {
   async execute(input: SearchActionInput): Promise<ActionResult> {
     try {
-      // 替换链接中的占位符
-      const url = input.link.replaceAll('{selectedText}', input.selectedText)
+      // 检测是否为纯占位符模板，如果是则直接替换不编码
+      let url: string
+      if (input.link === '{selectedText}') {
+        url = input.selectedText // 直接替换，不编码
+      } else {
+        url = input.link.replaceAll('{selectedText}', encodeURIComponent(input.selectedText))
+      }
+
       // 在新窗口中打开链接
       const newWindow = window.open(url, '_blank')
       newWindow?.focus()

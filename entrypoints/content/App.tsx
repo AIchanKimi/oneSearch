@@ -53,9 +53,10 @@ function Container() {
     try {
       const result = await actionHandler.executeAction(provider)
 
-      // 直接处理UI副作用
+      // 优先处理显示panel的逻辑
       if (result.effect?.shouldShowPanel) {
         showPanel()
+        return // 提前返回，不执行后面的关闭逻辑
       }
 
       // 默认情况下，如果UI没有被固定，关闭UI并清除选中
