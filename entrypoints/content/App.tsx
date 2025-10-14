@@ -220,50 +220,57 @@ type AppProps = {
 function App({ theme }: AppProps) {
   const [selectedText, setSelectedText] = useState<string>('')
   const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
-  const [bubbleOffset, setBubbleOffset] = useState<{ x: number, y: number }>({ x: 20, y: 20 })
+  const [uiSettings, setUISettings] = useState<UISettings | null>(null)
 
+  // 加载UI设置
   useEffect(() => {
-    // 加载设置
-    const loadSettings = async () => {
-      // 加载气泡偏移配置
-      const offset = await BubbleOffsetStorage.getValue()
-      setBubbleOffset(offset)
+    const loadUISettings = async () => {
+      const settings = await UISettingsStorage.getValue()
+      setUISettings(settings)
     }
-    loadSettings()
+    loadUISettings()
   }, [])
 
   useEffect(() => {
-    let lastMousePosition = { x: 0, y: 0 }
-    const handleSelectionChange = () => {
+    let selectionStartPos = { x: 0, y: 0 }
+
+    const handleMouseDown = (event: MouseEvent) => {
+      if (window.getSelection()?.toString()) {
+        // 如果已有选中文本，清除选择
+        window.getSelection()?.removeAllRanges()
+        setSelectedText('')
+      }
+      selectionStartPos = { x: event.clientX, y: event.clientY }
+    }
+
+    const handleMouseUp = (_event: MouseEvent) => {
+      // 松开鼠标时检查是否有选中文本
       // 使用正则表达式删除所有不可见字符，包括空格、制表符、换行符和其他Unicode不可见字符
       const selectedText = (window.getSelection()?.toString() || '')
         .trim()
         .replace(/^[\s\u200B-\u200D\u2060]+|[\s\u200B-\u200D\u2060]+$/g, '')
 
       if (selectedText) {
+        const offset = uiSettings?.bubble.offset || { x: 20, y: 20 }
         setSelectedText(selectedText)
-        setMousePosition(lastMousePosition)
+        setMousePosition({
+          x: selectionStartPos.x + offset.x,
+          y: selectionStartPos.y + offset.y,
+        })
       }
       else {
         setSelectedText('')
       }
     }
 
-    const handleMouseMove = (event: MouseEvent) => {
-      lastMousePosition = {
-        x: event.clientX + bubbleOffset.x,
-        y: event.clientY + bubbleOffset.y,
-      }
-    }
-
-    document.addEventListener('selectionchange', handleSelectionChange)
-    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('mouseup', handleMouseUp)
 
     return () => {
-      document.removeEventListener('selectionchange', handleSelectionChange)
-      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mousedown', handleMouseDown)
+      document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [bubbleOffset])
+  }, [uiSettings])
 
   const contextValue = useMemo(() => ({
     selectedText,
