@@ -11,7 +11,10 @@ export const copyExecutor: ActionExecutor<CopyActionInput> = {
 
       return {
         success: true,
-        error: undefined,
+        uiAction: {
+          type: 'close',
+          target: 'current', // 智能关闭当前显示的 UI，检查固定状态
+        },
       }
     }
     catch (error) {

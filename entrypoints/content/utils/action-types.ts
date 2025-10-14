@@ -1,9 +1,26 @@
+export type UIAction = {
+  type: 'show' | 'hide' | 'replace' | 'toggle' | 'close'
+  target: string // 'panel' | 'bubble' | 'iframe' | 'dialog' | 'current'
+  source?: string // 当前要关闭的 UI（用于 replace 类型）
+}
+
+export type UIConfig<T extends string = string> = {
+  key: T
+  state: {
+    isVisible: boolean
+    isPinned: boolean
+  }
+  actions: {
+    show: () => void
+    hide: () => void
+    toggle: () => void
+  }
+}
+
 export type ActionResult = {
   success: boolean
   error?: string
-  effect?: {
-    shouldShowPanel?: boolean
-  }
+  uiAction?: UIAction // UI 动作指令
 }
 
 export type CopyActionInput = {

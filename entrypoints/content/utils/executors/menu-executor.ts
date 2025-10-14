@@ -9,10 +9,11 @@ export const menuExecutor: ActionExecutor<MenuActionInput> = {
     try {
       return {
         success: true,
-        effect: {
-          shouldShowPanel: true, // 显示面板
+        uiAction: {
+          type: 'replace',
+          source: 'bubble',
+          target: 'panel',
         },
-        error: undefined,
       }
     }
     catch (error) {

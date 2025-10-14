@@ -49,6 +49,11 @@ export function useUIControl(options: UseUIControlOptions): [UIState, UIActions]
     setIsVisible(defaultVisible && selectedText.trim().length > 0)
   }
 
+  // 监听defaultPinned变化，更新当前pinned状态
+  useEffect(() => {
+    setIsPinned(defaultPinned)
+  }, [defaultPinned])
+
   // 监听defaultPosition变化，更新当前position
   useEffect(() => {
     if (prevDefaultPosition.x !== defaultPosition.x || prevDefaultPosition.y !== defaultPosition.y) {
@@ -63,10 +68,8 @@ export function useUIControl(options: UseUIControlOptions): [UIState, UIActions]
   }, [])
 
   const hide = useCallback(() => {
-    if (!isPinned) {
-      setIsVisible(false)
-    }
-  }, [isPinned])
+    setIsVisible(false)
+  }, [])
 
   const toggle = useCallback(() => {
     setIsVisible(prev => !prev)

@@ -1,8 +1,10 @@
 import type { ActionProvider } from '@/types'
+import type { UISettings } from '@/utils/storage'
+import type { UIAction, UIConfig } from './utils/action-types'
 import type { Theme } from './utils/theme-utils'
 import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
-import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
+import { ActionProviderStorage, UISettingsStorage } from '@/utils/storage'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useUIControl } from './hooks/useUIControl'
 import { createActionHandler } from './utils/action-handler'
@@ -25,45 +27,125 @@ function Container() {
   const context = useContext(Context)
   const [bubbleItems, setBubbleItems] = useState<ActionProvider[]>([])
   const [panelItems, setPanelItems] = useState<ActionProvider[]>([])
+  const [uiSettings, setUISettings] = useState<UISettings | null>(null)
   const { selectedText, mousePosition } = context
+
+  // 加载UI设置
+  useEffect(() => {
+    const loadUISettings = async () => {
+      const settings = await UISettingsStorage.getValue()
+      setUISettings(settings)
+    }
+    loadUISettings()
+  }, [])
 
   // 使用两个独立的UI控制
   const [bubbleState, bubbleActions] = useUIControl({
-    defaultVisible: true,
-    defaultPosition: mousePosition,
+    defaultVisible: uiSettings?.bubble.defaultVisible ?? true,
+    defaultPosition: {
+      x: mousePosition.x + (uiSettings?.bubble.offset.x || 0),
+      y: mousePosition.y + (uiSettings?.bubble.offset.y || 0),
+    },
     selectedText,
   })
   const [panelState, panelActions] = useUIControl({
-    defaultVisible: false,
-    defaultPosition: { x: 0, y: 0 },
+    defaultVisible: uiSettings?.panel.defaultVisible ?? false,
+    defaultPinned: uiSettings?.panel.defaultPinned ?? false,
+    defaultPosition: uiSettings?.panel.defaultPosition ?? { x: 0, y: 0 },
     selectedText,
   })
-
-  // 协调逻辑：显示panel时隐藏bubble
-  const showPanel = useCallback(() => {
-    bubbleActions.hide()
-    panelActions.show()
-  }, [bubbleActions, panelActions])
 
   // Action处理逻辑
   const actionHandler = createActionHandler()
 
+  // UI 配置数组
+  const uiConfigs = useMemo(() => [
+    {
+      key: 'bubble',
+      state: bubbleState,
+      actions: bubbleActions,
+    },
+    {
+      key: 'panel',
+      state: panelState,
+      actions: panelActions,
+    },
+  ], [bubbleState, bubbleActions, panelState, panelActions])
+
+  // UI 动作执行器
+  const executeUIAction = useCallback((
+    action: UIAction,
+    uiConfigs: UIConfig[],
+  ) => {
+    switch (action.type) {
+      case 'show': {
+        const targetConfig = uiConfigs.find(c => c.key === action.target)
+        targetConfig?.actions.show()
+        break
+      }
+
+      case 'hide': {
+        if (action.target === 'current') {
+          // 隐藏当前显示的 UI
+          const currentConfig = uiConfigs.find(c => c.state.isVisible)
+          currentConfig?.actions.hide()
+        }
+        else {
+          const targetConfig = uiConfigs.find(c => c.key === action.target)
+          targetConfig?.actions.hide()
+        }
+        break
+      }
+
+      case 'replace': {
+        const sourceConfig = uiConfigs.find(c => c.key === action.source)
+        const targetConfig = uiConfigs.find(c => c.key === action.target)
+        sourceConfig?.actions.hide()
+        targetConfig?.actions.show()
+        break
+      }
+
+      case 'toggle': {
+        const targetConfig = uiConfigs.find(c => c.key === action.target)
+        targetConfig?.actions.toggle()
+        break
+      }
+
+      case 'close': {
+        if (action.target === 'current') {
+          // 智能关闭当前显示的 UI，检查固定状态
+          const currentConfig = uiConfigs.find(c => c.state.isVisible)
+          if (currentConfig && !currentConfig.state.isPinned) {
+            currentConfig.actions.hide()
+          }
+        }
+        else {
+          const targetConfig = uiConfigs.find(c => c.key === action.target)
+          if (targetConfig && !targetConfig.state.isPinned) {
+            targetConfig.actions.hide()
+          }
+        }
+        break
+      }
+    }
+  }, [])
+
   // 统一的action处理函数
-  const handleMenuItemClick = useCallback(async (provider: ActionProvider, uiState: { isPinned: boolean, isVisible: boolean, actions: { hide: () => void } }) => {
+  const handleMenuItemClick = useCallback(async (provider: ActionProvider) => {
     try {
       const result = await actionHandler.executeAction(provider)
 
-      // 优先处理显示panel的逻辑
-      if (result.effect?.shouldShowPanel) {
-        showPanel()
-        return // 提前返回，不执行后面的关闭逻辑
+      // 处理 UI 动作指令
+      if (result.uiAction) {
+        executeUIAction(result.uiAction, uiConfigs)
+        return // 执行 UI 动作后提前返回
       }
 
-      // 默认情况下，如果UI没有被固定，关闭UI并清除选中
-      if (uiState.isVisible && !uiState.isPinned) {
-        uiState.actions.hide()
-        window.getSelection()?.removeAllRanges() // 只有在没有固定时才清除选中
-      }
+      // 如果没有明确的 UI 动作指令，执行默认关闭行为
+      executeUIAction({
+        type: 'close',
+        target: 'current',
+      }, uiConfigs)
 
       // 处理错误情况
       if (!result.success && result.error) {
@@ -73,7 +155,7 @@ function Container() {
     catch (error) {
       console.error('Error executing action:', error)
     }
-  }, [actionHandler, showPanel])
+  }, [actionHandler, executeUIAction, uiConfigs])
 
   useEffect(() => {
     async function fetchItems() {
@@ -113,11 +195,7 @@ function Container() {
           isPinned={bubbleState.isPinned}
           onTogglePin={bubbleActions.togglePin}
           onPositionChange={bubbleActions.setPosition}
-          onMenuItemClick={provider => handleMenuItemClick(provider, {
-            isPinned: bubbleState.isPinned,
-            isVisible: bubbleState.isVisible,
-            actions: { hide: bubbleActions.hide },
-          })}
+          onMenuItemClick={provider => handleMenuItemClick(provider)}
         />
       )}
 
@@ -128,11 +206,7 @@ function Container() {
           isPinned={panelState.isPinned}
           onClose={panelActions.hide}
           onTogglePin={panelActions.togglePin}
-          onMenuItemClick={provider => handleMenuItemClick(provider, {
-            isPinned: panelState.isPinned,
-            isVisible: panelState.isVisible,
-            actions: { hide: panelActions.hide },
-          })}
+          onMenuItemClick={provider => handleMenuItemClick(provider)}
         />
       )}
     </div>

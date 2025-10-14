@@ -1,7 +1,7 @@
 import type { ActionProvider } from '@/types'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
 import { GroupOrderStorage } from '@/utils/storage'
-import { X } from 'lucide-react'
+import { Pin, PinOff, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import MenuItem from './menu-item'
 import styles from './panel.module.css'
@@ -68,9 +68,8 @@ function Panel({
               size="icon"
               onClick={onTogglePin}
               title={isPinned ? '取消固定' : '固定面板'}
-              className={isPinned ? styles.pinned : ''}
             >
-              {isPinned ? '📍' : '📌'}
+              {isPinned ? <Pin /> : <PinOff />}
             </Button>
             {/* 关闭按钮 */}
             <Button

@@ -11,7 +11,8 @@ export const searchExecutor: ActionExecutor<SearchActionInput> = {
       let url: string
       if (input.link === '{selectedText}') {
         url = input.selectedText // 直接替换，不编码
-      } else {
+      }
+      else {
         url = input.link.replaceAll('{selectedText}', encodeURIComponent(input.selectedText))
       }
 
@@ -21,7 +22,10 @@ export const searchExecutor: ActionExecutor<SearchActionInput> = {
 
       return {
         success: true,
-        error: undefined,
+        uiAction: {
+          type: 'close',
+          target: 'current', // 智能关闭当前显示的 UI，检查固定状态
+        },
       }
     }
     catch (error) {

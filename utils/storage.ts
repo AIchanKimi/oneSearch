@@ -22,10 +22,35 @@ export const BubbleOffsetStorage = storage.defineItem<{ x: number, y: number }>(
   },
 )
 
-// 面板固定设置
-export const PanelPinStorage = storage.defineItem<boolean>(
-  'local:PanelPinStorage',
+// UI 设置配置
+export type UISettings = {
+  bubble: {
+    defaultVisible: boolean
+    defaultPosition: { x: number, y: number }
+    offset: { x: number, y: number }
+  }
+  panel: {
+    defaultVisible: boolean
+    defaultPinned: boolean
+    defaultPosition: { x: number, y: number }
+  }
+}
+
+// UI 设置存储
+export const UISettingsStorage = storage.defineItem<UISettings>(
+  'local:UISettingsStorage',
   {
-    fallback: false, // 默认不固定面板
+    fallback: {
+      bubble: {
+        defaultVisible: true,
+        defaultPosition: { x: 0, y: 0 },
+        offset: { x: 20, y: 20 },
+      },
+      panel: {
+        defaultVisible: false,
+        defaultPinned: false,
+        defaultPosition: { x: 0, y: 0 },
+      },
+    },
   },
 )
