@@ -1,6 +1,7 @@
 import type { ActionProvider } from '@/types'
+import { Context } from '@/entrypoints/content/App'
 import { GripVertical } from 'lucide-react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './bubble.module.css'
 import MenuItem from './menu-item'
 
@@ -21,6 +22,8 @@ function Bubble({
   onPositionChange,
   onMenuItemClick,
 }: BubbleMenuProps) {
+  const { theme } = useContext(Context)
+
   // 拖拽相关状态（本地状态，不持久化）
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
@@ -77,7 +80,7 @@ function Bubble({
   return (
     <div
       ref={bubbleRef}
-      className={styles.bubbleContainer}
+      className={`${styles.bubbleContainer} ${theme === 'dark' ? styles.bubbleContainerDark : ''}`}
       style={{
         top: `${currentPosition.y}px`,
         left: `${currentPosition.x}px`,

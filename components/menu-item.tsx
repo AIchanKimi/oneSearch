@@ -1,5 +1,7 @@
 import type { ActionProvider } from '@/types'
+import { Context } from '@/entrypoints/content/App'
 import { cn } from '@/lib/utils'
+import { useContext } from 'react'
 import styles from './menu-item.module.css'
 
 type MenuItemProps = {
@@ -9,6 +11,8 @@ type MenuItemProps = {
 }
 
 function MenuItem({ provider, size = 'normal', onClick }: MenuItemProps) {
+  const { theme } = useContext(Context)
+
   const handleClick = () => {
     onClick(provider)
   }
@@ -23,6 +27,7 @@ function MenuItem({ provider, size = 'normal', onClick }: MenuItemProps) {
         size === 'icon' ? styles.sizeIcon : styles.sizeSm,
         styles.menuItem,
         size === 'normal' && styles.normal,
+        theme === 'dark' && styles.buttonDark,
       )}
       onClick={handleClick}
     >

@@ -1,8 +1,9 @@
 import type { ActionProvider } from '@/types'
+import { Context } from '@/entrypoints/content/App'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
 import { GroupOrderStorage } from '@/utils/storage'
 import { Pin, PinOff, X } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import MenuItem from './menu-item'
 import styles from './panel.module.css'
 import { Button } from './shadow-ui/button'
@@ -22,6 +23,8 @@ function Panel({
   onTogglePin,
   onMenuItemClick,
 }: PanelProps) {
+  const { theme } = useContext(Context)
+
   // 读取存储的分组顺序
   const [groupOrder, setGroupOrder] = useState<string[]>([])
 
@@ -56,7 +59,7 @@ function Panel({
       onClick={onClose}
     >
       <div
-        className={styles.panelContainer}
+        className={`${styles.panelContainer} ${theme === 'dark' ? styles.panelContainerDark : ''}`}
         onClick={e => e.stopPropagation()}
       >
         <div className={styles.panelHeader}>

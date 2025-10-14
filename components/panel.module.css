@@ -58,3 +58,17 @@
   flex-direction: column;
   gap: 8px;
 }
+
+/* 暗黑模式样式 */
+.panelContainerDark {
+  background-color: #374151;
+  color: #f9fafb;
+}
+
+.panelContainerDark .panelTitle {
+  color: #f9fafb;
+}
+
+.panelContainerDark .groupTitle {
+  color: #f9fafb;
+}
