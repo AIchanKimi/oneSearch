@@ -67,3 +67,13 @@
   width: 16px;
   height: 16px;
 }
+
+/* 暗黑模式样式 */
+.buttonDark {
+  color: #9ca3af;
+}
+
+.buttonDark.ghost:hover {
+  background-color: #6b7280;
+  color: #f3f4f6;
+}

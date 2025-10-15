@@ -2,9 +2,10 @@ import type { ActionProvider } from '@/types'
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
-import { ActionProviderStorage, BubbleOffsetStorage } from '@/utils/storage'
+import { Switch } from '@/components/ui/switch'
+import { ActionProviderStorage, UISettingsStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { PageTitle } from '../components/PageTitle'
 
@@ -13,13 +14,14 @@ type SortableActionProvider = {
 } & ActionProvider
 
 export function BubbleSettings() {
-  // 气泡偏移值
-  const [bubbleOffset, setBubbleOffset] = useState<{ x: number, y: number }>({ x: 20, y: 20 })
+  // 气泡偏移值和UI设置
+  const [uiSettings, setUISettings] = useState<any>(null)
   // 气泡排序相关状态
   const [data, setData] = useState<ActionProvider[]>([])
   const [bubbleItemsForSort, setBubbleItemsForSort] = useState<SortableActionProvider[]>([])
+
   // 初始化可排序气泡项目
-  const initSortableItems = (items = data) => {
+  const initSortableItems = useCallback((items = data) => {
     const bubbleItems = items.filter(item => item.bubble === true)
     const sorted = [...bubbleItems].sort((a, b) => {
       if (a.order === undefined && b.order === undefined)
@@ -34,13 +36,13 @@ export function BubbleSettings() {
       ...item,
       id: `${item.label}-${item.type}-${index}`,
     })))
-  }
+  }, [data])
 
   useEffect(() => {
-    // 加载气泡偏移设置和服务提供商数据
+    // 加载UI设置和服务提供商数据
     const loadData = async () => {
-      const offset = await BubbleOffsetStorage.getValue()
-      setBubbleOffset(offset)
+      const settings = await UISettingsStorage.getValue()
+      setUISettings(settings)
 
       const storageData = await ActionProviderStorage.getValue()
       setData(storageData)
@@ -49,19 +51,40 @@ export function BubbleSettings() {
       initSortableItems(storageData)
     }
     loadData()
-  })
+  }, [initSortableItems])
 
   // 处理气泡偏移值变化
   const handleBubbleOffsetChange = async (axis: 'x' | 'y', value: number[]) => {
     const numValue = value[0]
-    const newOffset = { ...bubbleOffset, [axis]: numValue }
-    setBubbleOffset(newOffset)
-    await BubbleOffsetStorage.setValue(newOffset)
+    const newOffset = { ...uiSettings.bubble.offset, [axis]: numValue }
+    const newSettings = {
+      ...uiSettings,
+      bubble: {
+        ...uiSettings.bubble,
+        offset: newOffset,
+      },
+    }
+    setUISettings(newSettings)
+    await UISettingsStorage.setValue(newSettings)
   }
 
   // 处理气泡偏移值变化完成后的提示
   const handleBubbleOffsetCommit = async (axis: 'x' | 'y') => {
     toast.success(`气泡${axis === 'x' ? 'X' : 'Y'}轴偏移已更新`)
+  }
+
+  // 处理气泡默认显示状态变化
+  const handleDefaultVisibleChange = async (checked: boolean) => {
+    const newSettings = {
+      ...uiSettings,
+      bubble: {
+        ...uiSettings.bubble,
+        defaultVisible: checked,
+      },
+    }
+    setUISettings(newSettings)
+    await UISettingsStorage.setValue(newSettings)
+    toast.success(`气泡默认${checked ? '显示' : '隐藏'}已更新`)
   }
 
   const handleBubbleDragEnd = async (result: DropResult) => {
@@ -96,12 +119,41 @@ export function BubbleSettings() {
     toast.success('气泡排序已更新')
   }
 
+  // 如果UI设置还没加载完，显示加载状态
+  if (!uiSettings) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">加载中...</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <PageTitle
         title="气泡设置"
         description="定制气泡显示的位置和行为"
       />
+
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-semibold mb-4">气泡默认设置</h2>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="font-medium">默认显示</div>
+              <div className="text-sm text-muted-foreground">
+                松开鼠标时是否默认显示气泡（需要开启文本选择检测）
+              </div>
+            </div>
+            <Switch
+              checked={uiSettings?.bubble?.defaultVisible ?? true}
+              onCheckedChange={handleDefaultVisibleChange}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardContent className="p-6">
@@ -156,7 +208,7 @@ export function BubbleSettings() {
               <div className="flex justify-between w-full mb-1">
                 <div className="text-sm text-muted-foreground">← 左</div>
                 <div className="font-medium text-sm">
-                  {bubbleOffset.x}
+                  {uiSettings?.bubble?.offset?.x || 20}
                   px
                 </div>
                 <div className="text-sm text-muted-foreground">右 →</div>
@@ -166,7 +218,7 @@ export function BubbleSettings() {
                 min={-100}
                 max={100}
                 step={1}
-                value={[bubbleOffset.x]}
+                value={[uiSettings?.bubble?.offset?.x || 20]}
                 onValueChange={value => handleBubbleOffsetChange('x', value)}
                 onValueCommit={() => handleBubbleOffsetCommit('x')}
               />
@@ -177,7 +229,7 @@ export function BubbleSettings() {
               <div className="w-10 flex flex-col justify-between mr-4">
                 <div className="text-sm text-muted-foreground">↑ 上</div>
                 <div className="font-medium text-sm text-center">
-                  {bubbleOffset.y}
+                  {uiSettings?.bubble?.offset?.y || 20}
                   px
                 </div>
                 <div className="text-sm text-muted-foreground">↓ 下</div>
@@ -187,7 +239,7 @@ export function BubbleSettings() {
                 min={-100}
                 max={100}
                 step={1}
-                value={[-bubbleOffset.y]}
+                value={[-(uiSettings?.bubble?.offset?.y || 20)]}
                 onValueChange={value => handleBubbleOffsetChange('y', value.map(v => -v))}
                 onValueCommit={() => handleBubbleOffsetCommit('y')}
                 orientation="vertical"
@@ -203,7 +255,7 @@ export function BubbleSettings() {
               <div
                 className="absolute w-10 h-10 bg-background rounded shadow-lg border border-border flex items-center justify-center"
                 style={{
-                  transform: `translate(${bubbleOffset.x}px, ${bubbleOffset.y}px)`,
+                  transform: `translate(${uiSettings?.bubble?.offset?.x || 20}px, ${uiSettings?.bubble?.offset?.y || 20}px)`,
                   top: 'calc(50%)',
                   left: 'calc(50%)',
                 }}

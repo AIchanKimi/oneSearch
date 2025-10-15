@@ -1,15 +1,22 @@
 import type { ActionProvider } from '@/types'
+import { Context } from '@/entrypoints/content/App'
 import { cn } from '@/lib/utils'
-import { handleAction } from '@/utils/handle-action'
+import { useContext } from 'react'
 import styles from './menu-item.module.css'
 
 type MenuItemProps = {
   provider: ActionProvider
   size?: 'icon' | 'normal'
-  menuAction: (arg: boolean) => void
+  onClick: (provider: ActionProvider) => void // 简化：只接收点击回调
 }
 
-function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
+function MenuItem({ provider, size = 'normal', onClick }: MenuItemProps) {
+  const { theme } = useContext(Context)
+
+  const handleClick = () => {
+    onClick(provider)
+  }
+
   return (
     <button
       type="button"
@@ -20,8 +27,9 @@ function MenuItem({ provider, size = 'normal', menuAction }: MenuItemProps) {
         size === 'icon' ? styles.sizeIcon : styles.sizeSm,
         styles.menuItem,
         size === 'normal' && styles.normal,
+        theme === 'dark' && styles.buttonDark,
       )}
-      onClick={() => handleAction(provider, menuAction)}
+      onClick={handleClick}
     >
       <div className={styles.contentContainer}>
         <img className={styles.icon} src={provider.icon} alt="" />

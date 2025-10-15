@@ -1,7 +1,8 @@
 import type { DropResult } from '@hello-pangea/dnd'
 import { Card, CardContent } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
 import { convertProviderTag } from '@/utils/convert-provider-tag'
-import { ActionProviderStorage, GroupOrderStorage } from '@/utils/storage'
+import { ActionProviderStorage, GroupOrderStorage, UISettingsStorage } from '@/utils/storage'
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -14,9 +15,15 @@ type SortableTag = {
 
 export function SortSettings() {
   const [groupOrderTags, setGroupOrderTags] = useState<SortableTag[]>([])
+  const [uiSettings, setUISettings] = useState<any>(null)
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchSettings() {
+      // 加载UI设置
+      const settings = await UISettingsStorage.getValue()
+      setUISettings(settings)
+
+      // 加载分组排序数据
       const storageData = await ActionProviderStorage.getValue()
       // 只筛选panel为true的provider
       const panelItems = storageData.filter(item => item.panel)
@@ -32,7 +39,7 @@ export function SortSettings() {
 
       setGroupOrderTags(sortedTags.map(tag => ({ id: tag, label: convertProviderTag(tag) })))
     }
-    fetchData()
+    fetchSettings()
   }, [])
 
   const handleGroupDragEnd = async (result: DropResult) => {
@@ -50,12 +57,83 @@ export function SortSettings() {
     toast.success('分组排序已更新')
   }
 
+  // 处理面板默认固定状态变化
+  const handleDefaultPinnedChange = async (checked: boolean) => {
+    const newSettings = {
+      ...uiSettings,
+      panel: {
+        ...uiSettings.panel,
+        defaultPinned: checked,
+      },
+    }
+    setUISettings(newSettings)
+    await UISettingsStorage.setValue(newSettings)
+    toast.success(`面板默认${checked ? '固定' : '不固定'}已更新`)
+  }
+
+  // 处理面板默认显示状态变化
+  const handleDefaultVisibleChange = async (checked: boolean) => {
+    const newSettings = {
+      ...uiSettings,
+      panel: {
+        ...uiSettings.panel,
+        defaultVisible: checked,
+      },
+    }
+    setUISettings(newSettings)
+    await UISettingsStorage.setValue(newSettings)
+    toast.success(`面板默认${checked ? '显示' : '隐藏'}已更新`)
+  }
+
+  // 如果UI设置还没加载完，显示加载状态
+  if (!uiSettings) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">加载中...</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <PageTitle
         title="面板设置"
-        description="管理面板分组的显示顺序"
+        description="管理面板的显示和行"
       />
+
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-semibold mb-4">面板默认设置</h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="font-medium">默认显示</div>
+                <div className="text-sm text-muted-foreground">
+                  点击气泡项目时是否默认显示面板
+                </div>
+              </div>
+              <Switch
+                checked={uiSettings.panel.defaultVisible}
+                onCheckedChange={handleDefaultVisibleChange}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="font-medium">默认固定状态</div>
+                <div className="text-sm text-muted-foreground">
+                  设置面板打开时是否默认为固定状态
+                </div>
+              </div>
+              <Switch
+                checked={uiSettings.panel.defaultPinned}
+                onCheckedChange={handleDefaultPinnedChange}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardContent className="p-6">

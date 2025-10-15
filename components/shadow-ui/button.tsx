@@ -1,6 +1,8 @@
+import { Context } from '@/entrypoints/content/App'
 import { cn } from '@/lib/utils'
 import { Slot } from '@radix-ui/react-slot'
 import * as React from 'react'
+import { useContext } from 'react'
 import styles from './button.module.css'
 
 type ButtonVariant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
@@ -19,6 +21,7 @@ function Button({
   asChild = false,
   ...props
 }: ButtonProps) {
+  const { theme } = useContext(Context)
   const Comp = asChild ? Slot : 'button'
 
   const sizeClass = {
@@ -35,6 +38,7 @@ function Button({
         styles.button,
         styles[variant],
         sizeClass,
+        theme === 'dark' && styles.buttonDark,
         className,
       )}
       {...props}

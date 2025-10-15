@@ -14,10 +14,35 @@ export const GroupOrderStorage = storage.defineItem<ProviderTag[]>(
   },
 )
 
-// 气泡偏移值配置
-export const BubbleOffsetStorage = storage.defineItem<{ x: number, y: number }>(
-  'local:BubbleOffsetStorage',
+// UI 设置配置
+export type UISettings = {
+  bubble: {
+    defaultVisible: boolean
+    defaultPosition: { x: number, y: number }
+    offset: { x: number, y: number }
+  }
+  panel: {
+    defaultVisible: boolean
+    defaultPinned: boolean
+    defaultPosition: { x: number, y: number }
+  }
+}
+
+// UI 设置存储
+export const UISettingsStorage = storage.defineItem<UISettings>(
+  'local:UISettingsStorage',
   {
-    fallback: { x: 20, y: 20 }, // 默认偏移值
+    fallback: {
+      bubble: {
+        defaultVisible: true,
+        defaultPosition: { x: 0, y: 0 },
+        offset: { x: 20, y: 20 },
+      },
+      panel: {
+        defaultVisible: false,
+        defaultPinned: false,
+        defaultPosition: { x: 0, y: 0 },
+      },
+    },
   },
 )

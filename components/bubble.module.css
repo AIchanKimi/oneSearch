@@ -9,6 +9,7 @@
     0 4px 6px -1px rgb(0 0 0 / 0.1),
     0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
   gap: 4px; /* 将 0.25rem 替换为 4px */
+  border: 1px solid #e5e7eb;
 }
 
 .dragHandle {
@@ -18,7 +19,6 @@
   width: 20px;
   height: 32px;
   color: #666;
-  cursor: grab;
   user-select: none;
   font-size: 12px;
   line-height: 1;
@@ -45,4 +45,29 @@
   border-left: 1px solid #e5e7eb;
   margin-left: 4px;
   padding-left: 4px;
+}
+
+/* 暗黑模式样式 */
+.bubbleContainerDark {
+  background-color: #374151;
+  border-color: #4b5563;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.3),
+    0 2px 4px -2px rgb(0 0 0 / 0.3);
+}
+
+.bubbleContainerDark .dragHandle {
+  color: #9ca3af;
+}
+
+.bubbleContainerDark .dragHandle:hover {
+  color: #d1d5db;
+}
+
+.bubbleContainerDark .leftHandle {
+  border-right-color: #4b5563;
+}
+
+.bubbleContainerDark .rightHandle {
+  border-left-color: #4b5563;
 }
