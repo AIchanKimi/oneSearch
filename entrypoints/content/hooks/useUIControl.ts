@@ -29,7 +29,7 @@ export function useUIControl(options: UseUIControlOptions): [UIState, UIActions]
   const {
     defaultVisible = false,
     defaultPinned = false,
-    defaultPosition = { x: 0, y: 0 },
+    defaultPosition,
     selectedText = '',
   } = options
 
@@ -37,30 +37,24 @@ export function useUIControl(options: UseUIControlOptions): [UIState, UIActions]
     defaultVisible && selectedText.trim().length > 0,
   )
   const [isPinned, setIsPinned] = useState(defaultPinned)
-  const [position, setPosition] = useState(defaultPosition)
+  const [position, setPosition] = useState(defaultPosition ?? { x: 0, y: 0 })
 
-  // 当selectedText变化时，更新显示状态
-  const [prevSelectedText, setPrevSelectedText] = useState(selectedText)
-  const [prevDefaultPosition, setPrevDefaultPosition] = useState(defaultPosition)
-
-  // 监听selectedText变化
-  if (prevSelectedText !== selectedText) {
-    setPrevSelectedText(selectedText)
+  // 监听 selectedText 和 defaultVisible 变化，更新显示状态
+  useEffect(() => {
     setIsVisible(defaultVisible && selectedText.trim().length > 0)
-  }
+  }, [defaultVisible, selectedText])
 
-  // 监听defaultPinned变化，更新当前pinned状态
+  // 监听 defaultPinned 变化，更新当前 pinned 状态
   useEffect(() => {
     setIsPinned(defaultPinned)
   }, [defaultPinned])
 
-  // 监听defaultPosition变化，更新当前position
+  // 只有当传入 defaultPosition 时才监听位置变化
   useEffect(() => {
-    if (prevDefaultPosition.x !== defaultPosition.x || prevDefaultPosition.y !== defaultPosition.y) {
-      setPrevDefaultPosition(defaultPosition)
+    if (defaultPosition !== undefined) {
       setPosition(defaultPosition)
     }
-  }, [defaultPosition, prevDefaultPosition])
+  }, [defaultPosition])
 
   // 操作方法
   const show = useCallback(() => {
@@ -83,19 +77,19 @@ export function useUIControl(options: UseUIControlOptions): [UIState, UIActions]
     setPosition(newPosition)
   }, [])
 
-  const state: UIState = {
+  const state: UIState = useMemo(() => ({
     isVisible,
     isPinned,
     position,
-  }
+  }), [isVisible, isPinned, position])
 
-  const actions: UIActions = {
+  const actions: UIActions = useMemo(() => ({
     show,
     hide,
     toggle,
     togglePin,
     setPosition: updatePosition,
-  }
+  }), [show, hide, toggle, togglePin, updatePosition])
 
   return [state, actions]
 }

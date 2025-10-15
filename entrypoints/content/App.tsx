@@ -6,6 +6,7 @@ import Bubble from '@/components/bubble'
 import Panel from '@/components/panel'
 import { ActionProviderStorage, UISettingsStorage } from '@/utils/storage'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useThrottle } from 'react-use'
 import { useUIControl } from './hooks/useUIControl'
 import { createActionHandler } from './utils/action-handler'
 
@@ -39,19 +40,21 @@ function Container() {
     loadUISettings()
   }, [])
 
+  // 缓存气泡的默认位置，避免频繁重新计算
+  const bubbleDefaultPosition = useMemo(() => ({
+    x: mousePosition.x + (uiSettings?.bubble.offset.x || 0),
+    y: mousePosition.y + (uiSettings?.bubble.offset.y || 0),
+  }), [mousePosition.x, mousePosition.y, uiSettings?.bubble.offset.x, uiSettings?.bubble.offset.y])
+
   // 使用两个独立的UI控制
   const [bubbleState, bubbleActions] = useUIControl({
     defaultVisible: uiSettings?.bubble.defaultVisible ?? true,
-    defaultPosition: {
-      x: mousePosition.x + (uiSettings?.bubble.offset.x || 0),
-      y: mousePosition.y + (uiSettings?.bubble.offset.y || 0),
-    },
+    defaultPosition: bubbleDefaultPosition,
     selectedText,
   })
   const [panelState, panelActions] = useUIControl({
     defaultVisible: uiSettings?.panel.defaultVisible ?? false,
     defaultPinned: uiSettings?.panel.defaultPinned ?? false,
-    defaultPosition: uiSettings?.panel.defaultPosition ?? { x: 0, y: 0 },
     selectedText,
   })
 
@@ -219,51 +222,92 @@ type AppProps = {
 
 function App({ theme }: AppProps) {
   const [selectedText, setSelectedText] = useState<string>('')
-  const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
-  const [bubbleOffset, setBubbleOffset] = useState<{ x: number, y: number }>({ x: 20, y: 20 })
+  const [rawMousePosition, setRawMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
+  const [uiSettings, setUISettings] = useState<UISettings | null>(null)
+
+  // 使用 useThrottle 来节流鼠标位置更新，减少计算频率
+  const mousePosition = useThrottle(rawMousePosition, 16) // 约60fps
 
   useEffect(() => {
     // 加载设置
     const loadSettings = async () => {
-      // 加载气泡偏移配置
-      const offset = await BubbleOffsetStorage.getValue()
-      setBubbleOffset(offset)
+      // 加载UI设置
+      const settings = await UISettingsStorage.getValue()
+      setUISettings(settings)
     }
     loadSettings()
   }, [])
 
   useEffect(() => {
     let lastMousePosition = { x: 0, y: 0 }
+    let isMouseDown = false
+    let tempSelectedText = ''
+
     const handleSelectionChange = () => {
       // 使用正则表达式删除所有不可见字符，包括空格、制表符、换行符和其他Unicode不可见字符
       const selectedText = (window.getSelection()?.toString() || '')
         .trim()
         .replace(/^[\s\u200B-\u200D\u2060]+|[\s\u200B-\u200D\u2060]+$/g, '')
 
-      if (selectedText) {
-        setSelectedText(selectedText)
-        setMousePosition(lastMousePosition)
-      }
-      else {
-        setSelectedText('')
+      if (isMouseDown) {
+        // 鼠标按下时，将文本存到临时变量
+        tempSelectedText = selectedText
+      } else {
+        // 鼠标未按下时，直接更新选中文本
+        if (selectedText) {
+          setSelectedText(selectedText)
+          setRawMousePosition({
+            x: lastMousePosition.x,
+            y: lastMousePosition.y,
+          })
+        } else {
+          setSelectedText('')
+        }
       }
     }
 
     const handleMouseMove = (event: MouseEvent) => {
+      const offsetX = uiSettings?.bubble.offset.x || 0
+      const offsetY = uiSettings?.bubble.offset.y || 0
+
       lastMousePosition = {
-        x: event.clientX + bubbleOffset.x,
-        y: event.clientY + bubbleOffset.y,
+        x: event.clientX + offsetX,
+        y: event.clientY + offsetY,
       }
+    }
+
+    const handleMouseDown = () => {
+      isMouseDown = true
+    }
+
+    const handleMouseUp = () => {
+      isMouseDown = false
+
+      // 鼠标弹起时，将临时变量中的文本更新到状态
+      if (tempSelectedText) {
+        setSelectedText(tempSelectedText)
+        setRawMousePosition({
+          x: lastMousePosition.x,
+          y: lastMousePosition.y,
+        })
+      } else {
+        setSelectedText('')
+      }
+      tempSelectedText = ''
     }
 
     document.addEventListener('selectionchange', handleSelectionChange)
     document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('mouseup', handleMouseUp)
 
     return () => {
       document.removeEventListener('selectionchange', handleSelectionChange)
       document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mousedown', handleMouseDown)
+      document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [bubbleOffset])
+  }, [uiSettings?.bubble.offset.x, uiSettings?.bubble.offset.y])
 
   const contextValue = useMemo(() => ({
     selectedText,
