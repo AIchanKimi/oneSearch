@@ -16,6 +16,7 @@ export const GroupOrderStorage = storage.defineItem<ProviderTag[]>(
 
 // UI 设置配置
 export type UISettings = {
+  theme: 'light' | 'dark' | 'system'
   bubble: {
     defaultVisible: boolean
     defaultPosition: { x: number, y: number }
@@ -33,6 +34,7 @@ export const UISettingsStorage = storage.defineItem<UISettings>(
   'local:UISettingsStorage',
   {
     fallback: {
+      theme: 'system',
       bubble: {
         defaultVisible: true,
         defaultPosition: { x: 0, y: 0 },

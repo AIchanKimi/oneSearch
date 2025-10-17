@@ -1,4 +1,5 @@
 export type Theme = 'light' | 'dark'
+export type ThemeSetting = 'light' | 'dark' | 'system'
 
 /**
  * 检测页面当前主题
@@ -59,4 +60,22 @@ export function calculateBrightness(r: number, g: number, b: number): number {
  */
 export function isLightColor(brightness: number): boolean {
   return brightness > 0.5
+}
+
+/**
+ * 根据用户设置的主题获取实际主题
+ * @param themeSetting 用户设置的主题 ('light' | 'dark' | 'system')
+ * @returns 实际的主题 ('light' | 'dark')
+ */
+export function getEffectiveTheme(themeSetting: ThemeSetting): Theme {
+  switch (themeSetting) {
+    case 'light':
+      return 'light'
+    case 'dark':
+      return 'dark'
+    case 'system':
+      return detectSystemTheme()
+    default:
+      return detectSystemTheme()
+  }
 }

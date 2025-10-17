@@ -252,7 +252,8 @@ function App({ theme }: AppProps) {
       if (isMouseDown) {
         // 鼠标按下时，将文本存到临时变量
         tempSelectedText = selectedText
-      } else {
+      }
+      else {
         // 鼠标未按下时，直接更新选中文本
         if (selectedText) {
           setSelectedText(selectedText)
@@ -260,7 +261,8 @@ function App({ theme }: AppProps) {
             x: lastMousePosition.x,
             y: lastMousePosition.y,
           })
-        } else {
+        }
+        else {
           setSelectedText('')
         }
       }
@@ -290,7 +292,8 @@ function App({ theme }: AppProps) {
           x: lastMousePosition.x,
           y: lastMousePosition.y,
         })
-      } else {
+      }
+      else {
         setSelectedText('')
       }
       tempSelectedText = ''

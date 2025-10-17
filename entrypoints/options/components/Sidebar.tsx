@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { LayoutGrid, Settings, Sliders } from 'lucide-react'
+import { LayoutGrid, Palette, Settings, Sliders } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 export function Sidebar() {
@@ -11,6 +11,11 @@ export function Sidebar() {
       title: '服务提供商',
       href: '/',
       icon: <LayoutGrid className="h-5 w-5" />,
+    },
+    {
+      title: '通用设置',
+      href: '/general',
+      icon: <Palette className="h-5 w-5" />,
     },
     {
       title: '气泡设置',

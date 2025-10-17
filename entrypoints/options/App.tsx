@@ -14,6 +14,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Sidebar } from './components/Sidebar'
 
 import BubbleSettings from './pages/BubbleSettings'
+import GeneralSettings from './pages/GeneralSettings'
 import PanelSettings from './pages/PanelSettings'
 // 导入页面
 import ProvidersSettings from './pages/ProvidersSettings'
@@ -63,6 +64,7 @@ function App() {
         <main className="flex-1 overflow-y-auto scrollbar-none">
           <Routes>
             <Route path="/" element={<ProvidersSettings />} />
+            <Route path="/general" element={<GeneralSettings />} />
             <Route path="/bubble" element={<BubbleSettings />} />
             <Route path="/panel" element={<PanelSettings />} />
           </Routes>
