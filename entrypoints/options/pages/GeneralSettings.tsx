@@ -1,12 +1,14 @@
-import type { UISettings } from '@/utils/storage'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import type { SearchOpenMode, UISettings } from '@/utils/storage'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@/components/ui/toggle-group'
 import { UISettingsStorage } from '@/utils/storage'
-import { Monitor, Moon, Sun } from 'lucide-react'
+import { ExternalLink, Eye, EyeOff, Monitor, MonitorDown, Moon, Sun } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { PageTitle } from '../components/PageTitle'
 
 export default function GeneralSettings() {
   const [uiSettings, setUISettings] = useState<UISettings>()
@@ -26,6 +28,26 @@ export default function GeneralSettings() {
       theme,
     })
     setUISettings({ ...currentSettings, theme })
+    toast.success('主题设置已更新')
+  }
+
+  const updateSearchOpenMode = async (openMode: SearchOpenMode) => {
+    const currentSettings = await UISettingsStorage.getValue()
+    await UISettingsStorage.setValue({
+      ...currentSettings,
+      search: {
+        ...currentSettings.search,
+        openMode,
+      },
+    })
+    setUISettings({
+      ...currentSettings,
+      search: {
+        ...currentSettings.search,
+        openMode,
+      },
+    })
+    toast.success('搜索行为设置已更新')
   }
 
   if (!uiSettings) {
@@ -33,28 +55,24 @@ export default function GeneralSettings() {
   }
 
   return (
-    <div className="p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <span>通用设置</span>
-          </CardTitle>
-          <CardDescription>
-            配置 OneSearch 的通用外观和行为
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* 主题设置 */}
-          <div className="space-y-3">
-            <div>
-              <h3 className="text-lg font-medium">界面主题</h3>
-              <p className="text-sm text-muted-foreground">
-                选择 OneSearch 的界面主题，将影响气泡和面板的外观
-              </p>
-            </div>
+    <div className="container mx-auto px-4 py-8">
+      <PageTitle
+        title="通用设置"
+        description="配置 OneSearch 的通用外观和行为"
+      />
 
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-medium">选择主题:</span>
+      {/* 主题设置 */}
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-semibold mb-4">界面主题</h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="font-medium">主题模式</div>
+                <div className="text-sm text-muted-foreground">
+                  选择 OneSearch 的界面主题，将影响气泡和面板的外观
+                </div>
+              </div>
               <ToggleGroup
                 type="single"
                 value={uiSettings.theme}
@@ -92,6 +110,74 @@ export default function GeneralSettings() {
                   •
                   <strong>跟随系统</strong>
                   ：根据系统设置自动切换（默认）
+                </li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 搜索设置 */}
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-semibold mb-4">搜索行为</h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="font-medium">默认打开方式</div>
+                <div className="text-sm text-muted-foreground">
+                  配置搜索结果的打开方式
+                </div>
+              </div>
+              <ToggleGroup
+                type="single"
+                value={uiSettings.search.openMode}
+                onValueChange={(value: SearchOpenMode) => {
+                  if (value)
+                    updateSearchOpenMode(value)
+                }}
+                variant="outline"
+              >
+                <ToggleGroupItem value="newTab" aria-label="新标签页">
+                  <ExternalLink className="h-4 w-4 " />
+                  新标签页
+                </ToggleGroupItem>
+                <ToggleGroupItem value="currentTab" aria-label="当前标签页">
+                  <Eye className="h-4 w-4 " />
+                  当前标签页
+                </ToggleGroupItem>
+                <ToggleGroupItem value="incognitoWindow" aria-label="隐私窗口">
+                  <EyeOff className="h-4 w-4 " />
+                  隐私窗口
+                </ToggleGroupItem>
+                <ToggleGroupItem value="popupWindow" aria-label="小窗模式">
+                  <MonitorDown className="h-4 w-4" />
+                  小窗模式
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+
+            <div className="text-sm text-muted-foreground">
+              <ul className="space-y-1">
+                <li>
+                  •
+                  <strong>新标签页</strong>
+                  ：在新的浏览器标签页中打开搜索结果（默认）
+                </li>
+                <li>
+                  •
+                  <strong>当前标签页</strong>
+                  ：在当前标签页中打开搜索结果
+                </li>
+                <li>
+                  •
+                  <strong>隐私窗口</strong>
+                  ：在隐私浏览窗口中打开搜索结果
+                </li>
+                <li>
+                  •
+                  <strong>小窗模式</strong>
+                  ：在小型弹窗中打开搜索结果，可以同时浏览多个网页
                 </li>
               </ul>
             </div>

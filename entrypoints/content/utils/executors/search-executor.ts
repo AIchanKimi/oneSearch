@@ -1,8 +1,9 @@
 import type { ActionExecutor, ActionResult, SearchActionInput } from '../action-types'
+import { UISettingsStorage } from '@/utils/storage'
 
 /**
  * 搜索动作执行器 - 纯函数
- * 负责在新窗口中打开搜索链接
+ * 根据用户设置在不同窗口中打开搜索链接
  */
 export const searchExecutor: ActionExecutor<SearchActionInput> = {
   async execute(input: SearchActionInput): Promise<ActionResult> {
@@ -16,16 +17,80 @@ export const searchExecutor: ActionExecutor<SearchActionInput> = {
         url = input.link.replaceAll('{selectedText}', encodeURIComponent(input.selectedText))
       }
 
-      // 在新窗口中打开链接
-      const newWindow = window.open(url, '_blank')
-      newWindow?.focus()
+      // 获取用户设置
+      const uiSettings = await UISettingsStorage.getValue()
+      const openMode = uiSettings?.search?.openMode || 'newTab'
 
-      return {
-        success: true,
-        uiAction: {
-          type: 'close',
-          target: 'current', // 智能关闭当前显示的 UI，检查固定状态
-        },
+      // 根据打开模式执行不同的操作
+      switch (openMode) {
+        case 'currentTab': {
+          // 在当前标签页打开
+          window.location.href = url
+          return {
+            success: true,
+            uiAction: {
+              type: 'close',
+              target: 'current',
+            },
+          }
+        }
+
+        
+        
+        case 'incognitoWindow': {
+          // 在隐私窗口打开
+          const newWindow = window.open(url, '_blank', 'noopener,noreferrer,incognito')
+          newWindow?.focus()
+          return {
+            success: true,
+            uiAction: {
+              type: 'close',
+              target: 'current',
+            },
+          }
+        }
+
+        case 'popupWindow': {
+          // 在弹窗窗口打开
+          const popupSettings = uiSettings?.search?.popupWindow
+          const width = popupSettings?.width || 800
+          const height = popupSettings?.height || 600
+          const left = popupSettings?.rememberPosition && popupSettings?.left !== undefined
+            ? popupSettings.left
+            : (window.screen.width - width) / 2
+          const top = popupSettings?.rememberPosition && popupSettings?.top !== undefined
+            ? popupSettings.top
+            : (window.screen.height - height) / 2
+
+          const newWindow = window.open(
+            url,
+            'popup',
+            `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,dependent=yes`,
+          )
+          newWindow?.focus()
+
+          return {
+            success: true,
+            uiAction: {
+              type: 'close',
+              target: 'current',
+            },
+          }
+        }
+
+        case 'newTab':
+        default: {
+          // 默认：在新标签页打开并获得焦点
+          const newWindow = window.open(url, '_blank')
+          newWindow?.focus()
+          return {
+            success: true,
+            uiAction: {
+              type: 'close',
+              target: 'current',
+            },
+          }
+        }
       }
     }
     catch (error) {

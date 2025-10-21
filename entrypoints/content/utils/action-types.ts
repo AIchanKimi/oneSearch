@@ -2,6 +2,7 @@ export type UIAction = {
   type: 'show' | 'hide' | 'replace' | 'toggle' | 'close'
   target: string // 'panel' | 'bubble' | 'iframe' | 'dialog' | 'current'
   source?: string // 当前要关闭的 UI（用于 replace 类型）
+  params?: Record<string, any> // 传递给目标组件的参数
 }
 
 export type UIConfig<T extends string = string> = {
