@@ -32,7 +32,7 @@ function App() {
 
           const parsed = psl.parse(hostname)
           if (parsed.error || parsed.sld === null) {
-            console.error('解析域名失败', parsed.error)
+            // 无域名
           }
           else {
             setSearchTerm(parsed.sld) // 确保传递的值为字符串
